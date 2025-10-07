@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Stream Player</title>
+  <link href="https://vjs.zencdn.net/8.0.4/video-js.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #000;
+      overflow: hidden;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      max-width: 100vw;
+      max-height: 100vh;
+      object-fit: contain;
+    }
+  </style>
+</head>
+
+<script>
+
+  
+  window.onload = function () {
+    var referrer = document.referrer;
+      // console.log("referrer");
+      // console.log(referrer);
+
+      if (referrer) {
+        var referrerDomain = new URL(referrer).hostname;
+        // console.log("referrerDomain");
+        // console.log(referrerDomain);
+
+        var allowedDomains = ['localhost','128.199.103.91', 'www.luckyslasher2025.live', 'www.slashernew888.live', 'www.slasher2k21.live', 'www.internationalslasher.live'];
+
+        if (allowedDomains.includes(referrerDomain)) {
+          // console.log("Referrer is allowed");
+        } else {
+          // console.log("Referrer is not allowed");
+          window.location.replace("https://www.youtube.com/embed/BjUn6pu74wc?autoplay=1");
+        }
+      } else {
+        var currentDomain = window.location.hostname;
+        // console.log("currentDomain");
+        // console.log(currentDomain);
+
+        var allowedDomains = ['localhost','128.199.103.91', 'www.luckyslasher2025.live', 'www.slashernew888.live'];
+
+        if (allowedDomains.includes(currentDomain)) {
+          // console.log("Direct access is allowed");
+        } else {
+          // console.log("Direct access is not allowed");
+          window.location.replace("https://www.youtube.com/embed/BjUn6pu74wc?autoplay=1");
+        }
+      }
+  };
+
+
+</script>
+
+<body>
+  <!-- Video.js Player -->
+  <video id="video-player" class="video-js vjs-fill vjs-big-play-centered" controls playsinline></video>
+
+  <!-- Video.js Library -->
+  <script src="https://vjs.zencdn.net/8.0.4/video.min.js"></script>
+
+  <script>
+    // Stream source selection (multiple servers)
+    // var servs = [
+    //  "www.slashernew888.live/stream",
+    // ];
+
+    // var serv = servs[Math.floor(Math.random() * servs.length)];
+    // var sources = [
+    //   'https://' + serv + '/hls/stream.m3u8',
+    //   "https://www.slashernew888.live/stream/hls/stream.m3u8",
+    // ];
+
+    // Stream source selection (multiple servers)
+    
+    var sources = [
+      // "https://adistreamserver.live/stream/hls/stream.m3u8",
+      "https://antmedia.adistreamserver.live:5443/WebRTCApp/streams/stream.m3u8"
+    ];
+
+    var currentSourceIndex = 0;
+
+    // Initialize the Video.js player
+    function initializePlayer(source) {
+      var player = videojs('video-player', {
+        techOrder: ["html5"],
+        autoplay: true,
+        controls: true,
+        muted: true, // Set to mute for autoplay to work across most browsers
+        sources: [{ src: source, type: 'application/x-mpegURL' }],
+        responsive: true,
+        fluid: true, // Ensures the player resizes with the container
+      });
+
+      // Error handling: switch to the next source on error
+      player.on('error', function() {
+        console.log('Error detected, switching to next source...');
+        currentSourceIndex = (currentSourceIndex + 1) % sources.length;
+        player.src({ type: 'application/x-mpegURL', src: sources[currentSourceIndex] });
+        player.play(); // Automatically start playback on the next source
+      });
+
+
+      // You can also listen for 'ended' or 'stalled' events to trigger a reload
+      player.on('stalled', function() {
+          console.log('Stream stalled, attempting to reload...');
+          player.load();
+          player.play();
+      });
+
+      // You can also listen for 'ended' or 'stalled' events to trigger a reload
+      player.on('ended', function() {
+          console.log('Stream ended, attempting to reload...');
+          player.load();
+          player.play();
+      });
+    }
+
+    // Initialize with the first source
+    initializePlayer(sources[currentSourceIndex]);
+  </script>
+</body>
+</html>

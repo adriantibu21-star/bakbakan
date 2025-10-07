@@ -1,0 +1,90 @@
+[09-Jul-2022 09:46:54 Asia/Manila] PHP Warning:  mysqli::__construct(): (HY000/2002): Cannot assign requested address in /home/luckybet777/public_html/classes/DBConnection.php on line 18
+[09-Jul-2022 09:46:54 Asia/Manila] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/luckybet777/public_html/classes/SystemSettings.php on line 16
+[09-Jul-2022 09:46:54 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/luckybet777/public_html/classes/SystemSettings.php:17
+Stack trace:
+#0 /home/luckybet777/public_html/classes/SystemSettings.php(150): SystemSettings->load_system_info()
+#1 /home/luckybet777/public_html/config.php(12): require_once('/home/luckybet7...')
+#2 /home/luckybet777/public_html/dashboard/user/convert_user.php(2): require_once('/home/luckybet7...')
+#3 {main}
+  thrown in /home/luckybet777/public_html/classes/SystemSettings.php on line 17
+[09-Jul-2022 11:28:45 Asia/Manila] PHP Warning:  mysqli::__construct(): (HY000/2002): Cannot assign requested address in /home/luckybet777/public_html/classes/DBConnection.php on line 18
+[09-Jul-2022 11:28:45 Asia/Manila] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/luckybet777/public_html/classes/SystemSettings.php on line 16
+[09-Jul-2022 11:28:45 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/luckybet777/public_html/classes/SystemSettings.php:17
+Stack trace:
+#0 /home/luckybet777/public_html/classes/SystemSettings.php(150): SystemSettings->load_system_info()
+#1 /home/luckybet777/public_html/config.php(12): require_once('/home/luckybet7...')
+#2 /home/luckybet777/public_html/dashboard/user/convert_user.php(2): require_once('/home/luckybet7...')
+#3 {main}
+  thrown in /home/luckybet777/public_html/classes/SystemSettings.php on line 17
+[09-Jul-2022 12:00:34 Asia/Manila] PHP Warning:  mysqli::__construct(): (HY000/2002): Cannot assign requested address in /home/luckybet777/public_html/classes/DBConnection.php on line 18
+[09-Jul-2022 12:00:34 Asia/Manila] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/luckybet777/public_html/classes/SystemSettings.php on line 16
+[09-Jul-2022 12:00:34 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/luckybet777/public_html/classes/SystemSettings.php:17
+Stack trace:
+#0 /home/luckybet777/public_html/classes/SystemSettings.php(150): SystemSettings->load_system_info()
+#1 /home/luckybet777/public_html/config.php(12): require_once('/home/luckybet7...')
+#2 /home/luckybet777/public_html/dashboard/user/convert_user.php(2): require_once('/home/luckybet7...')
+#3 {main}
+  thrown in /home/luckybet777/public_html/classes/SystemSettings.php on line 17
+[09-Jul-2022 12:37:26 Asia/Manila] PHP Warning:  mysqli::__construct(): (HY000/2002): Cannot assign requested address in /home/luckybet777/public_html/classes/DBConnection.php on line 18
+[09-Jul-2022 12:37:26 Asia/Manila] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/luckybet777/public_html/classes/SystemSettings.php on line 16
+[09-Jul-2022 12:37:26 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/luckybet777/public_html/classes/SystemSettings.php:17
+Stack trace:
+#0 /home/luckybet777/public_html/classes/SystemSettings.php(150): SystemSettings->load_system_info()
+#1 /home/luckybet777/public_html/config.php(12): require_once('/home/luckybet7...')
+#2 /home/luckybet777/public_html/dashboard/user/convert_user.php(2): require_once('/home/luckybet7...')
+#3 {main}
+  thrown in /home/luckybet777/public_html/classes/SystemSettings.php on line 17
+[09-Jul-2022 14:00:02 Asia/Manila] PHP Warning:  mysqli::__construct(): (HY000/2002): Cannot assign requested address in /home/luckybet777/public_html/classes/DBConnection.php on line 18
+[09-Jul-2022 14:00:02 Asia/Manila] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/luckybet777/public_html/classes/SystemSettings.php on line 16
+[09-Jul-2022 14:00:02 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/luckybet777/public_html/classes/SystemSettings.php:17
+Stack trace:
+#0 /home/luckybet777/public_html/classes/SystemSettings.php(150): SystemSettings->load_system_info()
+#1 /home/luckybet777/public_html/config.php(12): require_once('/home/luckybet7...')
+#2 /home/luckybet777/public_html/dashboard/user/convert_user.php(2): require_once('/home/luckybet7...')
+#3 {main}
+  thrown in /home/luckybet777/public_html/classes/SystemSettings.php on line 17
+[09-Jul-2022 14:09:32 Asia/Manila] PHP Warning:  mysqli::__construct(): (HY000/2002): Cannot assign requested address in /home/luckybet777/public_html/classes/DBConnection.php on line 18
+[09-Jul-2022 14:09:32 Asia/Manila] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/luckybet777/public_html/classes/SystemSettings.php on line 16
+[09-Jul-2022 14:09:32 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/luckybet777/public_html/classes/SystemSettings.php:17
+Stack trace:
+#0 /home/luckybet777/public_html/classes/SystemSettings.php(150): SystemSettings->load_system_info()
+#1 /home/luckybet777/public_html/config.php(12): require_once('/home/luckybet7...')
+#2 /home/luckybet777/public_html/dashboard/user/convert_user.php(2): require_once('/home/luckybet7...')
+#3 {main}
+  thrown in /home/luckybet777/public_html/classes/SystemSettings.php on line 17
+[09-Jul-2022 14:14:55 Asia/Manila] PHP Warning:  mysqli::__construct(): (HY000/2002): Cannot assign requested address in /home/luckybet777/public_html/classes/DBConnection.php on line 18
+[09-Jul-2022 14:14:55 Asia/Manila] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/luckybet777/public_html/classes/SystemSettings.php on line 16
+[09-Jul-2022 14:14:55 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/luckybet777/public_html/classes/SystemSettings.php:17
+Stack trace:
+#0 /home/luckybet777/public_html/classes/SystemSettings.php(150): SystemSettings->load_system_info()
+#1 /home/luckybet777/public_html/config.php(12): require_once('/home/luckybet7...')
+#2 /home/luckybet777/public_html/dashboard/user/convert_user.php(2): require_once('/home/luckybet7...')
+#3 {main}
+  thrown in /home/luckybet777/public_html/classes/SystemSettings.php on line 17
+[09-Jul-2022 15:27:38 Asia/Manila] PHP Warning:  mysqli::__construct(): (HY000/2002): Cannot assign requested address in /home/luckybet777/public_html/classes/DBConnection.php on line 18
+[09-Jul-2022 15:27:38 Asia/Manila] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/luckybet777/public_html/classes/SystemSettings.php on line 16
+[09-Jul-2022 15:27:38 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/luckybet777/public_html/classes/SystemSettings.php:17
+Stack trace:
+#0 /home/luckybet777/public_html/classes/SystemSettings.php(150): SystemSettings->load_system_info()
+#1 /home/luckybet777/public_html/config.php(12): require_once('/home/luckybet7...')
+#2 /home/luckybet777/public_html/dashboard/user/convert_user.php(2): require_once('/home/luckybet7...')
+#3 {main}
+  thrown in /home/luckybet777/public_html/classes/SystemSettings.php on line 17
+[09-Jul-2022 15:27:48 Asia/Manila] PHP Warning:  mysqli::__construct(): (HY000/2002): Cannot assign requested address in /home/luckybet777/public_html/classes/DBConnection.php on line 18
+[09-Jul-2022 15:27:48 Asia/Manila] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/luckybet777/public_html/classes/SystemSettings.php on line 16
+[09-Jul-2022 15:27:48 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/luckybet777/public_html/classes/SystemSettings.php:17
+Stack trace:
+#0 /home/luckybet777/public_html/classes/SystemSettings.php(150): SystemSettings->load_system_info()
+#1 /home/luckybet777/public_html/config.php(12): require_once('/home/luckybet7...')
+#2 /home/luckybet777/public_html/dashboard/user/convert_user.php(2): require_once('/home/luckybet7...')
+#3 {main}
+  thrown in /home/luckybet777/public_html/classes/SystemSettings.php on line 17
+[09-Jul-2022 15:27:58 Asia/Manila] PHP Warning:  mysqli::__construct(): (HY000/2002): Cannot assign requested address in /home/luckybet777/public_html/classes/DBConnection.php on line 18
+[09-Jul-2022 15:27:58 Asia/Manila] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/luckybet777/public_html/classes/SystemSettings.php on line 16
+[09-Jul-2022 15:27:58 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/luckybet777/public_html/classes/SystemSettings.php:17
+Stack trace:
+#0 /home/luckybet777/public_html/classes/SystemSettings.php(150): SystemSettings->load_system_info()
+#1 /home/luckybet777/public_html/config.php(12): require_once('/home/luckybet7...')
+#2 /home/luckybet777/public_html/dashboard/user/convert_user.php(2): require_once('/home/luckybet7...')
+#3 {main}
+  thrown in /home/luckybet777/public_html/classes/SystemSettings.php on line 17

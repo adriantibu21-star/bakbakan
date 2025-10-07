@@ -1,0 +1,880 @@
+﻿@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap");
+
+* {
+    padding: 0;
+    margin: 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+body {
+    height: 100vh;
+    background-color: #1e2024;
+}
+
+.wrapper {
+   /* padding:1rem;*/
+   padding:0 2rem 0 2rem;
+    font-family: "Source Sans Pro", sans-serif;
+    color: white;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+ 
+
+.liveStream {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    width: 100%;
+}
+
+    .liveStream .event {
+        margin-bottom: 1rem;
+    }
+
+        .liveStream .event .title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            /*color: #ffcc00;*/
+            color: #fff;
+            background-color: #2c3c4c;
+        }
+
+        .liveStream .event .date {
+            color: rgba(255, 255, 255, 0.596);
+        }
+
+    .liveStream .video {
+        border-radius: 5px;
+        width: 100%;
+    }
+
+    .liveStream .event .titleMessage {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #ff0000;
+    }
+
+.play {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    padding: 1rem 0 0 2rem;
+/*    margin-top: 1.2rem;*/
+}
+
+    .play .bettingStatus {
+        background: #b10f0f;
+        padding: 0.3rem;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .play .currentGame {
+        width: 100%;
+        border-collapse: collapse;
+        /*margin-top: 1rem;*/
+        background-color: #1d2833;
+        /*        border-radius: 4px;*/
+        border-bottom-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+
+        .play .currentGame th {
+            text-transform: uppercase;
+        }
+
+        .play .currentGame td,
+        .play .currentGame th {
+           /* border: 1px solid rgba(255, 255, 255, 0.13);*/
+            padding: .5rem;
+            text-align: center;
+            width: 33.3%;
+            color:#fff;
+        }
+
+    .play .bettingStatus.active {
+        background: #23b04b;
+    }
+
+    .play .bets {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+      /*  background-color: #1e2024;*/
+    }
+
+        .play .bets .betMeron {
+           
+            background-color: #1d2833;
+            /*border: 1px solid #23b04b;*/
+        }
+
+            .play .bets .betMeron .info button {
+                border: 1px solid transparent;
+                background-color: #f34141;
+            }
+
+                .play .bets .betMeron .info button:hover {
+                    color: #f34141;
+                    background-color: transparent;
+                    border: 1px solid #f34141;
+                }
+
+
+
+        .play .bets .betWala {
+            background-color: #1d2833;
+           /* border: 1px solid #23b04b;*/
+        }
+
+            .play .bets .betWala .info button {
+                border: 1px solid transparent;
+                background-color: #1d81f1;
+            }
+
+                .play .bets .betWala .info button:hover {
+                    color: #1d81f1;
+                    background-color: transparent;
+                    border: 1px solid #1d81f1;
+                }
+
+        .play .bets .betMeron .title {
+          /*  background: #f34141;*/
+          color:red;
+           font-size: 2.5rem;
+        }
+
+        .play .bets .betWala .title {
+            /*background: #1d81f1;*/
+            color: #1d81f1;
+            font-size: 2.5rem;
+        }
+
+        .play .bets > div {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.11);
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+            .play .bets > div .title {
+                padding: .8rem 0;
+                margin-bottom: 1rem;
+                font-size: 1.5rem;
+                font-weight: 600;
+                text-align: center;
+            }
+
+            .play .bets > div .info {
+                /* padding: 0 1rem .3rem 1rem;*/
+                padding-left: 2px;
+                padding-right: 2px;
+                padding-bottom: 2px;
+            }
+             
+
+                .play .bets > div .info .totalBets {
+                    color: #ffcc00;
+                    text-align: center;
+                    font-size: 3rem;
+                    font-weight: 700;
+                    margin-bottom: 0.2rem;
+                }
+
+               
+
+               
+
+                .play .bets > div .info .payout {
+                    text-align: center;
+                    margin-bottom: .5rem;
+                    font-weight: 600;
+                    font-size: 2.3rem;
+                }
+
+                .play .bets > div .info .currentBet {
+                    text-align: center;
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                    font-size: 3rem;
+                    color: #16a316;
+                }
+
+                    .play .bets > div .info .currentBet span.bet-win {
+                        text-align: center;
+                        font-weight: 600;
+                        font-size: 3rem;
+                        color: #ffcc00;
+                        padding: 1px;
+                        border-radius: 4px;
+                       margin:0;
+                       /*background-color:#23b04b;*/
+                    }
+
+                .play .bets > div .info button {
+                    padding: 1rem 2rem;
+                    background: transparent;
+                    width: -webkit-fit-content;
+                    width: -moz-fit-content;
+                    width: fit-content;
+                    cursor: pointer;
+                    border: none;
+                    color: white;
+                    background: #23b04b;
+                    border-radius: 5px;
+                    -webkit-box-flex: 1;
+                    -ms-flex: 1;
+                    flex: 1;
+                    width: 100%;
+                }
+
+    .play .currentPoints {
+        margin-top: 2rem;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        gap: 1rem;
+    }
+        .play .currentPoints p {
+            font-size: 20px;
+            font-weight:bold;
+            
+        }
+        .play .currentPoints p:nth-child(2) {
+            color: #ffcc00;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+            .play .currentPoints p:nth-child(2) i {
+                padding-right: 0.3rem;
+            }
+
+    .play .amount {
+        width: 100%;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        border: 1px solid #000;
+        border-radius: 5px;
+        margin-top: 1rem;
+    }
+
+        .play .amount input[type="text"] {
+            font-weight: 400;
+            background: #1d2833;
+            border: none;
+            font-size: 15px;
+            padding: 1rem;
+            border-radius: 3px;
+            color: white;
+            outline: none;
+            position: relative;
+            resize: none;
+            width: 100%;
+        }
+
+        .play .amount button {
+            padding: 1rem 2rem;
+            /*background: transparent;*/
+            width: -webkit-fit-content;
+            width: -moz-fit-content;
+            width: fit-content;
+            cursor: pointer;
+            border: none;
+            color: white;
+            border-left: 1px solid #2f3238;
+            background-color: transparent;
+        }
+
+            .play .amount button:hover {
+                background: #2f3238;
+            }
+
+    .play .amounts {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        gap: 1rem;
+        width: 100%;
+        overflow: auto;
+        padding: 2rem 0;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+    }
+
+    .play .amountsBet {
+        width: 100%;
+        overflow: auto;
+        padding: 2rem 0;
+        text-align: center;
+      
+    }
+
+        .play .amountsBet button {
+            background: #1d2833;
+            border-bottom: solid 3px #23b04b;
+            border-radius: 7px;
+            border-top: unset;
+            border-left: unset;
+            border-right: unset;
+            color: #fff;
+            /*  padding: 10px 10px;*/
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            font-size: 2rem;
+        }
+            .play .amountsBet button:hover {
+                background: #23b04b;
+                border-bottom: solid 3px #29335b;
+                border-radius: 7px;
+                border-top: unset;
+                border-left: unset;
+                border-right: unset;
+                color: #fff;
+                /*    border-bottom: solid 3px #1d2833;
+                border-radius: 7px;
+                border-top: unset;
+                border-left: unset;
+                border-right: unset;
+                color: #fff;
+                padding: 10px 10px;*/
+            }
+
+
+      
+
+        .play .amounts button {
+            border-radius: 5px;
+           /* padding: 1rem;*/
+            background: #282b30;
+     /*       width: -webkit-fit-content;
+            width: -moz-fit-content;*/
+           /* width: fit-content;*/
+            cursor: pointer;
+            border: none;
+            color: white;
+        }
+
+
+
+            .play .amounts button:hover {
+                background: #363b40;
+            }
+
+    .play .betDraw {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1rem;
+      
+    }
+
+        .play .betDraw button {
+            padding: 1rem 2rem;
+           
+            width: -webkit-fit-content;
+            width: -moz-fit-content;
+            width: fit-content;
+            cursor: pointer;
+            border: none;
+            color: white;
+            background: #23b04b;
+            border-radius: 5px;
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+        }
+
+            .play .betDraw button:hover {
+                padding: 1rem 2rem;
+                color: #23b04b;
+                width: -webkit-fit-content;
+                width: -moz-fit-content;
+                width: fit-content;
+                cursor: pointer;
+                border: none;
+                color: white;
+                background: transparent;
+                border-radius: 5px;
+                -webkit-box-flex: 1;
+                -ms-flex: 1;
+                flex: 1;
+                border: 1px solid #23b04b;
+            }
+
+        .play .betDraw .drawed {
+            padding: 1rem 2rem;
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bolder;
+        }
+
+        .play .betDraw .drawedTotal {
+            padding: 1rem 2rem;
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            text-align: center;
+            color: #23b04b;
+            font-weight:bolder;
+        }
+
+    .play .note {
+        color: rgba(255, 255, 255, 0.308);
+        margin-top: 1rem;
+        letter-spacing: 1px;
+        background-color:#1d2833;
+        border-radius:5px;
+        padding:5px;
+    }
+
+        .play .note i {
+            margin-right: 0.5rem;
+        }
+
+    .play .results {
+        width: 100%;
+        margin: 1rem 0;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+
+    }
+
+        .play .results .currentBets {
+            max-width: 720px;
+            overflow-x: auto;
+            max-height: 300px;
+            margin: 2rem 0;
+        }
+
+
+
+            .play .results .currentBets table {
+                border-collapse: collapse;
+                background: #2c3c4c;
+            }
+
+                .play .results .currentBets table tr td {
+                    padding: 2.25px;
+                    /* border: 1px solid rgba(0, 0, 0, 0.178);*/
+                    width: 25px;
+                    height: 25px;
+                    line-height: 25px;
+                  /*  font-size: 10px;*/
+                    text-align: center;
+                    border-radius: 50%;
+                    background: #ffffff21;
+                }
+                    .play .results .currentBets table tr td div {
+                        height: 2.5rem;
+                        width: 2.5rem;
+                    }
+
+                    .play .results .currentBets table tr td .circleRed {
+                        height: 2.5rem;
+                        width: 2.5rem;
+                        background-color: #fff;
+                        border-radius: 1.3rem;
+                        border: 8px solid #f34141;
+                    }
+
+                    .play .results .currentBets table tr td .circleBlue {
+                        height: 2.5rem;
+                        width: 2.5rem;
+                        background-color: #fff;
+                        border-radius: 1.2rem;
+                        border: 8px solid #167df1;
+                    }
+
+                    .play .results .currentBets table tr td .circleGreen {
+                        height: 2.5rem;
+                        width: 2.5rem;
+                        background-color: #fff;
+                        border-radius: 1.2rem;
+                        border: 8px solid #23b04b;
+                    }
+                    .play .results .currentBets table tr td .circleCancel {
+                        height: 2.5rem;
+                        width: 2.5rem;
+                        background-color: #fff;
+                        border-radius: 1.2rem;
+                        border: 8px solid #707B7C;
+                    }
+                    
+                    
+
+
+                    .play .results .currentBets table tr td .circleRedAll {
+                        height: 2.5rem;
+                        width: 2.5rem;
+                        background-color: #f34141;
+                        border-radius: 1.2rem;
+                        text-align: center;
+                        color: #fff;
+                        font-weight: bold;
+                    }
+
+                    .play .results .currentBets table tr td .circleBlueAll {
+                        height: 2.5rem;
+                        width: 2.5rem;
+                        background-color: #167df1;
+                        border-radius: 1.2rem;
+                        text-align: center;
+                        color: #fff;
+                        font-weight: bold;
+                    }
+
+                    .play .results .currentBets table tr td .circleGreenAll {
+                        height: 2.5rem;
+                        width: 2.5rem;
+                        background-color: #23b04b;
+                        border-radius: 1.2rem;
+                        text-align: center;
+                        color: #fff;
+                        font-weight: bold;
+                    }
+
+                    .play .results .currentBets table tr td .circleCancelAll {
+                        height: 2.5rem;
+                        width: 2.5rem;
+                        background-color: #9d9d9d;
+                        border-radius: 1.2rem;
+                        text-align: center;
+                        color: #fff;
+                        font-weight: bold;
+                    }
+
+
+                    .play .results .currentBets table tr td:nth-child(even) .circle {
+                        border: 8px solid #1830b9;
+                    }
+
+        .play .results .resultLabel {
+            width: 100%;
+            max-width: 600px;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: space-evenly;
+            -ms-flex-pack: space-evenly;
+            justify-content: space-evenly;
+            margin: 1rem;
+
+        }
+
+    .play .resultLabel > a {
+        background: transparent;
+        width: -webkit-fit-content;
+        width: -moz-fit-content;
+        width: fit-content;
+        cursor: pointer;
+        border: 1px solid #dadada;
+        color: #dadada;
+        background-color: #373838;
+        border-radius: 5px;
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        padding: .1rem 1rem .1rem 1rem;
+      
+      
+    }
+
+            .play .results .resultLabel > div {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -ms-flex-direction: column;
+                flex-direction: column;
+                -webkit-box-pack: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                gap: 0.5rem;
+
+            }
+
+                .play .results .resultLabel > div .circle {
+                    display: -webkit-box;
+                    display: -ms-flexbox;
+                    display: flex;
+                    height: 1.8rem;
+                    width: 1.8rem;
+                    border-radius: 2rem;
+                    -webkit-box-pack: center;
+                    -ms-flex-pack: center;
+                    justify-content: center;
+                    -webkit-box-align: center;
+                    -ms-flex-align: center;
+                    align-items: center;
+                    padding:10px;
+                }
+
+                    .play .results .resultLabel > div .circle.meron {
+                        background: #f34141;
+                        padding: 20px;
+                    }
+
+                    .play .results .resultLabel > div .circle.wala {
+                        background: #1d81f1;
+                        padding: 20px;
+                    }
+
+                    .play .results .resultLabel > div .circle.draw {
+                        background: #23b04b;
+                        padding: 20px;
+                    }
+
+                    .play .results .resultLabel > div .circle.cancel {
+                        background: rgba(252, 252, 252, 0.39);
+                        padding: 20px;
+                    }
+
+
+        .play .results .currentBets {
+            max-width: 720px;
+            overflow-x: auto;
+            max-height: 300px;
+            margin: 2rem 0;
+        }
+
+            .play .results .currentBets .circle ul li.meron {
+                background: #b10f0f;
+                padding: 10px;
+            }
+
+            .play .results .currentBets .circle ul li.wala {
+                background: #1830b9;
+                padding: 10px;
+            }
+
+            .play .results .currentBets .circle ul li.draw {
+                background: #23b04b;
+                padding: 10px;
+            }
+
+            .play .results .currentBets .circle ul li.cancel {
+                background: rgba(252, 252, 252, 0.39);
+                padding: 10px;
+            }
+
+
+
+    .play .results .result {
+        width: 100%;
+        overflow: auto;
+        max-height: 300px;
+        background-color: #2c3c4c;
+    }
+
+        .play .results .result table {
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: #2c3c4c !important;
+        }
+
+                .play .results .result table tr td {
+                    padding: 7px;
+                    border: 1px solid rgba(0, 0, 0, 0.178);
+                }
+
+                    .play .results .result table tr td .circle {
+                        display: -webkit-box;
+                        display: -ms-flexbox;
+                        display: flex;
+                        height: 1.7rem;
+                        width: 1.7rem;
+                        border-radius: 1rem;
+                        -webkit-box-pack: center;
+                        -ms-flex-pack: center;
+                        justify-content: center;
+                        -webkit-box-align: center;
+                        -ms-flex-align: center;
+                        align-items: center;
+                    }
+
+                        .play .results .result table tr td .circle.meron {
+                            background: #b10f0f;
+                        }
+
+                        .play .results .result table tr td .circle.wala {
+                            background: #1830b9;
+                        }
+
+                        .play .results .result table tr td .circle.draw {
+                            background: #23b04b;
+                        }
+
+                        .play .results .result table tr td .circle.cancelled {
+                            background: rgba(252, 252, 252, 0.39);
+                        }
+
+@media (max-width: 1200px) {
+    .wrapper {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+    }
+
+    .play {
+        padding: 0;
+    }
+        .play .results .currentBets {
+            max-width: 720px;
+            overflow-x: auto;
+            max-height: 300px;
+            margin: 2rem 0;
+        }
+}
+
+@media (max-width: 600px) {
+    .wrapper {
+        padding: 1rem;
+    }
+    .play .results .currentBets {
+        max-width: 600px;;
+        overflow-x: auto;
+        max-height: 300px;
+        margin: 2rem 0;
+    }
+}
+/*# sourceMappingURL=bet.css.map */
+
+.blink_me {
+    animation: blinker 2s linear infinite;
+}
+
+.text-closed-bet {
+    color: #fff;
+    font-weight: bold;
+    font-size: 15px;
+    background-color: #fe3a2e;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-radius: 2px;
+}
+
+.text-open-bet {
+    color: #fff;
+    font-weight: bold;
+    font-size: 15px;
+    background-color: #2eb85c;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-radius: 2px;
+}
+
+.text-fightnumber {
+    color: #ffc579;
+    font-weight: bolder;
+    font-size: 20px;
+}
+
+.result-table {
+    width: 100%;
+    overflow-x: scroll;
+    background-color: #111111;
+    white-space: nowrap !important;
+}
+
+.fixed-div-result-dark {
+    width: 100%;
+    overflow-x: scroll;
+    background-color: #111111;
+    white-space: nowrap !important;
+}
+
+
+button.wala {
+    padding: 1rem 2rem;
+    background: transparent;
+    cursor: pointer;
+    border: none;
+    color: white;
+    background: #1830b9;
+    border-radius: 5px;
+}
+
+button.meron {
+    padding: 1rem 2rem;
+    background: transparent;
+    cursor: pointer;
+    border: none;
+    color: white;
+    background: #ff0000;
+    border-radius: 5px;
+}
+
+button.cancel {
+    padding: 1rem 2rem;
+    background: transparent;
+    cursor: pointer;
+    border: none;
+    color: white;
+    background: #b8b8b8;
+    border-radius: 5px;
+
+  
+}
+
+button.draw {
+    padding: 1rem 2rem;
+    background: transparent;
+    cursor: pointer;
+    border: none;
+    color: white;
+    background: #23b04b;
+    border-radius: 5px;
+
+ 
+}
+
+
+
+.text-winner-bet {
+    color: #fe3a2e;
+    font-weight: bold;
+    font-size: 15px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-radius: 2px;
+}
+
+ 

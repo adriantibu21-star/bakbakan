@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Player</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            overflow: hidden;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            max-width: 100vw;
+            max-height: 100vh;
+            object-fit: contain;
+        }
+    </style>
+</head>
+
+<body>
+    <video id="webrtc-player" controls autoplay playsinline muted></video>
+
+    <script>
+        // Place your WHEP playback URL here
+        // Format: webrtc://[your_srs_ip]/live/[stream_name]
+        const whepUrl = "https://srs.adistreamserver.live:443/rtc/v1/whep/?app=live&stream=livestream2";
+        const videoElement = document.getElementById('webrtc-player');
+        const whepEndpoint = "https://" + whepUrl.split('//')[1];
+        let peerConnection = null;
+        let reconnectTimeout = null;
+
+        // Your existing domain and referrer security check
+        window.onload = function () {
+            var referrer = document.referrer;
+            var isAllowed = false;
+
+            if (referrer) {
+                var referrerDomain = new URL(referrer).hostname;
+                var allowedDomains = ['localhost', '128.199.103.91', 'www.luckyslasher2025.live', 'www.slashernew888.live', 'www.slasher2k21.live', 'www.internationalslasher.live'];
+                if (allowedDomains.includes(referrerDomain)) {
+                    isAllowed = true;
+                }
+            } else {
+                var currentDomain = window.location.hostname;
+                var allowedDomains = ['localhost', '128.199.103.91', 'www.luckyslasher2025.live', 'www.slashernew888.live'];
+                if (allowedDomains.includes(currentDomain)) {
+                    isAllowed = true;
+                }
+            }
+
+            if (isAllowed) {
+                // If allowed, start the WHEP stream playback with retry logic
+                startWHEP();
+            } else {
+                // If not allowed, redirect to YouTube
+                window.location.replace("https://www.youtube.com/embed/BjUn6pu74wc?autoplay=1");
+            }
+        };
+
+        function startWHEP() {
+            // Clear any previous reconnection timers
+            if (reconnectTimeout) {
+                clearTimeout(reconnectTimeout);
+                reconnectTimeout = null;
+            }
+
+            // Close any existing peer connection before starting a new one
+            if (peerConnection && peerConnection.connectionState !== 'closed') {
+                peerConnection.close();
+            }
+
+            peerConnection = new RTCPeerConnection();
+
+            // Add transceivers for receiving video and audio
+            peerConnection.addTransceiver('video', { direction: 'recvonly' });
+            peerConnection.addTransceiver('audio', { direction: 'recvonly' });
+
+            // When tracks are received, set the video source
+            peerConnection.ontrack = (event) => {
+                videoElement.srcObject = event.streams[0];
+                console.log("Stream successfully connected and playing.");
+            };
+
+            // This is the key for automatic reconnection
+            peerConnection.oniceconnectionstatechange = () => {
+                if (peerConnection.iceConnectionState === 'disconnected' || peerConnection.iceConnectionState === 'failed' || peerConnection.iceConnectionState === 'closed') {
+                    console.log(`ICE connection state changed to ${peerConnection.iceConnectionState}. Reconnecting in 5 seconds...`);
+                    // Retry connection after a short delay
+                    reconnectTimeout = setTimeout(startWHEP, 5000);
+                }
+            };
+            
+            // Initiate the stream connection
+            playWHEP();
+        }
+
+        // WebRTC script to connect to the SRS WHEP endpoint
+        async function playWHEP() {
+            try {
+                const offer = await peerConnection.createOffer();
+                await peerConnection.setLocalDescription(offer);
+                
+                // Send the SDP offer to the WHEP endpoint
+                const response = await fetch(whepEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/sdp' },
+                    body: peerConnection.localDescription.sdp
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`WHEP endpoint returned ${response.status}`);
+                }
+                
+                const answerSdp = await response.text();
+                
+                // Set the SDP answer from the WHEP endpoint
+                const answer = new RTCSessionDescription({ type: 'answer', sdp: answerSdp });
+                await peerConnection.setRemoteDescription(answer);
+
+            } catch (error) {
+                console.error("Error playing WHEP stream:", error);
+                // If the initial connection fails, retry after a delay
+                reconnectTimeout = setTimeout(startWHEP, 5000);
+            }
+        }
+    </script>
+</body>
+</html>

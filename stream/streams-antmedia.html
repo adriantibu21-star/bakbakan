@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slasher 2k25</title>
+
+    
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #000;
+      overflow: hidden;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      max-width: 100vw;
+      max-height: 100vh;
+      object-fit: contain;
+    }
+  </style>
+</head>
+
+<script>
+  window.onload = function () {
+    var referrer = document.referrer;
+      // console.log("referrer");
+      // console.log(referrer);
+
+      if (referrer) {
+        var referrerDomain = new URL(referrer).hostname;
+        // console.log("referrerDomain");
+        // console.log(referrerDomain);
+
+        var allowedDomains = ['localhost','128.199.103.91', 'www.luckyslasher2025.live', 'www.slashernew888.live', 'www.slasher2k21.live', 'www.internationalslasher.live'];
+
+        if (allowedDomains.includes(referrerDomain)) {
+          // console.log("Referrer is allowed");
+        } else {
+          // console.log("Referrer is not allowed");
+          window.location.replace("https://www.youtube.com/embed/BjUn6pu74wc?autoplay=1");
+        }
+      } else {
+        var currentDomain = window.location.hostname;
+        // console.log("currentDomain");
+        // console.log(currentDomain);
+
+        var allowedDomains = ['localhost','128.199.103.91', 'www.luckyslasher2025.live', 'www.slashernew888.live'];
+
+        if (allowedDomains.includes(currentDomain)) {
+          // console.log("Direct access is allowed");
+        } else {
+          // console.log("Direct access is not allowed");
+          window.location.replace("https://www.youtube.com/embed/BjUn6pu74wc?autoplay=1");
+        }
+      }
+  };
+
+
+</script>
+<body>
+    <iframe 
+        style="width: 100%; height: 100%"
+        src="https://antmedia.adistreamserver.live:5443/WebRTCApp/play.html?id=stream" 
+        frameborder="0" 
+        allowfullscreen>
+    </iframe>
+</body>
+</html>
