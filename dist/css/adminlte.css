@@ -19672,9 +19672,9 @@ html.maximized-card {
     box-shadow: none !important;
 }
 
-.text-sm .card-title {
+/* .text-sm .card-title {
     font-size: 1rem;
-}
+} */
 
 .text-sm .nav-link {
     padding: 0.4rem 0.8rem;
@@ -20513,9 +20513,9 @@ html.maximized-card {
     top: 0;
 }
 
-.text-sm .btn {
+/* .text-sm .btn {
     font-size: 0.875rem !important;
-}
+} */
 
 .btn-default {
     background-color: #f8f9fa;
