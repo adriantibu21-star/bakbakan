@@ -1,22 +1,19 @@
+<?php
+	require_once '../classes/UserBalance.php';
+
+	$userBalance = new UserBalance($conn, $_settings->userdata('id'), $_settings->userdata('type'));
+	$totalAgentBalanceUnderCurrentUser = $userBalance->getTotalAgentBalanceUnderCurrentUser();
+	$totalPlayerBalanceUnderCurrentUser = $userBalance->getTotalPlayerBalanceUnderCurrentUser();
+	$activePlayerUnderCurrrentUserCount = $userBalance->getActiveAgentUnderCurrrentUserCount();
+	$activeAgentUnderCurrrentUserCount = $userBalance->getActivePlayerUnderCurrrentUserCount();
+	$totalAgentCommissionUnderCurrentUser = $userBalance->getTotalAgentCommissionUnderCurrentUser();
+
+?>
+
+
 <?php if ($_settings->userdata('type') == 1 or $_settings->userdata('type') == 2) : ?>
-  <!-- <h6 style="color:white">
-    <?php if ($_settings->userdata('role') == 1) : ?>
-      <?php echo 'Home / Dashboard Financer Account' ?>
-    <?php endif; ?>
-    <?php if ($_settings->userdata('role') == 2) : ?>
-      <?php echo 'Home / Dashboard Operator' ?>
-    <?php endif; ?>
-    <?php if ($_settings->userdata('role') == 3) : ?>
-      <?php echo 'Home / Dashboard sub Operator' ?>
-    <?php endif; ?>
-    <?php if ($_settings->userdata('role') == 4) : ?>
-      <?php echo 'Home / Dashboard Master Agent' ?>
-    <?php endif; ?>
-    <?php if ($_settings->userdata('role') == 5) : ?>
-      <?php echo 'Home / Dashboard Player' ?>
-    <?php endif; ?>
-  </h6> -->
 	<nav aria-label="breadcrumb">
+		
 		<ol class="breadcrumb my-0 pb-0" style="background-color: transparent;">
 			<?php if ($_settings->userdata('role') == 1) : ?>
 			<li class="breadcrumb-item" style="font-size: 1rem"><a href="#">Home</a></li>
@@ -119,33 +116,6 @@
 								?>
 							</span>
 						</h2>
-					
-						<!-- <table>
-							<td valign="top">
-								<table style="color:white">
-								<tr>
-									<td>
-											<h7>TOTAL CURRENT WALLET</h7>
-									</td>
-								</tr>
-								<tr>
-									<td>
-												<br><h5>Your Points: <b><?php
-												$qry = $conn->query("SELECT * from users where id ='{$_settings->userdata('id')}' "); //$_settings->userdata('id')
-												$row = $qry->fetch_assoc();
-												echo number_format($row['amount'], 2);
-										?></b></h5>
-									</td>
-								</tr>
-								<tr>
-									<td>
-											<p></p>
-									</td>
-								</tr>
-								</table>
-							</td>
-						</table> -->
-
 					</div>
 				</div>
 			</div>
@@ -153,46 +123,20 @@
 				<div class="card">
 					<div class="card-body rounded text-white" style="background-color:#00bc8c  !important;">
 
-					<h5 class="card-title"><b>TOTAL CURRENT COMMISSION:</b> <span id="twallet" style="display:none;">0</span></h5>
+						<h5 class="card-title"><b>TOTAL CURRENT COMMISSION:</b> <span id="twallet" style="display:none;">0</span></h5>
 
-					<br/>
-					<br/>
-					<h2>
-						Your points: 
-						<span id="wallet">
-							<?php
-								$qry = $conn->query("SELECT com_amount_bal from users where id ='{$_settings->userdata('id')}' "); //$_settings->userdata('id')
-								$row = $qry->fetch_assoc();
-								echo number_format($row['com_amount_bal'], 2);
-							?>
-						</span>
-					</h2>
-
-					<!-- <table>
-						<td valign="top">
-						<table style="color:white">
-						<tr>
-							<td>
-									<h7>TOTAL CURRENT COMMISSION (<?php echo number_format($_settings->userdata('rate'), 2) ?>% per bet)</h7>
-							</td>
-						</tr>
-						<tr>
-							<td>
-									<br><h5>Your Commission: <b><?php
+						<br/>
+						<br/>
+						<h2>
+							Your points: 
+							<span id="wallet">
+								<?php
 									$qry = $conn->query("SELECT com_amount_bal from users where id ='{$_settings->userdata('id')}' "); //$_settings->userdata('id')
 									$row = $qry->fetch_assoc();
 									echo number_format($row['com_amount_bal'], 2);
-									?></b></h5>
-							</td>
-						</tr>
-						<tr>
-							<td>
-									<p></p>
-							</td>
-						</tr>
-						</table>
-					</td>
-					</table> -->
+								?>
+							</span>
+						</h2>
 
 					</div>
 				</div>
@@ -201,12 +145,12 @@
 				<div class="card" style=" background: linear-gradient(to top, #c4c5c7 0%, #dcdddf 52%, #ebebeb 100%);color: black;">
 					<div class="card-body rounded" style="color:black;">
 
-						<h5 class="card-title"><b>TOTAL PLAYER WALLET: ( 0 ActivePlayer) </b> <span id="twallet" style="display:none;">0</span></h5>
+						<h5 class="card-title"><b>TOTAL PLAYER WALLET: ( <?php echo $activePlayerUnderCurrrentUserCount ?> ActivePlayer) </b> <span id="twallet" style="display:none;">0</span></h5>
 
 						<br/>
 						<br/>
 						<h2>
-							<span>( 0.0 )</span>
+							<span><?php echo $totalPlayerBalanceUnderCurrentUser ?></span>
 						</h2>
 					</div>
 				</div>
@@ -215,12 +159,12 @@
 				<div class="card" style=" background: linear-gradient(to top, #c4c5c7 0%, #dcdddf 52%, #ebebeb 100%);color: black;">
 					<div class="card-body rounded" style="color:black;">
 
-						<h5 class="card-title"><b>TOTAL AGENT WALLET: ( 0 ActiveAgent) </b> <span id="twallet" style="display:none;">0</span></h5>
+						<h5 class="card-title"><b>TOTAL AGENT WALLET: ( <?php echo $activeAgentUnderCurrrentUserCount ?> Active Agent) </b> <span id="twallet" style="display:none;">0</span></h5>
 
 						<br/>
 						<br/>
 						<h2>
-							<span>( 0.0 )</span>
+							<span><?php echo $totalAgentBalanceUnderCurrentUser ?></span>
 						</h2>
 					</div>
 				</div>
@@ -234,7 +178,7 @@
 						<br/>
 						<br/>
 						<h2>
-							<span>( 0.0 )</span>
+							<span><?php echo $totalAgentCommissionUnderCurrentUser ?></span>
 						</h2>
 					</div>
 				</div>
