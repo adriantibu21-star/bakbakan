@@ -23,4 +23,4 @@ RewriteRule ^(.*)$ /index.php/$1 [L]
 
 Options -Indexes
 
-Header set Access-Control-Allow-Origin "internationalslasher.live"
+Header set Access-Control-Allow-Origin "internationalslasher.live" 
