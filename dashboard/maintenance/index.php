@@ -145,7 +145,7 @@
 				<div class="card" style=" background: linear-gradient(to top, #c4c5c7 0%, #dcdddf 52%, #ebebeb 100%);color: black;">
 					<div class="card-body rounded" style="color:black;">
 
-						<h5 class="card-title"><b>TOTAL PLAYER WALLET: ( <?php echo $activePlayerUnderCurrrentUserCount ?> ActivePlayer) </b> <span id="twallet" style="display:none;">0</span></h5>
+						<h5 class="card-title"><b>TOTAL PLAYER WALLET: ( <?php echo $activePlayerUnderCurrrentUserCount ?> Active Player) </b> <span id="twallet" style="display:none;">0</span></h5>
 
 						<br/>
 						<br/>
