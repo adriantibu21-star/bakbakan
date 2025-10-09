@@ -33,8 +33,8 @@
 	.content-color {
 		background-color: black;
 	}
-	th, td {
-		font-size: 20px;
+	table.dataTable th, table.dataTable td {
+		padding: 0.75rem !important;
 	}
 </style>
 
@@ -51,7 +51,7 @@
 			<div class="col-md-12">
 				<form action="" method="POST">                
 					<div class="input-group input-group-lg">
-						<input type="text" name="search" class="form-control" placeholder="Search Username">
+						<input type="text" name="search" class="form-control" id="searchUsername" placeholder="Search Username">
 						<span class="input-group-append">
 							<button type="submit" class="btn btn-info btn-sm ">
 								<i class="fa fa-search"></i>
@@ -138,10 +138,18 @@
 		})
 
 
+		$('#example').DataTable({
+			lengthChange: false,
+			dom: 'lrtip',
+			stateSave: true
+		});
 
-		$('#example').DataTable( {
-                stateSave: true
-                } );
+		$('#searchUsername').on('keyup', function() {
+			console.log("Keyup",$(this).val())
+			var searchValue = $(this).val();
+			$('#example').find('input[type="search"]').val(searchValue);
+			$('#example').DataTable().draw();
+		});
 	})
 
 	function delete_user($id){
