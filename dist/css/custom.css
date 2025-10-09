@@ -208,6 +208,17 @@ nav.navbar-dark{
     color: rgb(226, 226, 226) !important;
     background-color: rgb(85, 85, 85) !important;
 }
+
+.card-v2{
+    background-color: white !important;
+    margin-left: 2% !important;
+    margin-right: 2% !important;
+}
+.card-v2 input,.card select,.card textarea, .custom-file label{  
+    color: #495057 !important;
+    background-color: #fff !important;
+}
+
 .table-hover tbody tr:hover {
     color: #000000;
     background-color: rgba(241, 241, 241, 0.692);
