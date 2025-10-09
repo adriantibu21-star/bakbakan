@@ -123,7 +123,11 @@
 				<div class="card">
 					<div class="card-body rounded text-white" style="background-color:#00bc8c  !important;">
 
-						<h5 class="card-title"><b>TOTAL CURRENT COMMISSION: </b>(<?php echo number_format($_settings->userdata('rate'), 2) ?>% per bet ) <span id="twallet" style="display:none;">0</span></h5>
+						<h5 class="card-title"><b>TOTAL CURRENT COMMISSION: </b> 
+							<span class="text-bold" style="color: #d34242ff;">
+								 (<?php echo number_format($_settings->userdata('rate'), 2) ?>% per bet ) 
+							</span>
+						</h5>
 
 						<br/>
 						<br/>
