@@ -309,16 +309,32 @@ Class Master extends DBConnection {
 	}
 
 	function save_withdrawals1(){
-		extract($_POST);
-		//$agentid=$_settings->userdata('id');
-		$data = "";
-		foreach($_POST as $k =>$v){
-			if(!in_array($k,array('id'))){
-				$v = addslashes($v);
-				if(!empty($data)) $data .=",";
-				$data .= " `{$k}`='{$v}' ";
+		// extract($_POST);
+		// //$agentid=$_settings->userdata('id');
+		// $data = "";
+		// foreach($_POST as $k =>$v){
+		// 	if(!in_array($k,array('id'))){
+		// 		$v = addslashes($v);
+		// 		if(!empty($data)) $data .=",";
+		// 		$data .= " `{$k}`='{$v}' ";
+		// 	}
+		// }
+
+		$cleaned_post = [];
+		$prefix = "cashout-";
+		$prefix_length = strlen($prefix);
+
+		foreach ($_POST as $key => $value) {
+			if (substr($key, 0, $prefix_length) === $prefix) {
+				$new_key = substr($key, $prefix_length);
+				$cleaned_post[$new_key] = $value;
+			} else {
+				$cleaned_post[$key] = $value;
 			}
 		}
+		$_POST = $cleaned_post; 
+    	extract($_POST);
+
 		//check if userid is empty
 		if(empty($user_id)){
 			$resp['status'] = 'failed';
