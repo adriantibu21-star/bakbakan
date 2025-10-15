@@ -4,8 +4,8 @@
 	$userBalance = new UserBalance($conn, $_settings->userdata('id'), $_settings->userdata('type'));
 	$totalAgentBalanceUnderCurrentUser = $userBalance->getTotalAgentBalanceUnderCurrentUser();
 	$totalPlayerBalanceUnderCurrentUser = $userBalance->getTotalPlayerBalanceUnderCurrentUser();
-	$activePlayerUnderCurrrentUserCount = $userBalance->getActiveAgentUnderCurrrentUserCount();
-	$activeAgentUnderCurrrentUserCount = $userBalance->getActivePlayerUnderCurrrentUserCount();
+	$activePlayerUnderCurrrentUserCount = $userBalance->getActivePlayerUnderCurrrentUserCount();
+	$activeAgentUnderCurrrentUserCount = $userBalance->getActiveAgentUnderCurrrentUserCount();
 	$totalAgentCommissionUnderCurrentUser = $userBalance->getTotalAgentCommissionUnderCurrentUser();
 
 ?>
