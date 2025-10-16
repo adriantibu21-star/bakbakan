@@ -87,13 +87,13 @@
                             				<td><span class="badge"><?php echo date("m-d-Y H:i", strtotime($row['date_created'])) ?></span></td>
 
 								<?php if($row['type'] == 1): ?>
-                                    					<?php $bal = $bal + $row['amount']?>
+									<?php $bal = $bal + $row['amount']?>
 									<td><span class="badge">Cash-In</span></td>
 								<?php elseif($row['type'] == 2): ?>
-                                    					<?php $bal = $bal - $row['amount']?>
+									<?php $bal = $bal - $row['amount']?>
 									<td><span class="badge">Cash-Out</span></td>
 								<?php elseif($row['type'] == 3): ?>
-                                    					<?php $bal = $bal + $row['amount']?>
+									<?php $bal = $bal + $row['amount']?>
 									<td><span class="badge">Commission</span></td>
 								<?php elseif($row['type'] == 4): ?>
 									<?php $bal = $bal + $row['amount']?>

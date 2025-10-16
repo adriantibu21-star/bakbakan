@@ -120,7 +120,7 @@
 									<td class="text-center">
 										<a class="btn btn-danger btn-xs user-load-btn" data-user-id="<?php echo $player['id']?>">Load</a>
 										<a class="btn btn-primary btn-xs user-withdraw-load-btn" data-user-id="<?php echo $player['id']?>">Withdraw Load</a>
-										<a class="btn btn-success btn-xs" href="?page=user/view_history_player&id=<?php echo $player['id'] ?>">History</a>
+										<a class="btn btn-success btn-xs user-history-btn" data-user-id="<?php echo $player['id']?>">History</a>
 
 										<a class="btn btn-info btn-xs" href="ColorGameBet.php?un=ZGc4OUEzUXM=&amp;ui=QlZsaVVpRXVzdz09">ColorGame Bet</a>
 										<a class="btn btn-warning  btn-xs" href="PlayerSummary?un=ZGc4OUEzUXM=&amp;ui=QlZsaVVpRXVzdz09">Summary</a>
@@ -150,9 +150,8 @@
 <div class="modal fade" id="cashin-modal">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content">
-			<div class="modal-header">
+			<div class="modal-header" style="display: block;">
 
-				<div class="row mb-2">
 					<div class="row">
 						<div class="col-sm-12">
 							<h1>Load Points <span class="text-danger">( 0.00 )</span></h1>
@@ -160,14 +159,13 @@
 					</div>
 					<div class="row">
 						<div class="col-sm-12">
-							<ol class="breadcrumb float-sm-right mb-0">
+							<ol class="breadcrumb float-sm-left mb-0">
 								<li class="breadcrumb-item breadcrumb-item-cashin active"><a href="/Portal/testdashboard">Dashboard</a></li>
 								<li class="breadcrumb-item breadcrumb-item-cashin "><a href="/Portal/testactiveplayer">All Players</a></li>
 								<li class="breadcrumb-item breadcrumb-item-cashin active">Load Points</li>
 							</ol>
 						</div>
 					</div>
-				</div>
 			</div>
 			<div class="modal-body" style="color:black">
 
@@ -255,9 +253,8 @@
 <div class="modal fade" id="cashout-modal">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content">
-			<div class="modal-header">
+			<div class="modal-header" style="display: block;">
 
-				<div class="row mb-2">
 					<div class="row">
 						<div class="col-sm-12">
 							<h1>Withdraw Points <span class="text-danger">( 0.00 )</span></h1>
@@ -265,14 +262,13 @@
 					</div>
 					<div class="row">
 						<div class="col-sm-12">
-							<ol class="breadcrumb float-sm-right mb-0">
+							<ol class="breadcrumb float-sm-left mb-0">
 								<li class="breadcrumb-item breadcrumb-item-cashin active"><a href="/Portal/testdashboard">Dashboard</a></li>
 								<li class="breadcrumb-item breadcrumb-item-cashin "><a href="/Portal/testactiveplayer">All Players</a></li>
 								<li class="breadcrumb-item breadcrumb-item-cashin active">Withdraw Points</li>
 							</ol>
 						</div>
 					</div>
-				</div>
 			</div>
 			<div class="modal-body" style="color:black">
 
@@ -356,8 +352,97 @@
 	</div>
 </div>
 
+<!-- History Modal -->
+<div class="modal fade" id="user-history-modal">
+	<div class="modal-dialog modal-xl modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="display: block;">
+
+					<div class="row">
+						<div class="col-sm-12">
+							<h1>Bet History of <span class="text-danger user-history-username"></span></h1>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<ol class="breadcrumb float-sm-left mb-0">
+								<li class="breadcrumb-item breadcrumb-item-cashin active"><a href="/Portal/testdashboard">Dashboard</a></li>
+								<li class="breadcrumb-item breadcrumb-item-cashin active">Bet History</li>
+							</ol>
+						</div>
+					</div>
+			</div>
+			<div class="modal-body" style="color:black">
+
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card card-success">
+							<div class="card-header">
+								<h3 class="card-title">  
+									<span> Current Points of </span>
+									<span class="user-history-username"></span>: 
+									(<span id="user-history-current-points"></span>)
+								</h3>
+								<div class="card-tools">
+									<button type="button" class="btn btn-lg btn-dark" data-dismiss="modal">BACK</button>
+								</div>
+							</div>
+							<div class="card-body table-responsive p-0">
+								<div class="card-body">
+
+									<table class="table table-striped table-head-fixed text-nowrap table-dark" id="user-bet-history">
+										<thead class="text-center">
+											<tr>
+												<th>Username</th>
+												<th>Date</th>
+												<th>Fight #- Event</th>
+												<th>Meron/Pula</th>
+												<th>Wala/Asul</th>
+												<th>Draw</th>
+												<th>Result</th>
+												<th>Earned</th>
+												<th>Balance</th>
+											</tr>
+										</thead>
+										<tbody>
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+                            <!-- /.card-body -->
+							<div class="card-footer text-right ">
+		
+							</div> 
+                            <!-- /.card-footer -->
+
+                        </div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
 <script>
 	$(document).ready(function(){
+
+		var userListTable = $('#example').DataTable({
+			lengthChange: false,
+			dom: 'lrtip',
+			stateSave: true
+		});
+		
+		$('#searchUsername').val('');
+		userListTable.search('').draw();
+
+        $('#searchUsername').on('keyup', function() {
+            var searchValue = $(this).val();
+            userListTable.search(searchValue).draw();
+        });
+
 		$('.convert_data').click(function(){
 			uni_modal("<i class='fa fa-redo'></i> Confirmation",'user/convert_user.php?id='+$(this).attr('data-id'))
     	})
@@ -371,21 +456,9 @@
 			_conf("Are you sure to tag user as Inactive?","deactivate_user",[$(this).attr('data-id')])
 		})
 
-
 		$('.view_history').click(function(){
 			uni_modal("<i class='fa fa-history'></i> History" ,'user/view_history?id='+$(this).attr('data-id'))
 		})
-
-		var userListTable = $('#example').DataTable({
-			lengthChange: false,
-			dom: 'lrtip',
-			stateSave: true
-		});
-
-        $('#searchUsername').on('keyup', function() {
-            var searchValue = $(this).val();
-            userListTable.search(searchValue).draw();                     // <-- REMOVE THIS LINE
-        });
 
 		$('.user-load-btn').click(function(){
 			clear_modal_values();
@@ -469,6 +542,72 @@
 				}
 			});
 			$('#cashout-modal').modal('show');
+		});
+
+		$('.user-history-btn').click(function(){
+			var userId = $(this).data('user-id');
+			var beginningBalanceData;
+			var userName;
+
+			console.log("user-history-btn",userId);
+			$.ajax({
+				url: _base_url_ + "classes/UserInfo.php?f=get_user_data",
+				method: "POST",
+				data: { user_id: userId },
+				dataType: "json",
+				success: function(data){
+					if(data.status == 'success'){
+						set_history_modal_values(data.content);
+						userName = data.content.username;
+					}else{
+						alert_toast("An error occurred.",'error');
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					console.log(errorThrown);
+					alert_toast("An error occurred.",'error');
+				}
+			});
+			
+			$.ajax({
+				url: _base_url_ + "classes/BetInfo.php?f=get_initial_balance_of_user",
+				method: "POST",
+				data: { user_id: userId },
+				dataType: "json",
+				success: function(data){
+					if(data.status == 'success'){
+						beginningBalanceData = data.content;
+
+						$.ajax({
+							url: _base_url_ + "classes/BetInfo.php?f=get_bet_history_of_user",
+							method: "POST",
+							data: { user_id: userId },
+							dataType: "json",
+							success: function(data){
+								if(data.status == 'success'){
+									console.log("bet history",data.content);
+									set_bet_history_table(data.content,beginningBalanceData,userName);
+								}else{
+									alert_toast("An error occurred.",'error');
+								}
+							},
+							error: function(jqXHR, textStatus, errorThrown){
+								console.log(errorThrown);
+								alert_toast("An error occurred.",'error');
+							}
+						});
+
+					}else{
+						alert_toast("An error occurred.",'error');
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					console.log(errorThrown);
+					alert_toast("An error occurred.",'error');
+				}
+			});
+			
+			$('#user-history-modal').modal('show');
 		});
 
 		$('#loading-form').submit(function(e){
@@ -610,6 +749,11 @@
 		$('#cashout-user_id').val(data.id);
 	}
 
+	function set_history_modal_values(data){
+		$('.user-history-username').text(data.username);
+		$('#user-history-current-points').text(data.amount);
+	}
+
 	function set_cashout_history_table(data){
     	$('#cashout-user-history tbody').empty();
 
@@ -626,6 +770,97 @@
 			row += '</tr>';
 			$('#cashout-user-history tbody').append(row);
 		}
+		
+	}
+
+	function set_bet_history_table(data, beginningBalanceData,userName){
+    	$('#user-bet-history tbody').empty();
+		let bal = 0;
+		let beginning_row;
+
+		if (beginningBalanceData && beginningBalanceData.length > 0) {
+			bal += Number(beginningBalanceData[0].amount);
+
+			beginning_row = '<tr>';
+			beginning_row += '<td class="">'+userName+'</td>';
+			beginning_row += '<td><span class="badge">' + beginningBalanceData[0].ending_asof + '</span></td>';
+			beginning_row += '<td>' + beginningBalanceData[0].type + '</td>';
+			beginning_row += '<td>' + parseFloat(beginningBalanceData[0].red_amount || 0).toFixed(2) + '</td>';
+			beginning_row += '<td>' + parseFloat(beginningBalanceData[0].blue_amount || 0).toFixed(2) + '</td>';
+			beginning_row += '<td>' + parseFloat(beginningBalanceData[0].yellow_amount || 0).toFixed(2) + '</td>';
+			beginning_row += '<td><span class="badge badge-light">N/A</span></td>';
+			beginning_row += '<td>' + beginningBalanceData[0].amount + '</td>';
+			beginning_row += '<td>' + beginningBalanceData[0].amount + '</td>';
+			beginning_row += '</tr>';
+		}
+		
+		for (var i = 0; i < data.length; i++) {
+			let typeColumnContent = '';
+			let amountDisplay = Number(data[i].amount).toFixed(2);
+			const amount = parseFloat(data[i].amount);
+			const type = data[i].type;
+			
+			if (data[i].type === 1) {
+				bal += amount;
+				console.log("Bal",bal);
+				typeColumnContent = 'Cash-In';
+			} else if (data[i].type === 2) {
+				bal -= amount;
+				amountDisplay = '-' + amountDisplay;
+				typeColumnContent = 'Cash-Out';
+			} else if (data[i].type === 3) {
+				bal += amount;
+				typeColumnContent = 'Commission';
+			} else {
+				bal += amount;
+				typeColumnContent = data[i].drawno;
+			}
+			
+			let winnerBadge;
+			const winner = String(data[i].winner);
+			if (winner === '1') {
+				winnerBadge = '<span class="badge badge-danger">Meron/Pula</span>';
+			} else if (winner === '2') {
+				winnerBadge = '<span class="badge badge-primary">Wala/Asul</span>';
+			} else if (winner === '3') {
+				winnerBadge = '<span class="badge badge-success">Draw</span>';
+			} else if (winner === '4') {
+				winnerBadge = '<span class="badge badge-light">Cancelled</span>';
+			} else {
+				winnerBadge = '<span class="badge badge-light">N/A</span>';
+			}
+
+			let row = '<tr>';
+			row += '<td class="">'+userName+'</td>'; // Index
+			row += '<td><span class="badge">' + data[i].date_created + '</span></td>';
+			row += '<td>' + typeColumnContent + '</td>'; // Type / Drawno
+			
+			// Red, Blue, Yellow Amounts (formatted to 2 decimal places)
+			row += '<td>' + parseFloat(data[i].red_amount || 0).toFixed(2) + '</td>';
+			row += '<td>' + parseFloat(data[i].blue_amount || 0).toFixed(2) + '</td>';
+			row += '<td>' + parseFloat(data[i].yellow_amount || 0).toFixed(2) + '</td>';
+
+			row += '<td>' + winnerBadge + '</td>'; // Winner Status
+			
+			let winnerStatus ='';
+			// Type (1: Cash-In, 2: Cash-Out, 3: Commission, 4: Draw)
+			if (data[i].type === 4 && data[i].amount < 0 ) {
+				winnerStatus = '<span class="badge badge-danger">Lose</span>';
+			}else if (data[i].type === 4 && data[i].amount > 0 ) {
+				winnerStatus = '<span class="badge badge-success">Win</span>';
+			}
+			
+			// Amount (with negative sign for Cash-Out, formatted to 2 decimal places)
+			row += '<td>' + amountDisplay +' ' +  winnerStatus + '</td>';
+
+			// Running Balance (formatted to 2 decimal places)
+			row += '<td>' + bal.toFixed(2) + '</td>';
+
+			row += '</tr>';
+
+			$('#user-bet-history tbody').prepend(row);
+		}
+		$('#user-bet-history tbody').append(beginning_row);
 		
 	}
 
