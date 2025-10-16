@@ -463,7 +463,6 @@
 		$('.user-load-btn').click(function(){
 			clear_modal_values();
 			var userId = $(this).data('user-id');
-			console.log("load user",userId);
 			$.ajax({
 				url: _base_url_ + "classes/UserInfo.php?f=get_user_data",
 				method: "POST",
@@ -505,7 +504,6 @@
 		$('.user-withdraw-load-btn').click(function(){
 			clear_modal_values();
 			var userId = $(this).data('user-id');
-			console.log("withdrawal user",userId);
 			$.ajax({
 				url: _base_url_ + "classes/UserInfo.php?f=get_user_data",
 				method: "POST",
@@ -549,7 +547,6 @@
 			var beginningBalanceData;
 			var userName;
 
-			console.log("user-history-btn",userId);
 			$.ajax({
 				url: _base_url_ + "classes/UserInfo.php?f=get_user_data",
 				method: "POST",
@@ -585,7 +582,6 @@
 							dataType: "json",
 							success: function(data){
 								if(data.status == 'success'){
-									console.log("bet history",data.content);
 									set_bet_history_table(data.content,beginningBalanceData,userName);
 								}else{
 									alert_toast("An error occurred.",'error');
@@ -802,7 +798,6 @@
 			
 			if (data[i].type === 1) {
 				bal += amount;
-				console.log("Bal",bal);
 				typeColumnContent = 'Cash-In';
 			} else if (data[i].type === 2) {
 				bal -= amount;
