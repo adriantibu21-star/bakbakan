@@ -94,7 +94,12 @@
 						<th>Active</th>
 						<th>Agent </th>
 						<th>Points</th>
-						<th></th>
+						<th>Actions</th>
+						
+
+						<?php if($_settings->userdata('type') == 1): ?>
+							<th>Admin Actions</th>
+						<?php endif; ?>
 					</tr>
 				</thead>
 				<tbody>
@@ -118,14 +123,28 @@
 									<td><?php echo $player['type'] == 2 ? "Agent" : "Not an Agent"; ?></td>
 									<td><?php echo $player['amount']; ?></td>
 									<td class="text-center">
-										<a class="btn btn-danger btn-xs user-load-btn" data-user-id="<?php echo $player['id']?>">Load</a>
-										<a class="btn btn-primary btn-xs user-withdraw-load-btn" data-user-id="<?php echo $player['id']?>">Withdraw Load</a>
-										<a class="btn btn-success btn-xs user-history-btn" data-user-id="<?php echo $player['id']?>">History</a>
+										<a class="btn btn-danger btn-xs mb-1 user-load-btn" data-user-id="<?php echo $player['id']?>">Load</a>
+										<a class="btn btn-primary btn-xs mb-1 user-withdraw-load-btn" data-user-id="<?php echo $player['id']?>">Withdraw Load</a>
+										<a class="btn btn-success btn-xs mb-1 user-history-btn" data-user-id="<?php echo $player['id']?>">History</a>
 
-										<a class="btn btn-info btn-xs" href="ColorGameBet.php?un=ZGc4OUEzUXM=&amp;ui=QlZsaVVpRXVzdz09">ColorGame Bet</a>
-										<a class="btn btn-warning  btn-xs" href="PlayerSummary?un=ZGc4OUEzUXM=&amp;ui=QlZsaVVpRXVzdz09">Summary</a>
-										<button class="deactivate_btn btn btn-dark btn-xs" id="288490">Set as Agent</button>
+										<?php if($_settings->userdata('role') !== 4): ?>
+											<button class="btn btn-dark btn-xs mb-1 convert_data" href="javascript:void(0)" data-id="<?php echo $player['id'] ?>">Set as Agent</button>
+										<?php endif; ?>
 									</td>  
+
+									<?php if($_settings->userdata('type') == 1): ?>
+										<td class="text-center">
+											<a class="btn btn-info btn-xs mb-1" href="?page=user/manage_user&id=<?php echo $player['id'] ?>">Edit</a>
+											<?php if($player['active'] == 'N' or $player['active'] == 'F'): ?>
+												<a class="btn btn-success btn-xs mb-1 activate_data" href="javascript:void(0)" data-id="<?php echo $player['id'] ?>">Activate</a>
+											<?php endif; ?> 
+											<?php if($player['active'] == 'Y'): ?>
+												<a class="btn btn-warning btn-xs mb-1 deactivate_data" href="javascript:void(0)" data-id="<?php echo $player['id'] ?>">Deactivate</a>
+											<?php endif; ?> 
+
+											<a class="btn btn-danger btn-xs mb-1 delete_data" href="javascript:void(0)" data-id="<?php echo $player['id'] ?>">Delete</a>
+										</td>  
+									<?php endif; ?>
 								</tr>
 								<?php
 							}
@@ -138,7 +157,12 @@
 							<th>Active</th>
 							<th>Agent </th>
 							<th>Points</th>
-							<th></th>
+							<th>Actions</th>
+							
+
+							<?php if($_settings->userdata('type') == 1): ?>
+								<th>Admin Actions</th>
+							<?php endif; ?>
 						</tr>
 					</tfoot>
 			</table>
@@ -443,16 +467,16 @@
             userListTable.search(searchValue).draw();
         });
 
-		$('.convert_data').click(function(){
+		$(document).on('click', '.convert_data', function(){
 			uni_modal("<i class='fa fa-redo'></i> Confirmation",'user/convert_user.php?id='+$(this).attr('data-id'))
     	})
-		$('.delete_data').click(function(){
+		$(document).on('click', '.delete_data', function(){
 			_conf("Are you sure to delete this User permanently?","delete_user",[$(this).attr('data-id')])
 		})
-		$('.activate_data').click(function(){
+		$(document).on('click', '.activate_data', function(){
 			_conf("Are you sure to tag user as Active?","activate_user",[$(this).attr('data-id')])
 		})
-		$('.deactivate_data').click(function(){
+		$(document).on('click', '.deactivate_data', function(){
 			_conf("Are you sure to tag user as Inactive?","deactivate_user",[$(this).attr('data-id')])
 		})
 
@@ -460,7 +484,7 @@
 			uni_modal("<i class='fa fa-history'></i> History" ,'user/view_history?id='+$(this).attr('data-id'))
 		})
 
-		$('.user-load-btn').click(function(){
+		$(document).on('click', '.user-load-btn', function(){
 			clear_modal_values();
 			var userId = $(this).data('user-id');
 			$.ajax({
@@ -501,7 +525,7 @@
 			$('#cashin-modal').modal('show');
 		});
 
-		$('.user-withdraw-load-btn').click(function(){
+		$(document).on('click', '.user-withdraw-load-btn', function(){
 			clear_modal_values();
 			var userId = $(this).data('user-id');
 			$.ajax({
@@ -542,7 +566,7 @@
 			$('#cashout-modal').modal('show');
 		});
 
-		$('.user-history-btn').click(function(){
+		$(document).on('click', '.user-history-btn', function(){
 			var userId = $(this).data('user-id');
 			var beginningBalanceData;
 			var userName;
@@ -779,7 +803,7 @@
 
 			beginning_row = '<tr>';
 			beginning_row += '<td class="">'+userName+'</td>';
-			beginning_row += '<td><span class="badge">' + beginningBalanceData[0].ending_asof + '</span></td>';
+			beginning_row += '<td>' + beginningBalanceData[0].ending_asof + '</span></td>';
 			beginning_row += '<td>' + beginningBalanceData[0].type + '</td>';
 			beginning_row += '<td>' + parseFloat(beginningBalanceData[0].red_amount || 0).toFixed(2) + '</td>';
 			beginning_row += '<td>' + parseFloat(beginningBalanceData[0].blue_amount || 0).toFixed(2) + '</td>';
@@ -827,7 +851,7 @@
 
 			let row = '<tr>';
 			row += '<td class="">'+userName+'</td>'; // Index
-			row += '<td><span class="badge">' + data[i].date_created + '</span></td>';
+			row += '<td><span>' + data[i].date_created + '</span></td>';
 			row += '<td>' + typeColumnContent + '</td>'; // Type / Drawno
 			
 			// Red, Blue, Yellow Amounts (formatted to 2 decimal places)
