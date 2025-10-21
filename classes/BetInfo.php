@@ -11,6 +11,96 @@ class BetInfo {
 
     // AJAX Handling
 
+    public function getCommWithdrawHistoryOfUserAjax($userId, $ending_asof, $ending_amount){
+        $stmt = $this->conn->prepare("
+            select '{$ending_asof}' date_created, '{$ending_amount}' amount, 0 as type, '' accttyp, '' processby
+            UNION ALL
+            select date_created,amount,1 as type,
+            (select
+            concat(case
+                when role = 1 then 'Financer Account'
+                when role = 2 then 'Operator'
+                when role = 3 then 'Sub-Operator'
+                when role = 4 then 'Master Agent'
+                when role = 5 then 'Player'
+                else ''
+            end,' - ', username)
+            from users where id = a.agent_id) accttyp,
+            (select username from users where id = a.agent_id) processby from loading a where active ='N' and user_id = '{$userId}' and date_created >= '{$ending_asof}'
+            UNION ALL
+            select date_created,amount,2 as type,
+            (select
+            concat(case
+                when role = 1 then 'Financer Account'
+                when role = 2 then 'Operator'
+                when role = 3 then 'Sub-Operator'
+                when role = 4 then 'Master Agent'
+                when role = 5 then 'Player'
+                else ''
+            end,' - ', username)
+            from users where id = a.agent_id) accttyp,
+            (select username from users where id = a.agent_id) processby from withdrawals a where active ='N' and user_id = '{$userId}' and date_created >= '{$ending_asof}'
+            UNION ALL
+            select date_created,amount,5 as type,
+            (select
+            concat(case
+                when role = 1 then 'Financer Account'
+                when role = 2 then 'Operator'
+                when role = 3 then 'Sub-Operator'
+                when role = 4 then 'Master Agent'
+                when role = 5 then 'Player'
+                else ''
+            end,' - ', username)
+            from users where id = a.user_id) accttyp,
+            (select username from users where id = a.agent_id) processby from loading a where active ='N' and agent_id = '{$userId}' and date_created >= '{$ending_asof}'
+            UNION ALL
+            select date_created,amount,6 as type,
+            (select
+            concat(case
+                when role = 1 then 'Financer Account'
+                when role = 2 then 'Operator'
+                when role = 3 then 'Sub-Operator'
+                when role = 4 then 'Master Agent'
+                when role = 5 then 'Player'
+                else ''
+            end,' - ', username)
+            from users where id = a.user_id) accttyp,
+            (select username from users where id = a.agent_id) processby from withdrawals a where active ='N' and agent_id = '{$userId}' and date_created >= '{$ending_asof}'
+
+            UNION ALL
+
+            select date_created, amount_converted as amount,3  as type,
+            (select
+            concat(case
+                when role = 1 then 'Financer Account'
+                when role = 2 then 'Operator'
+                when role = 3 then 'Sub-Operator'
+                when role = 4 then 'Master Agent'
+                when role = 5 then 'Player'
+                else ''
+            end,' - ', username)
+            from users where id = a.agent_id) accttyp,
+            (select username from users where id = a.agent_id) processby from coms_converted a where a.user_id = '{$userId}' and a.date_created >= '{$ending_asof}'
+            
+            UNION ALL
+
+            select date_created, (earnings-red_amount-blue_amount-yellow_amount) as amount, 4 as type,concat((select drawno from draws where id = a.drawid),'-', (select name from events where id = (select eventid from draws where id = a.drawid))) accttyp,'' processby from bets a where user_id = '{$userId}' and date_created >= '{$ending_asof}'
+            order by date_created asc, type
+        ");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $rows[] = $row;
+        }
+        
+        if (!empty($rows)) {
+            return ['status' => 'success', 'content' => $rows];
+        } else {
+            return ['status' => 'success', 'content' => []];
+        }
+    }
+
     public function getBetHistoryOfUserAjax($userId){
         $stmt = $this->conn->prepare("
             SELECT
@@ -158,6 +248,17 @@ if(isset($_GET['f'])){
     $resp = array();
 
     switch($functionName){
+        
+        case 'get_comm_withdraw_history_of_user':
+            if(isset($_POST['user_id'])){
+                $userId = $_POST['user_id'];
+                $ending_asof = $_POST['ending_asof'];
+                $amount = $_POST['amount'];
+                $resp = $betInfo->getCommWithdrawHistoryOfUserAjax($userId,$ending_asof,$amount);
+            } else {
+                $resp = ['status' => 'failed', 'err' => 'Missing user_id parameter.'];
+            }
+            break;
         
         case 'get_bet_history_of_user':
             if(isset($_POST['user_id'])){
