@@ -1131,7 +1131,7 @@
 				'<td>' + row.processby + '</td>' +
 			'</tr>';
 
-			$tbody.append(newRow);
+			$tbody.prepend(newRow);
 		});
 
     // Initialize DataTables after populating (if you are using DataTables)
