@@ -127,8 +127,8 @@
 									<td><?php echo $player['com_amount_bal']; ?></td>
 									<td><?php echo $player['rate']; ?>%</td>
 									<td class="text-center">
-										<a class="btn btn-danger btn-xs mb-1 agent-load-btn" data-agent-id="<?php echo $player['id']?>">Load</a>
-										<a class="btn btn-primary btn-xs mb-1 agent-withdraw-load-btn" data-agent-id="<?php echo $player['id']?>">Withdraw Load</a>
+										<a class="btn btn-danger btn-xs mb-1 agent-load-btn" data-logged-in-user-id="<?php echo $_settings->userdata('id')?>" data-agent-id="<?php echo $player['id']?>">Load</a>
+										<a class="btn btn-primary btn-xs mb-1 agent-withdraw-load-btn" data-logged-in-user-id="<?php echo $_settings->userdata('id')?>" data-agent-id="<?php echo $player['id']?>">Withdraw Load</a>
 										<a class="btn btn-xs mb-1 agent-set-comm-btn convert_data" style="color:white; background-color: #f012be! important" data-id="<?php echo $player['id']?>">Set Commission</a>
 										<a class="btn btn-warning btn-xs mb-1 agent-history-btn" data-agent-id="<?php echo $player['id']?>">History</a>
 										<a class="btn btn-dark btn-xs mb-1 agent-agent-list-btn" data-agent-id="<?php echo $player['id'] ?>">Agent</a>
@@ -183,7 +183,7 @@
 
 					<div class="row">
 						<div class="col-sm-12">
-							<h1>Load Points <span class="text-danger">( 0.00 )</span></h1>
+							<h1>Load Points <span class="text-danger" >(<span class="logged-in-agent-balance"></span>)</span></h1>
 						</div>
 					</div>
 					<div class="row">
@@ -286,7 +286,7 @@
 
 					<div class="row">
 						<div class="col-sm-12">
-							<h1>Withdraw Points <span class="text-danger">( 0.00 )</span></h1>
+							<h1>Withdraw Points <span class="text-danger" >(<span class="logged-in-agent-balance"></span>)</span></h1>
 						</div>
 					</div>
 					<div class="row">
@@ -618,6 +618,26 @@
 		$(document).on('click', '.agent-load-btn', function(){
 			clear_modal_values();
 			var userId = $(this).data('agent-id');
+			var loggedInUserId = $(this).data('logged-in-user-id');
+			
+			$.ajax({
+				url: _base_url_ + "classes/UserInfo.php?f=get_user_data",
+				method: "POST",
+				data: { user_id: loggedInUserId },
+				dataType: "json",
+				success: function(data){
+					if(data.status == 'success'){
+						$('.logged-in-agent-balance').text(data.content.amount);
+					}else{
+						alert_toast("An error occurred.",'error');
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					console.log(errorThrown);
+					alert_toast("An error occurred.",'error');
+				}
+			});
+			
 			$.ajax({
 				url: _base_url_ + "classes/UserInfo.php?f=get_user_data",
 				method: "POST",
@@ -659,13 +679,34 @@
 		$(document).on('click', '.agent-withdraw-load-btn', function(){
 			clear_modal_values();
 			var userId = $(this).data('agent-id');
+			var loggedInUserId = $(this).data('logged-in-user-id');
+			
 			$.ajax({
 				url: _base_url_ + "classes/UserInfo.php?f=get_user_data",
 				method: "POST",
-				data: { user_id: userId },
+				data: { user_id: loggedInUserId },
 				dataType: "json",
 				success: function(data){
 					if(data.status == 'success'){
+						$('.logged-in-agent-balance').text(data.content.amount);
+					}else{
+						alert_toast("An error occurred.",'error');
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					console.log(errorThrown);
+					alert_toast("An error occurred.",'error');
+				}
+			});
+			
+			$.ajax({
+				url: _base_url_ + "classes/UserInfo.php?f=get_user_data",
+				method: "POST",
+				data: { user_id: loggedInUserId },
+				dataType: "json",
+				success: function(data){
+					if(data.status == 'success'){
+
 						set_cashout_modal_values(data.content);
 					}else{
 						alert_toast("An error occurred.",'error');
