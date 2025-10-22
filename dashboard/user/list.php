@@ -59,7 +59,7 @@
 <nav aria-label="breadcrumb">
 	<ol class="breadcrumb my-0 pb-3" style="background-color: transparent;">
 		<li class="breadcrumb-item" style="font-size: 1rem"><a href="#">Home</a></li>
-		<li class="breadcrumb-item active" style="font-size: 1rem" aria-current="page">Active Player</li>
+		<li class="breadcrumb-item active" style="font-size: 1rem" aria-current="page">Active Agent</li>
 	</ol>
 </nav>
 
@@ -94,6 +94,8 @@
 						<th>Active</th>
 						<th>Agent </th>
 						<th>Points</th>
+						<th>Comm. Wallet</th>
+						<th>Comm. Rate</th>
 						<th>Actions</th>
 						
 
@@ -122,13 +124,15 @@
 									</td>
 									<td><?php echo $player['type'] == 2 ? "Agent" : "Not an Agent"; ?></td>
 									<td><?php echo $player['amount']; ?></td>
+									<td><?php echo $player['com_amount_bal']; ?></td>
+									<td><?php echo $player['rate']; ?>%</td>
 									<td class="text-center">
 										<a class="btn btn-danger btn-xs mb-1 agent-load-btn" data-agent-id="<?php echo $player['id']?>">Load</a>
 										<a class="btn btn-primary btn-xs mb-1 agent-withdraw-load-btn" data-agent-id="<?php echo $player['id']?>">Withdraw Load</a>
-										<a class="btn btn-info btn-xs mb-1 agent-withdraw-comm-btn" data-agent-id="<?php echo $player['id']?>">Withdraw Comm</a>
-										<a class="btn btn-xs mb-1 agent-set-comm-btn" style="color:white; background-color: #f012be! important" data-agent-id="<?php echo $player['id']?>">Set Commission</a>
-										<a class="btn btn-dark btn-xs mb-1 agent-agent-list-btn" data-id="<?php echo $player['id'] ?>">Agent</a>
-										<a class="btn btn-success btn-xs mb-1 agent-player-list-btn" data-id="<?php echo $player['id'] ?>">Player</a>
+										<a class="btn btn-xs mb-1 agent-set-comm-btn convert_data" style="color:white; background-color: #f012be! important" data-id="<?php echo $player['id']?>">Set Commission</a>
+										<a class="btn btn-warning btn-xs mb-1 agent-history-btn" data-agent-id="<?php echo $player['id']?>">History</a>
+										<a class="btn btn-dark btn-xs mb-1 agent-agent-list-btn" data-agent-id="<?php echo $player['id'] ?>">Agent</a>
+										<a class="btn btn-success btn-xs mb-1 agent-player-list-btn" data-agent-id="<?php echo $player['id'] ?>">Player</a>
 									</td>  
 
 									<?php if($_settings->userdata('type') == 1): ?>
@@ -150,20 +154,22 @@
 						}
 					?>  
 				</tbody>
-					<tfoot>
-						<tr>
-							<th>Username</th>
-							<th>Active</th>
-							<th>Agent </th>
-							<th>Points</th>
-							<th>Actions</th>
-							
+				<tfoot>
+					<tr>
+						<th>Username</th>
+						<th>Active</th>
+						<th>Agent </th>
+						<th>Points</th>
+						<th>Comm. Wallet</th>
+						<th>Comm. Rate</th>
+						<th>Actions</th>
+						
 
-							<?php if($_settings->userdata('type') == 1): ?>
-								<th>Admin Actions</th>
-							<?php endif; ?>
-						</tr>
-					</tfoot>
+						<?php if($_settings->userdata('type') == 1): ?>
+							<th>Admin Actions</th>
+						<?php endif; ?>
+					</tr>
+				</tfoot>
 			</table>
 		</div>
 	</div>
@@ -383,14 +389,14 @@
 
 					<div class="row">
 						<div class="col-sm-12">
-							<h1>Bet History of <span class="text-danger agent-history-username"></span></h1>
+							<h1>History of <span class="text-danger agent-history-username"></span></h1>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-sm-12">
 							<ol class="breadcrumb float-sm-left mb-0">
 								<li class="breadcrumb-item breadcrumb-item-cashin active"><a href="/Portal/testdashboard">Dashboard</a></li>
-								<li class="breadcrumb-item breadcrumb-item-cashin active">Bet History</li>
+								<li class="breadcrumb-item breadcrumb-item-cashin active">History</li>
 							</ol>
 						</div>
 					</div>
@@ -416,15 +422,12 @@
 									<table class="table table-striped table-head-fixed text-nowrap table-dark" id="agent-bet-history">
 										<thead class="text-center">
 											<tr>
-												<th>Username</th>
 												<th>Date</th>
-												<th>Fight #- Event</th>
-												<th>Meron/Pula</th>
-												<th>Wala/Asul</th>
-												<th>Draw</th>
-												<th>Result</th>
-												<th>Earned</th>
+												<th>Amount</th>
 												<th>Balance</th>
+												<th>Type</th>
+												<th>Account Type/Fight</th>
+												<th>Process By</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -449,23 +452,22 @@
 	</div>
 </div>
 
-<!-- Withdraw Comm Modal -->
-<div class="modal fade" id="withdraw-comm-modal">
+<!-- Agent List Modal -->
+<div class="modal fade" id="agent-agent-list-modal">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header" style="display: block;">
 
 					<div class="row">
 						<div class="col-sm-12">
-							<h1>Withdraw Points <span class="text-danger">( 0.00 )</span></h1>
+							<h1>Agent List of <span class="text-danger" id="agent-list-username"></span></h1>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-sm-12">
 							<ol class="breadcrumb float-sm-left mb-0">
 								<li class="breadcrumb-item breadcrumb-item-cashin active"><a href="/Portal/testdashboard">Dashboard</a></li>
-								<li class="breadcrumb-item breadcrumb-item-cashin "><a href="/Portal/testactiveplayer">All Players</a></li>
-								<li class="breadcrumb-item breadcrumb-item-cashin active">Withdraw Points</li>
+								<li class="breadcrumb-item breadcrumb-item-cashin active">Agent List</li>
 							</ol>
 						</div>
 					</div>
@@ -476,46 +478,84 @@
 					<div class="col-md-12">
 						<div class="card card-success">
 							<div class="card-header">
-								<h3 class="card-title">  <span> Withdraw Commission of </span><span id="withdraw-comm-agent-username"></span> (<span class="withdraw-comm-agent-balance"></span>)</h3>
+								<h3 class="card-title">  <span> Agent List </span></h3>
 								<div class="card-tools">
 									<button type="button" class="btn btn-lg btn-dark" data-dismiss="modal">BACK</button>
 								</div>
 							</div>
 							<div class="card-body table-responsive p-0">
 								<div class="card-body">
-
-									<div class="form-group row">
-										<h3 class="text-white">Agent COMM: <span class="text-danger withdraw-comm-agent-balance" ></span></h3>
-									</div>
-
-									<form action="" id="withdraw-comm-form">
-										<input type="hidden" name ="withdraw-comm-id" value="">  
-										<input type="hidden" name ="withdraw-comm-agent_id" value="<?php echo $_settings->userdata('id') ?>">  
-										<input type="hidden" name ="withdraw-comm-agent_code" value="<?php echo $curbal['password'] ?>"> 
-										<input type="hidden" name ="withdraw-comm-date_created" value="<?php echo date("Y-m-d H:i") ?>">
-        								<input type="hidden" name ="withdraw-comm-user_id" id="withdraw-comm-user_id" ?>
-
-										<div class="form-group row ">
-											<label class="col-sm-2 col-form-label" for="UserPoint_Points">Comm</label>
-											<div class="col-sm-10">
-                 								<input name="withdraw-comm-amount" id="withdraw-comm-amount" type="number" inputmode="numeric" pattern="[0-9]*" step="0.01" class="form-control form  rounded-0" placeholder="ENTER AMOUNT" value= <?php echo isset($amount) ? $amount : ''; ?> >
-											</div>
-										</div>
-
-										<button type="submit" value="submit" class="btn btn-danger btn-block mb-2" form="withdraw-comm-form" >
-											WITHDRAW
-										</button>
-									</form>
-
-									<table class="table table-striped table-head-fixed text-nowrap table-dark" id="withdraw-comm-agent-history">
+									<table class="table table-striped table-head-fixed text-nowrap table-dark" id="agent-list-table">
 										<thead class="text-center">
 											<tr>
-												<th>Withdraw By</th>
+												<th>Username</th>
+												<th>Role</th>
 												<th>Points</th>
-												<th>Date Withdraw</th>
-												<th>From</th>
-												<th>Notes</th>
-												<th>Current Balance</th>
+												<th>Comm. Wallet</th>
+												<th>Comm. Rate</th>
+											</tr>
+										</thead>
+										<tbody>
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+                            <!-- /.card-body -->
+							<div class="card-footer text-right ">
+		
+							</div> 
+                            <!-- /.card-footer -->
+
+                        </div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Player List Modal -->
+<div class="modal fade" id="agent-player-list-modal">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="display: block;">
+
+					<div class="row">
+						<div class="col-sm-12">
+							<h1>Player List of <span class="text-danger" id="player-list-username"></span></h1>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<ol class="breadcrumb float-sm-left mb-0">
+								<li class="breadcrumb-item breadcrumb-item-cashin active"><a href="/Portal/testdashboard">Dashboard</a></li>
+								<li class="breadcrumb-item breadcrumb-item-cashin active">Player List</li>
+							</ol>
+						</div>
+					</div>
+			</div>
+			<div class="modal-body" style="color:black">
+
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card card-success">
+							<div class="card-header">
+								<h3 class="card-title">  <span> Player List </span></h3>
+								<div class="card-tools">
+									<button type="button" class="btn btn-lg btn-dark" data-dismiss="modal">BACK</button>
+								</div>
+							</div>
+							<div class="card-body table-responsive p-0">
+								<div class="card-body">
+									<table class="table table-striped table-head-fixed text-nowrap table-dark" id="player-list-table">
+										<thead class="text-center">
+											<tr>
+												<th>Username</th>
+												<th>Role</th>
+												<th>Points</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -682,32 +722,14 @@
 			});
 			
 			$.ajax({
-				url: _base_url_ + "classes/BetInfo.php?f=get_initial_balance_of_user",
+				url: _base_url_ + "classes/BetInfo.php?f=get_bet_history_of_agent",
 				method: "POST",
 				data: { user_id: userId },
 				dataType: "json",
 				success: function(data){
 					if(data.status == 'success'){
-						beginningBalanceData = data.content;
-
-						$.ajax({
-							url: _base_url_ + "classes/BetInfo.php?f=get_bet_history_of_user",
-							method: "POST",
-							data: { user_id: userId },
-							dataType: "json",
-							success: function(data){
-								if(data.status == 'success'){
-									set_bet_history_table(data.content,beginningBalanceData,userName);
-								}else{
-									alert_toast("An error occurred.",'error');
-								}
-							},
-							error: function(jqXHR, textStatus, errorThrown){
-								console.log(errorThrown);
-								alert_toast("An error occurred.",'error');
-							}
-						});
-
+						console.log(data.content);
+						set_agent_history_table(data.content);
 					}else{
 						alert_toast("An error occurred.",'error');
 					}
@@ -721,11 +743,8 @@
 			$('#agent-history-modal').modal('show');
 		});
 
-		$(document).on('click', '.agent-withdraw-comm-btn', function(){
+		$(document).on('click', '.agent-agent-list-btn', function(){
 			var userId = $(this).data('agent-id');
-			var beginningBalanceData;
-			var userName;
-
 			$.ajax({
 				url: _base_url_ + "classes/UserInfo.php?f=get_user_data",
 				method: "POST",
@@ -733,9 +752,7 @@
 				dataType: "json",
 				success: function(data){
 					if(data.status == 'success'){
-						console.log(data.content);
-						set_withdraw_comm_modal_values(data.content);
-						userName = data.content.username;
+						set_modal_values(data.content);
 					}else{
 						alert_toast("An error occurred.",'error');
 					}
@@ -747,36 +764,36 @@
 			});
 			
 			$.ajax({
-				url: _base_url_ + "classes/BetInfo.php?f=get_initial_balance_of_user",
+				url: _base_url_ + "classes/UserInfo.php?f=get_all_agents_under_agent",
+				method: "POST",
+				data: { user_id: userId},
+				dataType: "json",
+				success: function(data){
+					if(data.status == 'success'){
+						console.log(data.content);
+						set_agent_list_table(data.content);
+					}else{
+						alert_toast("An error occurred.",'error');
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					console.log(errorThrown);
+					alert_toast("An error occurred.",'error');
+				}
+			});
+			$('#agent-agent-list-modal').modal('show');
+		});
+
+		$(document).on('click', '.agent-player-list-btn', function(){
+			var userId = $(this).data('agent-id');
+			$.ajax({
+				url: _base_url_ + "classes/UserInfo.php?f=get_user_data",
 				method: "POST",
 				data: { user_id: userId },
 				dataType: "json",
 				success: function(data){
 					if(data.status == 'success'){
-						beginningBalanceData = data.content;
-
-						$.ajax({
-							url: _base_url_ + "classes/BetInfo.php?f=get_comm_withdraw_history_of_user",
-							method: "POST",
-							data: { 
-								user_id: userId,
-								ending_asof:beginningBalanceData[0].ending_asof,
-								amount:beginningBalanceData[0].amount
-							},
-							dataType: "json",
-							success: function(data){
-								if(data.status == 'success'){
-									set_comm_withdraw_history_table(data.content,beginningBalanceData,userName);
-								}else{
-									alert_toast("An error occurred.",'error');
-								}
-							},
-							error: function(jqXHR, textStatus, errorThrown){
-								console.log(errorThrown);
-								alert_toast("An error occurred.",'error');
-							}
-						});
-
+						set_modal_values(data.content);
 					}else{
 						alert_toast("An error occurred.",'error');
 					}
@@ -787,7 +804,25 @@
 				}
 			});
 			
-			$('#withdraw-comm-modal').modal('show');
+			$.ajax({
+				url: _base_url_ + "classes/UserInfo.php?f=get_all_players_under_agent",
+				method: "POST",
+				data: { user_id: userId},
+				dataType: "json",
+				success: function(data){
+					if(data.status == 'success'){
+						console.log(data.content);
+						set_player_list_table(data.content);
+					}else{
+						alert_toast("An error occurred.",'error');
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					console.log(errorThrown);
+					alert_toast("An error occurred.",'error');
+				}
+			});
+			$('#agent-player-list-modal').modal('show');
 		});
 
 		$('#loading-form').submit(function(e){
@@ -902,6 +937,9 @@
 		$('#cashin-agent-username').text(data.username);
 		$('#cashin-agent-balance').text(data.amount);
 		$('#user_id').val(data.id);
+		
+		$('#agent-list-username').text(data.username);
+		$('#player-list-username').text(data.username);
 	}
 
 	function set_cashin_history_table(data){
@@ -934,11 +972,6 @@
 		$('#agent-history-current-points').text(data.amount);
 	}
 
-	function set_withdraw_comm_modal_values(data){
-		$('#withdraw-comm-agent-username').text(data.username);
-		$('.withdraw-comm-agent-balance').text(data.amount);
-	}
-
 	function set_cashout_history_table(data){
     	$('#cashout-agent-history tbody').empty();
 
@@ -957,120 +990,6 @@
 		}
 		
 	}
-
-	// TODO Logic of this function
-	function set_comm_withdraw_history_table(historyData, beginningBalanceData, userName) {
-    const $tbody = $('#withdraw-comm-agent-history tbody');
-    $tbody.empty();
-
-    let initialBalance = 0;
-    
-    // Helper function to format the date string
-    const formatDate = (dateString) => {
-        const date = new Date(dateString.replace(' ', 'T'));
-        const pad = (num) => String(num).padStart(2, '0');
-        // Format: MM-DD-YYYY HH:mm:ss
-        return `${pad(date.getMonth() + 1)}-${pad(date.getDate())}-${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-    };
-
-    // --- 1. Initialize Running Balance ---
-    if (beginningBalanceData && beginningBalanceData.length > 0) {
-        initialBalance = Number(beginningBalanceData[0].amount) || 0;
-    }
-    
-    let bal = initialBalance; 
-    let rowCount = 1;
-
-    // --- CRITICAL FIX: Ensure calculation runs from oldest to newest ---
-    // If the data is coming from the server DESC (newest first), we must reverse it.
-    // If it's already ASC, this is safe and makes the intent clear.
-    const dataForCalculation = [...historyData].reverse(); 
-    
-    // --- 2. Iterate and Process History Data (Oldest to Newest) ---
-    for (const record of dataForCalculation) {
-        let typeColumnContent = '';
-        const amount = parseFloat(record.amount) || 0;
-        let amountColumnDisplay = amount.toFixed(2);
-        
-        let currentBalance;
-
-        // --- Determine Balance Change & Type Description ---
-        switch (record.type) {
-            case 0:
-                bal += amount;
-                typeColumnContent = `<span class="badge badge-secondary">${record.type}</span>`;
-                break;
-            case 1: // Cash-In
-                bal += amount;
-                typeColumnContent = '<span class="badge badge-success">Cash-In</span>';
-                break;
-            case 2: // Cash-Out
-                bal -= amount;
-                amountColumnDisplay = '-' + amountColumnDisplay;
-                typeColumnContent = '<span class="badge badge-danger">Cash-Out</span>';
-                break;
-            case 3: // Commission
-                bal += amount;
-                typeColumnContent = '<span class="badge badge-info">Commission</span>';
-                break;
-            case 4: // Winnings/Bets
-                bal += amount;
-                typeColumnContent = '<span class="badge badge-primary">Winnings/Bets</span>';
-                break;
-            case 5: // Cash-In (Downline)
-                bal -= amount; 
-                amountColumnDisplay = '-' + amountColumnDisplay; 
-                typeColumnContent = '<span class="badge badge-warning">Cash-In (Downline)</span>';
-                break;
-            case 6: // Cash-Out (Downline)
-                bal += amount; 
-                typeColumnContent = '<span class="badge badge-info">Cash-Out (Downline)</span>';
-                break;
-            default:
-                bal += amount;
-                typeColumnContent = '<span class="badge badge-primary">Winnings/Bets</span>';
-        }
-
-        currentBalance = bal;
-
-        // --- Build the HTML Row ---
-        let row = '<tr>';
-        // The index column is no longer needed since the history data is reversed for calculation
-        // but let's keep it to maintain column count. The index will be calculated in reverse order.
-        row += '<td class="">' + (dataForCalculation.length - rowCount++ + 1) + '</td>'; // Re-calculate index for correct display order
-        
-        row += '<td>' + (record.processby || 'N/A') + '</td>'; // processby column
-        row += '<td>' + amountColumnDisplay + '</td>'; 
-        row += '<td><span>' + formatDate(record.date_created) + '</span></td>'; // Formatted Date
-        row += '<td>' + typeColumnContent + '</td>'; 
-        row += '<td>' + (record.accttyp || 'N/A') + '</td>'; // accttyp
-        row += '<td>' + currentBalance.toFixed(2) + '</td>'; // Running Balance
-
-        row += '</tr>';
-
-        // PREPEND the row to display newest items at the top
-        $tbody.prepend(row);
-    }
-
-    // --- 3. Append Initial Balance Row to the Bottom ---
-    if (initialBalance > 0) {
-        const initialRecord = beginningBalanceData[0];
-        const initialAmountDisplay = initialBalance.toFixed(2);
-        
-        let initialRow = '<tr>';
-        initialRow += '<td class=""></td>'; // Empty Index
-        initialRow += '<td>N/A</td>'; // processby
-        initialRow += '<td>' + initialAmountDisplay + '</td>'; // Amount column
-        initialRow += '<td><span class="badge">' + initialRecord.ending_asof + '</span></td>'; // Date
-        initialRow += '<td><span class="badge badge-secondary">' + initialRecord.type + '</span></td>'; // Type column
-        initialRow += '<td>N/A</td>'; // accttyp
-        initialRow += '<td>' + initialAmountDisplay + '</td>'; // Running Balance column
-        initialRow += '</tr>';
-
-        // APPEND the initial row so it appears at the very bottom
-        $tbody.append(initialRow);
-    }
-}
 
 	function set_bet_history_table(data, beginningBalanceData,userName){
     	$('#agent-bet-history tbody').empty();
@@ -1159,6 +1078,93 @@
 			$('#agent-bet-history tbody').prepend(row);
 		}
 		$('#agent-bet-history tbody').append(beginning_row);
+		
+	}	
+	
+	function set_agent_history_table(data) {
+		var $tbody = $('#agent-bet-history').find('tbody');
+		
+		$tbody.empty();
+
+		if (!Array.isArray(data) || data.length === 0) {
+			var noDataRow = '<tr><td colspan="6" class="text-center">No transaction history found for this agent.</td></tr>';
+			$tbody.append(noDataRow);
+			return;
+		}
+		
+		data.forEach(function(row) {
+			
+			var formattedDate = moment(row.date_created).format('MM-DD-YYYY HH:mm:ss');
+			
+			var formattedBalance = parseFloat(row.current_balance).toLocaleString('en-US', {
+				minimumFractionDigits: 2,
+				maximumFractionDigits: 2
+			});
+			
+			var badgeClass = '';
+			switch (row.type) {
+				case 0: // Beginning Balance
+					badgeClass = 'badge-secondary';
+					break;
+				case 1: // Cash-In
+				case 6: // Cash-Out (Downline - which is a credit for the agent)
+				case 3: // Commission
+				case 4: // Winnings (if positive net amount)
+					badgeClass = 'badge-success';
+					break;
+				case 2: // Cash-Out
+				case 5: // Cash-In (Downline - which is a debit for the agent)
+				// case 4: // Bets (if negative net amount - although display_amount handles the sign)
+					badgeClass = 'badge-danger';
+					break;
+				default:
+					badgeClass = 'badge-info';
+			}
+
+			// Build the table row
+			var newRow = '<tr>' +
+				'<td><span>' + formattedDate + '</span></td>' + 
+				'<td>' + row.display_amount + '</td>' + 
+				'<td>' + formattedBalance + '</td>' +
+				'<td><span class="badge ' + badgeClass + '">' + row.transaction_type_name + '</span></td>' +
+				'<td>' + row.accttyp + '</td>' +
+				'<td>' + row.processby + '</td>' +
+			'</tr>';
+
+			$tbody.append(newRow);
+		});
+
+    // Initialize DataTables after populating (if you are using DataTables)
+    // $('#agent-bet-history').DataTable(); 
+	}
+
+	function set_agent_list_table(data){
+    	$('#agent-list-table tbody').empty();
+
+		for (var i = 0; i < data.length; i++) {
+			var row = '<tr class="text-center">';
+			row += '<td>' + data[i].username + '</td>';
+			row += '<td>Agent</td>';
+			row += '<td>' + data[i].amount + '</td>';
+			row += '<td>' + data[i].com_amount_bal + '</td>';
+			row += '<td>' + data[i].rate + ' %</td>';
+			row += '</tr>';
+			$('#agent-list-table tbody').append(row);
+		}
+		
+	}
+
+	function set_player_list_table(data){
+    	$('#player-list-table tbody').empty();
+
+		for (var i = 0; i < data.length; i++) {
+			var row = '<tr class="text-center">';
+			row += '<td>' + data[i].username + '</td>';
+			row += '<td>Player</td>';
+			row += '<td>' + data[i].amount + '</td>';
+			row += '</tr>';
+			$('#player-list-table tbody').append(row);
+		}
 		
 	}
 

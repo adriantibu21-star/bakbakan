@@ -49,6 +49,40 @@ class UserInfo {
             return ['status' => 'failed', 'content' => 'User not found.'];
         }
     }
+
+    public function getAllAgentsUnderAgentAjax($userId) {
+        $stmt = $this->conn->prepare("SELECT * from `users` where type = 2  and active in ('Y','N','F','T') and parentid = ? order by username asc ");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $rows[] = $row;
+        }
+        
+        if (!empty($rows)) {
+            return ['status' => 'success', 'content' => $rows];
+        } else {
+            return ['status' => 'success', 'content' => []];
+        }
+    }
+
+    public function getAllPlayersUnderAgentAjax($userId) {
+        $stmt = $this->conn->prepare("SELECT * from `users` where type = 3  and active in ('Y','N','F','T') and parentid = ? order by username asc ");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $rows[] = $row;
+        }
+        
+        if (!empty($rows)) {
+            return ['status' => 'success', 'content' => $rows];
+        } else {
+            return ['status' => 'success', 'content' => []];
+        }
+    }
 }
 
 // AJAX Request
@@ -72,6 +106,29 @@ if(isset($_GET['f'])){
                 $resp = ['status' => 'failed', 'err' => 'Missing user_id parameter.'];
             }
             break;
+        
+        case 'get_all_agents_under_agent':
+            // Check for the required POST parameter
+            if(isset($_POST['user_id'])){
+                $userId = $_POST['user_id'];
+                // Call the correct method
+                $resp = $userInfo->getAllAgentsUnderAgentAjax($userId);
+            } else {
+                $resp = ['status' => 'failed', 'err' => 'Missing user_id parameter.'];
+            }
+            break;
+        
+        case 'get_all_players_under_agent':
+            // Check for the required POST parameter
+            if(isset($_POST['user_id'])){
+                $userId = $_POST['user_id'];
+                // Call the correct method
+                $resp = $userInfo->getAllPlayersUnderAgentAjax($userId);
+            } else {
+                $resp = ['status' => 'failed', 'err' => 'Missing user_id parameter.'];
+            }
+            break;
+
         // You can add more AJAX functions here if needed
         default:
             $resp = ['status' => 'failed', 'err' => 'Function not found.'];
