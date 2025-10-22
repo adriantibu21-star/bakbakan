@@ -680,7 +680,6 @@
 			clear_modal_values();
 			var userId = $(this).data('agent-id');
 			var loggedInUserId = $(this).data('logged-in-user-id');
-			
 			$.ajax({
 				url: _base_url_ + "classes/UserInfo.php?f=get_user_data",
 				method: "POST",
@@ -702,11 +701,10 @@
 			$.ajax({
 				url: _base_url_ + "classes/UserInfo.php?f=get_user_data",
 				method: "POST",
-				data: { user_id: loggedInUserId },
+				data: { user_id: userId },
 				dataType: "json",
 				success: function(data){
 					if(data.status == 'success'){
-
 						set_cashout_modal_values(data.content);
 					}else{
 						alert_toast("An error occurred.",'error');
