@@ -83,6 +83,14 @@
                         </p>
                       </a>
                     </li>
+                    <li class="nav-item dropdown">
+                      <a href="<?php echo base_url ?>dashboard/?page=maintenance/load_logs" class="nav-link nav-maintenance_hist_bets">
+                        <i class="nav-icon fas fa-book-open"></i>
+                        <p>
+                          Load Logs
+                        </p>
+                      </a>
+                    </li>
                     
 		<?php if($_settings->userdata('type') == 1): ?> 
                     <li class="nav-item dropdown">
