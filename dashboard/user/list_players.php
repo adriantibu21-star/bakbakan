@@ -426,6 +426,7 @@
 												<th>Result</th>
 												<th>Earned</th>
 												<th>Balance</th>
+												<th>Account Type/Fight</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -629,34 +630,15 @@
 					alert_toast("An error occurred.",'error');
 				}
 			});
-			
+
 			$.ajax({
-				url: _base_url_ + "classes/BetInfo.php?f=get_initial_balance_of_user",
+				url: _base_url_ + "classes/BetInfo.php?f=get_bet_history_of_user",
 				method: "POST",
 				data: { user_id: userId },
 				dataType: "json",
 				success: function(data){
 					if(data.status == 'success'){
-						beginningBalanceData = data.content;
-
-						$.ajax({
-							url: _base_url_ + "classes/BetInfo.php?f=get_bet_history_of_user",
-							method: "POST",
-							data: { user_id: userId },
-							dataType: "json",
-							success: function(data){
-								if(data.status == 'success'){
-									set_bet_history_table(data.content,beginningBalanceData,userName);
-								}else{
-									alert_toast("An error occurred.",'error');
-								}
-							},
-							error: function(jqXHR, textStatus, errorThrown){
-								console.log(errorThrown);
-								alert_toast("An error occurred.",'error');
-							}
-						});
-
+						set_bet_history_table(data.content,userName);
 					}else{
 						alert_toast("An error occurred.",'error');
 					}
@@ -833,95 +815,115 @@
 		
 	}
 
-	function set_bet_history_table(data, beginningBalanceData,userName){
-    	$('#user-bet-history tbody').empty();
-		let bal = 0;
-		let beginning_row;
+function set_bet_history_table(data, userName) {
+    const $tbody = $('#user-bet-history tbody');
+    $tbody.empty();
+    
+    let bal = 0;
+    
+    if (data.length > 0 && data[0].type === 0) {
+        bal = Number(data[0].amount);
+    }
+    
+    const processedRows = [];
 
-		if (beginningBalanceData && beginningBalanceData.length > 0) {
-			bal += Number(beginningBalanceData[0].amount);
-
-			beginning_row = '<tr>';
-			beginning_row += '<td class="">'+userName+'</td>';
-			beginning_row += '<td>' + beginningBalanceData[0].ending_asof + '</span></td>';
-			beginning_row += '<td>' + beginningBalanceData[0].type + '</td>';
-			beginning_row += '<td>' + parseFloat(beginningBalanceData[0].red_amount || 0).toFixed(2) + '</td>';
-			beginning_row += '<td>' + parseFloat(beginningBalanceData[0].blue_amount || 0).toFixed(2) + '</td>';
-			beginning_row += '<td>' + parseFloat(beginningBalanceData[0].yellow_amount || 0).toFixed(2) + '</td>';
-			beginning_row += '<td><span class="badge badge-light">N/A</span></td>';
-			beginning_row += '<td>' + beginningBalanceData[0].amount + '</td>';
-			beginning_row += '<td>' + beginningBalanceData[0].amount + '</td>';
-			beginning_row += '</tr>';
-		}
+    for (let i = 0; i < data.length; i++) {
+        const row = data[i];
+        const amount = parseFloat(row.amount);
+        const type = row.type;
+        
+        let typeColumnContent = '';
+        let amountDisplay = Number(amount).toFixed(2);
+        let winnerStatus = '';
 		
-		for (var i = 0; i < data.length; i++) {
-			let typeColumnContent = '';
-			let amountDisplay = Number(data[i].amount).toFixed(2);
-			const amount = parseFloat(data[i].amount);
-			const type = data[i].type;
-			
-			if (data[i].type === 1) {
-				bal += amount;
-				typeColumnContent = 'Cash-In';
-			} else if (data[i].type === 2) {
-				bal -= amount;
-				amountDisplay = '-' + amountDisplay;
-				typeColumnContent = 'Cash-Out';
-			} else if (data[i].type === 3) {
-				bal += amount;
-				typeColumnContent = 'Commission';
-			} else {
-				bal += amount;
-				typeColumnContent = data[i].drawno;
-			}
-			
-			let winnerBadge;
-			const winner = String(data[i].winner);
-			if (winner === '1') {
-				winnerBadge = '<span class="badge badge-danger">Meron/Pula</span>';
-			} else if (winner === '2') {
-				winnerBadge = '<span class="badge badge-primary">Wala/Asul</span>';
-			} else if (winner === '3') {
-				winnerBadge = '<span class="badge badge-success">Draw</span>';
-			} else if (winner === '4') {
-				winnerBadge = '<span class="badge badge-light">Cancelled</span>';
-			} else {
-				winnerBadge = '<span class="badge badge-light">N/A</span>';
-			}
+        if (type === 0) {
+            typeColumnContent = row.type_name || 'Cut-off Balance';
+            // Balance is already set to the starting amount.
+        } else if (type === 1 || type === 3 || type === 4 || type === 6) { 
+            // Cash-In, Commission, Winnings/Bets, Cash-Out (Downline) -> Credit (+)
+            bal += amount;
+        } else if (type === 2 || type === 5) { 
+            // Cash-Out, Cash-In (Downline) -> Debit (-)
+            bal -= amount;
+            if (amount > 0) {
+                amountDisplay = '-' + amountDisplay; // Add negative sign for display
+            }
+        } 
+        
+        // --- B. Determine Type Column Content ---
+        if (type === 1) typeColumnContent = 'Cash-In';
+        else if (type === 2) typeColumnContent = 'Cash-Out';
+        else if (type === 3) typeColumnContent = 'Commission';
+        else if (type === 5) typeColumnContent = 'Cash-In (Downline)';
+        else if (type === 6) typeColumnContent = 'Cash-Out (Downline)';
+        else if (type === 4) typeColumnContent = 'Fight #' + row.drawno; // Bet/Winnings
 
-			let row = '<tr>';
-			row += '<td class="">'+userName+'</td>'; // Index
-			row += '<td><span>' + data[i].date_created + '</span></td>';
-			row += '<td>' + typeColumnContent + '</td>'; // Type / Drawno
-			
-			// Red, Blue, Yellow Amounts (formatted to 2 decimal places)
-			row += '<td>' + parseFloat(data[i].red_amount || 0).toFixed(2) + '</td>';
-			row += '<td>' + parseFloat(data[i].blue_amount || 0).toFixed(2) + '</td>';
-			row += '<td>' + parseFloat(data[i].yellow_amount || 0).toFixed(2) + '</td>';
+        // --- C. Determine Winner Badge (Column 7) and Win/Lose Status (Column 8) ---
+        let winnerBadge = '<span class="badge badge-light">N/A</span>';
+        
+        if (type === 4) { // Only apply for Bet/Winnings
+            const winner = String(row.winner);
+            if (winner === '1') winnerBadge = '<span class="badge badge-danger">Meron/Pula</span>';
+            else if (winner === '2') winnerBadge = '<span class="badge badge-primary">Wala/Asul</span>';
+            else if (winner === '3') winnerBadge = '<span class="badge badge-success">Draw</span>';
+            else if (winner === '4') winnerBadge = '<span class="badge badge-light">Cancelled</span>';
 
-			row += '<td>' + winnerBadge + '</td>'; // Winner Status
-			
-			let winnerStatus ='';
-			// Type (1: Cash-In, 2: Cash-Out, 3: Commission, 4: Draw)
-			if (data[i].type === 4 && data[i].amount < 0 ) {
-				winnerStatus = '<span class="badge badge-danger">Lose</span>';
-			}else if (data[i].type === 4 && data[i].amount > 0 ) {
-				winnerStatus = '<span class="badge badge-success">Win</span>';
-			}
-			
-			// Amount (with negative sign for Cash-Out, formatted to 2 decimal places)
-			row += '<td>' + amountDisplay +' ' +  winnerStatus + '</td>';
+            // Win/Lose status for the Amount column (Column 8)
+            if (amount < 0) {
+                winnerStatus = ' <span class="badge badge-danger">Lose</span>';
+            } else if (amount > 0) {
+                winnerStatus = ' <span class="badge badge-success">Win</span>';
+            }
+        }
+        
+        let newRow = '<tr>';
+        
+        // Column 1: Date
+        newRow += '<td><span>' + row.date_created + '</span></td>'; 
+        // Column 2: User Name (Display 'START' for type 0)
+        newRow += '<td class="">' + userName + '</td>'; 
+        // Column 3: Type / Drawno
+        newRow += '<td>' + typeColumnContent + '</td>'; 
+        
+        // Columns 4, 5, 6: Red, Blue, Yellow Amounts
+        newRow += '<td>' + parseFloat(row.red_amount || 0).toFixed(2) + '</td>';
+        newRow += '<td>' + parseFloat(row.blue_amount || 0).toFixed(2) + '</td>';
+        newRow += '<td>' + parseFloat(row.yellow_amount || 0).toFixed(2) + '</td>';
 
-			// Running Balance (formatted to 2 decimal places)
-			row += '<td>' + bal.toFixed(2) + '</td>';
+        // Column 7: Winner Badge
+        newRow += '<td>' + winnerBadge + '</td>'; 
+        // Column 8: Amount + Win/Lose Badge
+        newRow += '<td>' + amountDisplay + winnerStatus + '</td>'; 
+        // Column 9: Running Balance
+        newRow += '<td>' + bal.toFixed(2) + '</td>'; 
+        
+        // Column 10: Account Type/Fight OR Process By (Combined)
+        const accountProcessContent = (row.accttyp && row.accttyp !== 'N/A') ? row.accttyp : (row.processby || 'N/A');
+        newRow += '<td>' + accountProcessContent + '</td>'; 
 
-			row += '</tr>';
+        newRow += '</tr>';
 
-			$('#user-bet-history tbody').prepend(row);
-		}
-		$('#user-bet-history tbody').append(beginning_row);
-		
-	}
+        processedRows.push({ html: newRow, type: type });
+    }
+    processedRows.reverse().forEach(processedRow => {
+            $tbody.append(processedRow.html);
+    })
+
+    // // 2. Reverse the array and populate the table (newest transactions first)
+    // processedRows.reverse().forEach(processedRow => {
+    //     if (processedRow.type === 0) {
+    //         // Beginning balance (Type 0) always goes at the bottom.
+    //         $tbody.append(processedRow.html);
+    //     } else {
+    //         // All other transactions (Type > 0) go at the top (newest first).
+    //         $tbody.prepend(processedRow.html);
+    //     }
+    // });
+
+    if (data.length === 0) {
+        $tbody.append('<tr><td colspan="10" class="text-center">No transaction history found for this user.</td></tr>');
+    }
+}
 
 	function delete_user($id){
 		start_loader();
