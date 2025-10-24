@@ -9,8 +9,8 @@
         
         <!-- Brand Logo -->
         <div class="w-100">
-            <a href="http://localhost/EsVanillaPhp/dashboard" class="brand-link bg-darkgray d-flex justify-content-center align-items-center w-100" style="flex-direction: column; height: auto;">
-                <img src="http://localhost/EsVanillaPhp/uploads/live_main.png" alt="Store Logo" class="brand-image img-circle elevation-3 d-block" style="opacity: .8; width: 3.7rem; height: 3.7rem; max-height: unset; margin: 0 auto;">
+            <a href="<?php echo base_url ?>dashboard" class="brand-link bg-darkgray d-flex justify-content-center align-items-center w-100" style="flex-direction: column; height: auto;">
+                <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3 d-block" style="opacity: .8; width: 3.7rem; height: 3.7rem; max-height: unset; margin: 0 auto;">
             </a>
         </div>
 
@@ -31,7 +31,7 @@
                 <!-- Sidebar Menu -->
                 <nav class="mt-4">
                   <ul class="nav nav-pills nav-sidebar flex-column text-sm nav-compact nav-flat nav-child-indent nav-collapse-hide-child" 
-                  style='font-family: "Rubik", sans-serif; font-size:1rem !important; font-weight:600; line-height:1.5;'
+                  style='font-family: "Rubik", sans-serif; font-size:1.1rem !important; font-weight:600; line-height:1.5;'
                   data-widget="treeview" role="menu" 
                   data-accordion="false">
                     <?php if($_settings->userdata('type') == 3 or $_settings->userdata('type') == 1 or $_settings->userdata('type') == 4): ?> 
