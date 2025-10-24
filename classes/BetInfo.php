@@ -278,6 +278,58 @@ class BetInfo {
 
     }
 
+    public function getCommLogsOfAgent($userId) {
+        $sql = "
+            SELECT 
+                a.date_created AS `DATE`,
+                (SELECT drawno FROM draws WHERE id = a.drawid) AS `FIGHT#`,
+                (SELECT name FROM events WHERE id = (SELECT eventid FROM draws WHERE id = a.drawid)) AS `EVENT`,
+                (SELECT username FROM users WHERE id = a.user_id) AS `USERNAME`,
+                (SELECT username FROM users WHERE id = b.user_id) AS `AGENT`,
+                a.blue_amount + a.red_amount + a.yellow_amount AS `BET`,
+                b.amount AS `COMMISSION`,
+                CONCAT(
+                    b.com_rate, 
+                    '% ',
+                    (SELECT
+                        CASE
+                            -- Check if the player is a direct downline of this agent
+                            WHEN (SELECT parentid FROM users WHERE id = a.user_id) = b.user_id THEN 'Earn direct player'
+                            -- Use the 'type' field from the 'users' table for the agent (b.user_id)
+                            WHEN type = 1 THEN 'Earn Operator'
+                            WHEN type = 2 THEN 'Earn Sub-Operator'
+                            WHEN type = 3 THEN 'Earn Master Agent'
+                            WHEN type = 4 THEN 'Earn Gold Agent'
+                            WHEN type = 5 THEN 'Earn Player'
+                            ELSE ''
+                        END
+                    FROM users WHERE id = b.user_id)
+                ) AS `%EARN`
+            FROM bets a
+            INNER JOIN coms b
+                ON b.drawid = a.drawid AND b.player_id = a.user_id
+            WHERE b.user_id = ? AND b.active = 'Y'
+        ";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $rows = [];
+        while($row = $result->fetch_assoc()) {
+            $row['DATE_formatted'] = date("M-d-Y H:i:s", strtotime($row['DATE']));
+            $row['BET_formatted'] = number_format($row['BET'], 2);
+            $row['COMMISSION_formatted'] = number_format($row['COMMISSION'], 2);
+            
+            $rows[] = $row;
+        }
+        $stmt->close();
+        
+        return $rows;
+    }
+
     public function getAllAgentsUnderAgent($userId,$type) {
         if ($type == 1){ //use admin priv
             $qry = $this->conn->query("SELECT * from `users` where type = 2  and active in ('Y','N','F','T')");
