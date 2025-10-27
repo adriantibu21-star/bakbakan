@@ -10,7 +10,8 @@
         <!-- Brand Logo -->
         <div class="w-100">
             <a href="<?php echo base_url ?>dashboard" class="brand-link bg-darkgray d-flex justify-content-center align-items-center w-100" style="flex-direction: column; height: auto;">
-                <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3 d-block" style="opacity: .8; width: 3.7rem; height: 3.7rem; max-height: unset; margin: 0 auto;">
+                <!-- <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3 d-block" style="opacity: .8; width: 3.7rem; height: 3.7rem; max-height: unset; margin: 0 auto;"> -->
+                <img src="<?php echo base_url ?>uploads/i-system.png" alt="Store Logo" class="brand-image img-circle elevation-3 d-block" style="opacity: .8; width: 3.7rem; height: 3.7rem; max-height: unset; margin: 0 auto;">
             </a>
         </div>
 
