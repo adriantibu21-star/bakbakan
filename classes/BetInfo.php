@@ -278,9 +278,148 @@ class BetInfo {
 
     }
 
+    // public function getCommLogsOfAgent($userId) {
+    //     // $sql = "
+    //     //     SELECT 
+    //     //         a.date_created AS `DATE`,
+    //     //         (SELECT drawno FROM draws WHERE id = a.drawid) AS `FIGHT#`,
+    //     //         (SELECT name FROM events WHERE id = (SELECT eventid FROM draws WHERE id = a.drawid)) AS `EVENT`,
+    //     //         (SELECT username FROM users WHERE id = a.user_id) AS `USERNAME`,
+    //     //         (SELECT username FROM users WHERE id = b.user_id) AS `AGENT`,
+    //     //         a.blue_amount + a.red_amount + a.yellow_amount AS `BET`,
+    //     //         b.amount AS `COMMISSION`,
+    //     //         CONCAT(
+    //     //             b.com_rate, 
+    //     //             '% ',
+    //     //             (SELECT
+    //     //                 CASE
+    //     //                     -- Check if the player is a direct downline of this agent
+    //     //                     WHEN (SELECT parentid FROM users WHERE id = a.user_id) = b.user_id THEN 'Earn direct player'
+    //     //                     -- Use the 'type' field from the 'users' table for the agent (b.user_id)
+    //     //                     WHEN type = 1 THEN 'Earn Operator'
+    //     //                     WHEN type = 2 THEN 'Earn Sub-Operator'
+    //     //                     WHEN type = 3 THEN 'Earn Master Agent'
+    //     //                     WHEN type = 4 THEN 'Earn Gold Agent'
+    //     //                     WHEN type = 5 THEN 'Earn Player'
+    //     //                     ELSE ''
+    //     //                 END
+    //     //             FROM users WHERE id = b.user_id)
+    //     //         ) AS `%EARN`
+    //     //     FROM bets a
+    //     //     INNER JOIN coms b
+    //     //         ON b.drawid = a.drawid AND b.player_id = a.user_id
+    //     //     WHERE b.user_id = ? AND b.active = 'Y'
+    //     // ";
+
+    //     $sql = "
+    //         SELECT
+    //             t.`DATE`,
+    //             t.`FIGHT#`,
+    //             t.`EVENT`,
+    //             t.`USERNAME`,
+    //             t.`AGENT`,
+    //             t.`BET`,
+    //             t.`COMMISSION`,
+    //             t.`%EARN`,
+    //             @r_bal := ROUND(
+    //                 @r_bal + ROUND(t.COMMISSION, 2), -- 1. Round the current commission to 2 decimals
+    //                 2                                  -- 2. Round the running balance to 2 decimals
+    //             ) AS `RUNNING_BALANCE`
+    //         FROM
+    //             (
+    //                 -- Initialize the session variable with a DECIMAL type
+    //                 SELECT @r_bal := CAST(0.00 AS DECIMAL(10, 2))
+    //             ) AS vars,
+    //             (
+    //                 -- Your original query
+    //                 SELECT
+    //                     a.date_created AS `DATE`,
+    //                     (SELECT drawno FROM draws WHERE id = a.drawid) AS `FIGHT#`,
+    //                     (SELECT name FROM events WHERE id = (SELECT eventid FROM draws WHERE id = a.drawid)) AS `EVENT`,
+    //                     (SELECT username FROM users WHERE id = a.user_id) AS `USERNAME`,
+    //                     (SELECT username FROM users WHERE id = b.user_id) AS `AGENT`,
+    //                     a.blue_amount + a.red_amount + a.yellow_amount AS `BET`,
+    //                     b.amount AS `COMMISSION`,
+    //                     CONCAT(
+    //                         b.com_rate,
+    //                         '% ',
+    //                         (SELECT
+    //                             CASE
+    //                                 WHEN (SELECT parentid FROM users WHERE id = a.user_id) = b.user_id THEN 'Earn direct player'
+    //                                 WHEN type = 1 THEN 'Earn Operator'
+    //                                 WHEN type = 2 THEN 'Earn Sub-Operator'
+    //                                 WHEN type = 3 THEN 'Earn Master Agent'
+    //                                 WHEN type = 4 THEN 'Earn Gold Agent'
+    //                                 WHEN type = 5 THEN 'Earn Player'
+    //                                 ELSE ''
+    //                             END
+    //                         FROM users WHERE id = b.user_id)
+    //                     ) AS `%EARN`
+    //                 FROM bets a
+    //                 INNER JOIN coms b
+    //                     ON b.drawid = a.drawid AND b.player_id = a.user_id
+    //                 WHERE b.user_id = ? AND b.active = 'Y'
+    //                 -- CRITICAL: This ORDER BY determines the calculation sequence
+    //                 ORDER BY a.date_created, a.drawid, a.user_id
+    //             ) t
+    //         ORDER BY t.`DATE` DESC;
+    //     ";
+
+        
+
+    //     $stmt = $this->conn->prepare($sql);
+
+    //     $stmt->bind_param("i", $userId);
+    //     $stmt->execute();
+    //     $result = $stmt->get_result();
+
+    //     $rows = [];
+    //     while($row = $result->fetch_assoc()) {
+    //         $row['DATE_formatted'] = date("M-d-Y H:i:s", strtotime($row['DATE']));
+    //         $row['BET_formatted'] = number_format($row['BET'], 2);
+    //         $row['COMMISSION_formatted'] = number_format($row['COMMISSION'], 2);
+            
+    //         $rows[] = $row;
+    //     }
+    //     $stmt->close();
+        
+    //     return $rows;
+    // }
+
     public function getCommLogsOfAgent($userId) {
+        // Step 1: Get the oldest date_created from bets/coms
+        $sql_oldest = "
+            SELECT MIN(a.date_created) AS oldest_date
+            FROM bets a
+            INNER JOIN coms b
+                ON b.drawid = a.drawid AND b.player_id = a.user_id
+            WHERE b.user_id = ? AND b.active = 'Y'
+        ";
+        $stmt = $this->conn->prepare($sql_oldest);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $oldestDate = $result->fetch_assoc()['oldest_date'] ?? null;
+        $stmt->close();
+
+        if (!$oldestDate) return []; // No records, return empty array
+
+        // Step 2: Fetch all commissions and withdrawals from coms_converted starting from $oldestDate
         $sql = "
             SELECT 
+                date_created AS `DATE`,
+                '' AS `FIGHT#`,
+                '' AS `EVENT`,
+                '' AS `USERNAME`,
+                '' AS `AGENT`,
+                0 AS `BET`,
+                amount_converted AS `COMMISSION`,
+                'Withdrawal' AS `%EARN`,
+                'WITHDRAWAL' AS `TYPE`
+            FROM coms_converted
+            WHERE agent_id = ? AND date_created >= ?
+            UNION ALL
+            SELECT
                 a.date_created AS `DATE`,
                 (SELECT drawno FROM draws WHERE id = a.drawid) AS `FIGHT#`,
                 (SELECT name FROM events WHERE id = (SELECT eventid FROM draws WHERE id = a.drawid)) AS `EVENT`,
@@ -289,13 +428,11 @@ class BetInfo {
                 a.blue_amount + a.red_amount + a.yellow_amount AS `BET`,
                 b.amount AS `COMMISSION`,
                 CONCAT(
-                    b.com_rate, 
+                    b.com_rate,
                     '% ',
                     (SELECT
                         CASE
-                            -- Check if the player is a direct downline of this agent
                             WHEN (SELECT parentid FROM users WHERE id = a.user_id) = b.user_id THEN 'Earn direct player'
-                            -- Use the 'type' field from the 'users' table for the agent (b.user_id)
                             WHEN type = 1 THEN 'Earn Operator'
                             WHEN type = 2 THEN 'Earn Sub-Operator'
                             WHEN type = 3 THEN 'Earn Master Agent'
@@ -304,31 +441,43 @@ class BetInfo {
                             ELSE ''
                         END
                     FROM users WHERE id = b.user_id)
-                ) AS `%EARN`
+                ) AS `%EARN`,
+                'COMMISSION' AS `TYPE`
             FROM bets a
             INNER JOIN coms b
                 ON b.drawid = a.drawid AND b.player_id = a.user_id
             WHERE b.user_id = ? AND b.active = 'Y'
+            ORDER BY `DATE` ASC
         ";
 
         $stmt = $this->conn->prepare($sql);
-
-        $stmt->bind_param("i", $userId);
+        $stmt->bind_param("isi", $userId, $oldestDate, $userId);
         $stmt->execute();
         $result = $stmt->get_result();
 
         $rows = [];
-        while($row = $result->fetch_assoc()) {
+        $runningBalance = 0.00;
+
+        while ($row = $result->fetch_assoc()) {
+            if ($row['TYPE'] === 'WITHDRAWAL') {
+                $runningBalance -= $row['COMMISSION'];
+                $row['COMMISSION'] = -1 * $row['COMMISSION'];
+            } else { // COMMISSION
+                $runningBalance += $row['COMMISSION'];
+            }
+            $row['RUNNING_BALANCE'] = $runningBalance;
             $row['DATE_formatted'] = date("M-d-Y H:i:s", strtotime($row['DATE']));
             $row['BET_formatted'] = number_format($row['BET'], 2);
             $row['COMMISSION_formatted'] = number_format($row['COMMISSION'], 2);
-            
+
             $rows[] = $row;
         }
-        $stmt->close();
-        
-        return $rows;
+
+        // Step 3: Show most recent first
+        return array_reverse($rows);
     }
+
+
 
     public function getAllAgentsUnderAgent($userId,$type) {
         if ($type == 1){ //use admin priv

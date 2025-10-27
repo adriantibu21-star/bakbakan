@@ -100,6 +100,7 @@
 							<th>Agent</th>
 							<th>Bet</th>
 							<th>Commission</th>
+							<th>Balance</th>
 							<th>% Earn</th>
 						</tr>
 					</thead>
@@ -114,6 +115,7 @@
 									<td><?php echo $row['AGENT']?></td>
 									<td><?php echo $row['BET_formatted'] ?></td>
 									<td><?php echo $row['COMMISSION_formatted']?></td>
+									<td><?php echo $row['RUNNING_BALANCE']?></td>
 									<td><?php echo $row['%EARN']?></td>
 								</tr>
 							<?php endforeach; 
@@ -128,6 +130,7 @@
 							<th>Agent</th>
 							<th>Bet</th>
 							<th>Commission</th>
+							<th>Balance</th>
 							<th>% Earn</th>
 						</tr>
 					</tfoot>
