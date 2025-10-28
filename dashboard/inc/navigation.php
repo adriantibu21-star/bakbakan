@@ -1,19 +1,37 @@
 </style>
+<style>
+  .nav-item .active{
+    color: #fff !important;
+  }
+  .nav-item, .nav-item a{
+    color: #c2c7d0 !important;
+    font-weight: 500 !important;
+  }
+</style>
 <!-- Main Sidebar Container -->
-      <aside class="main-sidebar sidebar-dark-primary text-white bg-darkgray disabled elevation-4 sidebar-no-expand">
+      <aside class="main-sidebar sidebar-dark-primary text-white bg-darkgray disabled elevation-4 sidebar-no-expand"style="font-family: &quot;Rubik&quot;, sans-serif; background-color: #212529 !important;">
         <!-- Brand Logo -->
         <!-- <a href="<?php echo base_url ?>dashboard" class="brand-link bg-darkgray text-sm">
         <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3" style="opacity: .8;width: 1.7rem;height: 1.7rem;max-height: unset">
         <span class="brand-text font-weight-light"><?php echo $_settings->info('short_name') ?></span>
         </a> -->
-        
+
+
+        <a href="#" class="brand-link">
+              <img src="<?php echo base_url ?>/uploads/i-system.png" alt="boombap Logo" class="brand-image img-circle elevation-3" style="opacity: .8; height:33px; width:33px">
+              <center> 
+                <span class="brand-text font-weight-bolder text-white" style="font-size: 1.25rem; line-height: 1.5; white-space: nowrap; ">
+                  INCORPORATOR                    
+                </span>
+              </center>
+          </a>
         <!-- Brand Logo -->
-        <div class="w-100">
+        <!-- <div class="w-100">
             <a href="<?php echo base_url ?>dashboard" class="brand-link bg-darkgray d-flex justify-content-center align-items-center w-100" style="flex-direction: column; height: auto;">
-                <!-- <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3 d-block" style="opacity: .8; width: 3.7rem; height: 3.7rem; max-height: unset; margin: 0 auto;"> -->
+                <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3 d-block" style="opacity: .8; width: 3.7rem; height: 3.7rem; max-height: unset; margin: 0 auto;">
                 <img src="<?php echo base_url ?>uploads/i-system.png" alt="Store Logo" class="brand-image img-circle elevation-3 d-block" style="opacity: .8; width: 3.7rem; height: 3.7rem; max-height: unset; margin: 0 auto;">
             </a>
-        </div>
+        </div> -->
 
         <!-- Sidebar -->
         <div class="sidebar os-host os-theme-light os-host-overflow os-host-overflow-y os-host-resize-disabled os-host-transition os-host-scrollbar-horizontal-hidden">
@@ -30,9 +48,9 @@
                 <!-- Sidebar user panel (optional) -->
                 <div class="clearfix"></div>
                 <!-- Sidebar Menu -->
-                <nav class="mt-4">
+                <nav class="mt-2">
                   <ul class="nav nav-pills nav-sidebar flex-column text-sm nav-compact nav-flat nav-child-indent nav-collapse-hide-child" 
-                  style='font-family: "Rubik", sans-serif; font-size:1.1rem !important; font-weight:600; line-height:1.5;'
+                  style='font-family: "Rubik", sans-serif; font-size:1rem !important; line-height:1.9;'
                   data-widget="treeview" role="menu" 
                   data-accordion="false">
                     <?php if($_settings->userdata('type') == 3 or $_settings->userdata('type') == 1 or $_settings->userdata('type') == 4): ?> 
@@ -206,7 +224,7 @@
                           </p>
                           <?php else: ?>
                           <p>
-                            My Agents
+                            Agents
                           </p>
                           <?php endif; ?>
                         </a>
@@ -223,7 +241,7 @@
                           </p>
                           <?php else: ?>
                           <p>
-                            My Players
+                            Active Players
                           </p>
                           <?php endif; ?>
                         </a>
@@ -236,7 +254,7 @@
                         <a href="<?php echo base_url ?>dashboard/?page=user/list_players_approval" class="nav-link nav-user_list_players_approval">
                           <i class="nav-icon fas fa-users"></i>
                           <p>
-                            For Approval Players
+                            Approval Players
                           </p>
                         </a>
                       </li>
