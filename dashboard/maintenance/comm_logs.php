@@ -115,7 +115,7 @@
 									<td><?php echo $row['AGENT']?></td>
 									<td><?php echo $row['BET_formatted'] ?></td>
 									<td><?php echo $row['COMMISSION_formatted']?></td>
-									<td><?php echo $row['RUNNING_BALANCE']?></td>
+									<td><?php echo $row['RUNNING_BALANCE_formatted']?></td>
 									<td><?php echo $row['%EARN']?></td>
 								</tr>
 							<?php endforeach; 
