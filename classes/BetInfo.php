@@ -416,6 +416,334 @@ class BetInfo {
         return $processed_rows;
     }
 
+    public function getCommWithdrawalOfAgent($userId, $userType) {
+        $user_id = $userId;
+        $user_type = $userType;
+
+        $agent_qry = $this->conn->query("SELECT id, username FROM users");
+        $agent_arr = array_column($agent_qry->fetch_all(MYSQLI_ASSOC), 'username', 'id');
+
+        $sql = "
+            SELECT 
+                cc.id,
+                cc.date_created,
+                cc.user_id,
+                cc.amount_converted,
+                cc.agent_id
+            FROM coms_converted cc
+        ";
+
+        if ($user_type == 1) {
+            $sql .= " ORDER BY cc.id DESC";
+        } 
+        else {
+            $sql .= "
+                WHERE cc.user_id IN (SELECT id FROM users WHERE parentid = ? OR id = ?)
+                ORDER BY cc.id DESC
+            ";
+        }
+
+        $stmt = $this->conn->prepare($sql);
+
+        if ($user_type != 1) {
+            $stmt->bind_param("ii", $user_id, $user_id);
+        }
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        
+        $withdrawal_running_sum = 0; 
+        $processed_rows = [];
+        $i = 1; 
+
+        while($row = $result->fetch_assoc()) {
+            $withdrawal_running_sum += $row['amount_converted']; // Mimics $bal = $bal + amount
+            
+            $processed_rows[] = [
+                'i'                  => $i++,
+                'DATE'               => date("m-d-Y H:i:s", strtotime($row['date_created'])),
+                'USER_USERNAME'      => $agent_arr[$row['user_id']] ?? 'N/A', // Look up user_id
+                'AMOUNT_converted'   => number_format((float)$row['amount_converted'], 2),
+                'AGENT_USERNAME'     => $agent_arr[$row['agent_id']] ?? 'N/A', // Look up agent_id
+                'RUNNING_SUM'        => number_format($withdrawal_running_sum, 2)
+            ];
+        }
+
+        return [
+            'rows' => $processed_rows,
+            'total_withdrawal_sum' => $withdrawal_running_sum // The final raw sum
+        ];
+    }
+
+    public function getBetHistoryOfAgent($userId){
+       $ending_asof = '1900-01-01'; 
+        $ending_amount = 0.00;
+        $type_name = 'Unknown';
+        
+        $qryBeginingbalance_sql = "
+            SELECT
+                T1.ending_asof,
+                T1.amount,
+                T1.type
+            FROM
+                (
+                    SELECT
+                        ending_asof,
+                        amount,
+                        'Cut-off Balance' AS type
+                    FROM
+                        endingbalance
+                    WHERE
+                        user_id = ?
+
+                    UNION
+
+                    SELECT
+                        DATE_FORMAT(date_added, '%Y-%m-%d %H:%i') AS ending_asof,
+                        0 AS amount,
+                        'Beginning Balance' AS type
+                    FROM
+                        users
+                    WHERE
+                        id = ?
+                    ORDER BY
+                        ending_asof DESC
+                    LIMIT 1
+                ) AS T1;
+        ";
+
+        $stmt_bal = $this->conn->prepare($qryBeginingbalance_sql);
+
+        $stmt_bal->bind_param("ss", $userId, $userId);
+
+        $stmt_bal->execute();
+        $result_bal = $stmt_bal->get_result();
+
+        if ($result_bal->num_rows > 0) {
+            $rowevent = $result_bal->fetch_assoc();
+            $ending_asof = $rowevent['ending_asof']; 
+            $ending_amount = $rowevent['amount'];
+            $type_name = $rowevent['type']; 
+        }
+        $stmt_bal->close();
+        
+        $sql = "
+            ( -- Beginning Balance
+                SELECT 
+                    ? AS date_created, 
+                    ? AS amount, 
+                    0 AS type, 
+                    ? AS accttyp, 
+                    '' AS processby
+            )
+            UNION ALL
+            ( -- Cash-In (type 1) - user is being credited
+                SELECT 
+                    a.date_created,
+                    a.amount,
+                    1 AS type,
+                    CONCAT(
+                        (SELECT 
+                            CASE 
+                                WHEN role = 1 THEN 'Financer Account'
+                                WHEN role = 2 THEN 'Operator'
+                                WHEN role = 3 THEN 'Sub-Operator'
+                                WHEN role = 4 THEN 'Master Agent'
+                                WHEN role = 5 THEN 'Player'
+                                ELSE ''
+                            END
+                        FROM users WHERE id = a.agent_id),
+                        ' - ', 
+                        (SELECT username FROM users WHERE id = a.agent_id)
+                    ) AS accttyp,
+                    (SELECT username FROM users WHERE id = a.agent_id) AS processby
+                FROM loading a
+                WHERE a.active = 'N' AND a.user_id = ? AND a.date_created >= ?
+            )
+            UNION ALL
+            ( -- Cash-Out (type 2) - user is being debited
+                SELECT 
+                    a.date_created,
+                    a.amount,
+                    2 AS type,
+                    CONCAT(
+                        (SELECT 
+                            CASE 
+                                WHEN role = 1 THEN 'Financer Account'
+                                WHEN role = 2 THEN 'Operator'
+                                WHEN role = 3 THEN 'Sub-Operator'
+                                WHEN role = 4 THEN 'Master Agent'
+                                WHEN role = 5 THEN 'Player'
+                                ELSE ''
+                            END
+                        FROM users WHERE id = a.agent_id),
+                        ' - ', 
+                        (SELECT username FROM users WHERE id = a.agent_id)
+                    ) AS accttyp,
+                    (SELECT username FROM users WHERE id = a.agent_id) AS processby
+                FROM withdrawals a
+                WHERE a.active = 'N' AND a.user_id = ? AND a.date_created >= ?
+            )
+            UNION ALL
+            ( -- Cash-In (Downline) (type 5) - user is debited (acts as agent for downline load)
+                SELECT 
+                    a.date_created,
+                    a.amount,
+                    5 AS type,
+                    CONCAT(
+                        (SELECT 
+                            CASE 
+                                WHEN role = 1 THEN 'Financer Account'
+                                WHEN role = 2 THEN 'Operator'
+                                WHEN role = 3 THEN 'Sub-Operator'
+                                WHEN role = 4 THEN 'Master Agent'
+                                WHEN role = 5 THEN 'Player'
+                                ELSE ''
+                            END
+                        FROM users WHERE id = a.user_id),
+                        ' - ', 
+                        (SELECT username FROM users WHERE id = a.user_id)
+                    ) AS accttyp,
+                    (SELECT username FROM users WHERE id = a.agent_id) AS processby
+                FROM loading a
+                WHERE a.active = 'N' AND a.agent_id = ? AND a.date_created >= ?
+            )
+            UNION ALL
+            ( -- Cash-Out (Downline) (type 6) - user is credited (acts as agent for downline withdrawal)
+                SELECT 
+                    a.date_created,
+                    a.amount,
+                    6 AS type,
+                    CONCAT(
+                        (SELECT 
+                            CASE 
+                                WHEN role = 1 THEN 'Financer Account'
+                                WHEN role = 2 THEN 'Operator'
+                                WHEN role = 3 THEN 'Sub-Operator'
+                                WHEN role = 4 THEN 'Master Agent'
+                                WHEN role = 5 THEN 'Player'
+                                ELSE ''
+                            END
+                        FROM users WHERE id = a.user_id),
+                        ' - ', 
+                        (SELECT username FROM users WHERE id = a.user_id)
+                    ) AS accttyp,
+                    (SELECT username FROM users WHERE id = a.agent_id) AS processby
+                FROM withdrawals a
+                WHERE a.active = 'N' AND a.agent_id = ? AND a.date_created >= ?
+            )
+            UNION ALL
+            ( -- Commission (type 3) - user is being credited
+                SELECT 
+                    a.date_created, 
+                    a.amount_converted AS amount, 
+                    3 AS type,
+                    CONCAT(
+                        (SELECT 
+                            CASE 
+                                WHEN role = 1 THEN 'Financer Account'
+                                WHEN role = 2 THEN 'Operator'
+                                WHEN role = 3 THEN 'Sub-Operator'
+                                WHEN role = 4 THEN 'Master Agent'
+                                WHEN role = 5 THEN 'Player'
+                                ELSE ''
+                            END
+                        FROM users WHERE id = a.agent_id),
+                        ' - ', 
+                        (SELECT username FROM users WHERE id = a.agent_id)
+                    ) AS accttyp,
+                    (SELECT username FROM users WHERE id = a.agent_id) AS processby 
+                FROM coms_converted a 
+                WHERE a.user_id = ? AND a.date_created >= ?
+            )
+            UNION ALL
+            ( -- Winnings/Bets (type 4) - user's net amount from a bet (can be positive for win, negative for loss)
+                SELECT 
+                    a.date_created, 
+                    (a.earnings - a.red_amount - a.blue_amount - a.yellow_amount) AS amount, 
+                    4 AS type,
+                    CONCAT(
+                        (SELECT drawno FROM draws WHERE id = a.drawid),
+                        '-', 
+                        (SELECT name FROM events WHERE id = (SELECT eventid FROM draws WHERE id = a.drawid))
+                    ) AS accttyp,
+                    '' AS processby 
+                FROM bets a 
+                WHERE a.user_id = ? AND a.date_created >= ?
+            )
+            ORDER BY date_created ASC, type
+        ";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bind_param(
+            "sds" . "ss" . "ss" . "ss" . "ss" . "ss" . "ss", 
+            $ending_asof, 
+            $ending_amount, 
+            $type_name, 
+            $userId, $ending_asof, 
+            $userId, $ending_asof, 
+            $userId, $ending_asof, 
+            $userId, $ending_asof, 
+            $userId, $ending_asof, 
+            $userId, $ending_asof 
+        );
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        
+        $rows = [];
+        $bal = 0.00;
+        $i = 1;
+
+        while ($row = $result->fetch_assoc()) {
+            $row['display_amount'] = $row['amount']; // Initialize display amount
+            $transaction_type_name = 'Winnings/Bets'; // Default name (matches the last 'else')
+
+            switch ($row['type']) {
+                case 0: // Beginning Balance
+                    $bal += $row['amount'];
+                    $transaction_type_name = $type_name;
+                    break;
+                case 1: // Cash-In (Credit)
+                    $bal += $row['amount'];
+                    $transaction_type_name = 'Cash-In';
+                    break;
+                case 2: // Cash-Out (Debit)
+                    $bal -= $row['amount'];
+                    $row['display_amount'] = '-' . number_format($row['amount'], 2); // Show as negative
+                    $transaction_type_name = 'Cash-Out';
+                    break;
+                case 3: // Commission (Credit)
+                    $bal += $row['amount'];
+                    $transaction_type_name = 'Commission';
+                    break;
+                case 4: // Winnings/Bets (Credit/Debit) - Amount is already calculated as net (earnings - bets)
+                    $bal += $row['amount'];
+                    $transaction_type_name = 'Fight #' . $row['accttyp'];
+                    break;
+                case 5: // Cash-In (Downline) (Debit) - Agent is debited
+                    $bal -= $row['amount'];
+                    $row['display_amount'] = '-' . number_format($row['amount'], 2); // Show as negative
+                    $transaction_type_name = 'Cash-In (Downline)';
+                    break;
+                case 6: // Cash-Out (Downline) (Credit) - Agent is credited
+                    $bal += $row['amount'];
+                    $transaction_type_name = 'Cash-Out (Downline)';
+                    break;
+            }
+            
+            $row['row_num'] = $i++;
+            $row['current_balance'] = $bal;
+            $row['transaction_type_name'] = $transaction_type_name;
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
     // public function getCommLogsOfAgent($userId) {
     //     // Step 1: Get the oldest date_created from bets/coms
     //     $sql_oldest = "
