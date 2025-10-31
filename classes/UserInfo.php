@@ -34,6 +34,16 @@ class UserInfo {
         return $qry->fetch_all(MYSQLI_ASSOC);
     }
 
+    public function getApprovalPlayersUnderAgent($userId,$type) {
+        if ($type == 1){ //use admin priv
+            $qry = $this->conn->query("SELECT * from `users` where type = 3  and active in ('N','F')");
+        }else{
+            $qry = $this->conn->query("SELECT * from `users` where type = 3  and active in ('N','F') and parentid = '{$userId}' order by username asc ");
+        }
+        
+        return $qry->fetch_all(MYSQLI_ASSOC);
+    }
+
     // AJAX Handling
 
     public function getUserData($userId){
