@@ -124,7 +124,7 @@
                       <?php endif; ?>
 
                       <li class="nav-item dropdown">
-                        <a href="<?php echo base_url ?>dashboard/?page=maintenance/load_logs" class="nav-link nav-maintenance_hist_bets">
+                        <a href="<?php echo base_url ?>dashboard/?page=maintenance/load_logs" class="nav-link nav-maintenance_load_logs">
                           <i class="nav-icon fas fa-history"></i>
                           <p>
                             Load Logs
@@ -176,7 +176,7 @@
 
                         <?php if($_settings->userdata('type') == 2): ?> 
                           <li class="nav-item dropdown">
-                            <a href="<?php echo base_url ?>dashboard/?page=maintenance/comm_logs" class="nav-link nav-maintenance_hist_bets">
+                            <a href="<?php echo base_url ?>dashboard/?page=maintenance/comm_logs" class="nav-link nav-maintenance_comm_logs">
                               <i class="nav-icon fas fa-chart-line"></i>
                               <p>
                                 Comm Logs
@@ -197,7 +197,8 @@
 
                       <?php if($_settings->userdata('type') == 1 or $_settings->userdata('type') == 2): ?> 
                         <li class="nav-item dropdown">
-                          <a href="<?php echo base_url ?>dashboard/?page=maintenance/hist_commission" class="nav-link nav-maintenance_hist_commission">
+                          <!-- <a href="<?php echo base_url ?>dashboard/?page=maintenance/hist_commission" class="nav-link nav-maintenance_hist_commission"> -->
+                          <a href="<?php echo base_url ?>dashboard/?page=maintenance/comm_withdrawal" class="nav-link nav-maintenance_comm_withdrawal">
                             <i class="nav-icon fas fa-chart-bar"></i>
                             <p>
                               Comm Withdrawal
@@ -251,7 +252,7 @@
 
                     <?php if($_settings->userdata('type') == 2): ?> 
                       <li class="nav-item dropdown">
-                        <a href="<?php echo base_url ?>dashboard/?page=user/list_players_approval" class="nav-link nav-user_list_players_approval">
+                        <a href="<?php echo base_url ?>dashboard/?page=user/approval_players" class="nav-link nav-user_approval_players">
                           <i class="nav-icon fas fa-users"></i>
                           <p>
                             Approval Players
