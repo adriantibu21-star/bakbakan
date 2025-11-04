@@ -53,6 +53,11 @@
 		padding: 0.75rem !important;
 	}
 
+	.card{
+		background-color: #001103 !important;
+		color: rgb(226, 226, 226) !important;
+	}
+
 	
 
 </style>
@@ -66,7 +71,7 @@
 
 <div class="content-wrapper" style="background-color: #f4f6f9 !important;">
 	<div class="pt-4"></div>
-	<div class="card card-info card-v2"  style="margin-left: 2%; margin-right: 2%; color: #212529 !important;">
+	<div class="card card-success card-v2"  style="margin-left: 2%; margin-right: 2%; color: #212529 !important;">
 		<div class="card-header">
 			<h3 class="card-title ">
 				<i class="fas fa-align-justify "></i>   
@@ -91,7 +96,7 @@
 				</div>
 			</form>               
 				
-				<table id="example1" class="table table-bordered table-striped  ">
+				<table id="example1" class="table table-responsive table-striped table-head-fixed text-nowrap table-dark">
 					<thead>
 						<tr>
 							<th>Date</th>
