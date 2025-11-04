@@ -7,7 +7,7 @@
 	$userBalance = new UserBalance($conn, $_settings->userdata('id'), $_settings->userdata('type'));
 	$betInfo = new BetInfo($conn);
 
-	$betHistoryOfUser = $betInfo->getBetHistoryOfAgent($_settings->userdata('id'));
+	$betHistoryOfUser = $betInfo->getBetHistoryOfUser($_settings->userdata('id'));
 
     $curbal = $userBalance->getUserBalance($_settings->userdata('id'));
 ?>
@@ -94,8 +94,8 @@
 				<table id="example1" class="table table-bordered table-striped  ">
 					<thead>
 						<tr>
-							<th>Username</th>
 							<th>Date</th>
+							<th>Username</th>
 							<th>Fight# - Event</th>
 							<th>Meron/Pula</th>
 							<th>Wala/Asul</th>
@@ -193,8 +193,8 @@
 					</tbody>
 					<tfoot>
 						<tr>
-							<th>Username</th>
 							<th>Date</th>
+							<th>Username</th>
 							<th>Fight# - Event</th>
 							<th>Meron/Pula</th>
 							<th>Wala/Asul</th>

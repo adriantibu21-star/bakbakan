@@ -476,189 +476,125 @@ class BetInfo {
         ];
     }
 
-    public function getBetHistoryOfAgent($userId){
-       $ending_asof = '1900-01-01'; 
+    public function getBetHistoryOfUser($userId)
+    {
+        // 1. Initialize variables and fetch the beginning balance
+        $ending_asof = '1900-01-01'; 
         $ending_amount = 0.00;
-        $type_name = 'Unknown';
+        $type_name = 'Beginning Balance'; // Default
         
         $qryBeginingbalance_sql = "
-            SELECT
-                T1.ending_asof,
-                T1.amount,
-                T1.type
-            FROM
-                (
-                    SELECT
-                        ending_asof,
-                        amount,
-                        'Cut-off Balance' AS type
-                    FROM
-                        endingbalance
-                    WHERE
-                        user_id = ?
-
-                    UNION
-
-                    SELECT
-                        DATE_FORMAT(date_added, '%Y-%m-%d %H:%i') AS ending_asof,
-                        0 AS amount,
-                        'Beginning Balance' AS type
-                    FROM
-                        users
-                    WHERE
-                        id = ?
-                    ORDER BY
-                        ending_asof DESC
-                    LIMIT 1
-                ) AS T1;
+            SELECT T1.ending_asof, T1.amount, T1.type 
+            FROM (
+                SELECT ending_asof, amount, 'Cut-off Balance' AS type FROM endingbalance WHERE user_id = ?
+                UNION 
+                SELECT DATE_FORMAT(date_added, '%Y-%m-%d %H:%i') AS ending_asof, 0 AS amount, 'Beginning Balance' AS type FROM users WHERE id = ?
+                ORDER BY ending_asof DESC LIMIT 1
+            ) AS T1;
         ";
 
         $stmt_bal = $this->conn->prepare($qryBeginingbalance_sql);
-
-        $stmt_bal->bind_param("ss", $userId, $userId);
-
+        $stmt_bal->bind_param("ss", $userId, $userId); 
         $stmt_bal->execute();
         $result_bal = $stmt_bal->get_result();
 
         if ($result_bal->num_rows > 0) {
             $rowevent = $result_bal->fetch_assoc();
             $ending_asof = $rowevent['ending_asof']; 
-            $ending_amount = $rowevent['amount'];
-            $type_name = $rowevent['type']; 
+            $ending_amount = (float)$rowevent['amount']; // Cast to float
+            $type_name = $rowevent['type'];
         }
         $stmt_bal->close();
         
+        // 2. Prepare the main ledger history query
+        // The SQL is structured to match the 'getBetHistoryOfAgent' function,
+        // BUT INCLUDES the necessary fields for the client-side table rendering (winner, amounts, drawno).
         $sql = "
-            ( -- Beginning Balance
+            ( -- TYPE 0: Beginning Balance / Cut-off
                 SELECT 
-                    ? AS date_created, 
-                    ? AS amount, 
+                    ? AS date_created, ? AS amount, 
                     0 AS type, 
                     ? AS accttyp, 
-                    '' AS processby
+                    '' AS processby,
+                    0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, '' AS drawno
             )
             UNION ALL
-            ( -- Cash-In (type 1) - user is being credited
+            ( -- TYPE 1: Cash-In (user is being credited)
                 SELECT 
-                    a.date_created,
-                    a.amount,
+                    a.date_created, a.amount, 
                     1 AS type,
                     CONCAT(
-                        (SELECT 
-                            CASE 
-                                WHEN role = 1 THEN 'Financer Account'
-                                WHEN role = 2 THEN 'Operator'
-                                WHEN role = 3 THEN 'Sub-Operator'
-                                WHEN role = 4 THEN 'Master Agent'
-                                WHEN role = 5 THEN 'Player'
-                                ELSE ''
-                            END
-                        FROM users WHERE id = a.agent_id),
+                        (SELECT CASE WHEN role = 1 THEN 'Financer Account' WHEN role = 2 THEN 'Operator' WHEN role = 3 THEN 'Sub-Operator' WHEN role = 4 THEN 'Master Agent' WHEN role = 5 THEN 'Player' ELSE '' END FROM users WHERE id = a.agent_id),
                         ' - ', 
                         (SELECT username FROM users WHERE id = a.agent_id)
                     ) AS accttyp,
-                    (SELECT username FROM users WHERE id = a.agent_id) AS processby
+                    (SELECT username FROM users WHERE id = a.agent_id) AS processby,
+                    0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, '' AS drawno
                 FROM loading a
                 WHERE a.active = 'N' AND a.user_id = ? AND a.date_created >= ?
             )
             UNION ALL
-            ( -- Cash-Out (type 2) - user is being debited
+            ( -- TYPE 2: Cash-Out (user is being debited)
                 SELECT 
-                    a.date_created,
-                    a.amount,
+                    a.date_created, a.amount, 
                     2 AS type,
                     CONCAT(
-                        (SELECT 
-                            CASE 
-                                WHEN role = 1 THEN 'Financer Account'
-                                WHEN role = 2 THEN 'Operator'
-                                WHEN role = 3 THEN 'Sub-Operator'
-                                WHEN role = 4 THEN 'Master Agent'
-                                WHEN role = 5 THEN 'Player'
-                                ELSE ''
-                            END
-                        FROM users WHERE id = a.agent_id),
+                        (SELECT CASE WHEN role = 1 THEN 'Financer Account' WHEN role = 2 THEN 'Operator' WHEN role = 3 THEN 'Sub-Operator' WHEN role = 4 THEN 'Master Agent' WHEN role = 5 THEN 'Player' ELSE '' END FROM users WHERE id = a.agent_id),
                         ' - ', 
                         (SELECT username FROM users WHERE id = a.agent_id)
                     ) AS accttyp,
-                    (SELECT username FROM users WHERE id = a.agent_id) AS processby
+                    (SELECT username FROM users WHERE id = a.agent_id) AS processby,
+                    0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, '' AS drawno
                 FROM withdrawals a
                 WHERE a.active = 'N' AND a.user_id = ? AND a.date_created >= ?
             )
             UNION ALL
-            ( -- Cash-In (Downline) (type 5) - user is debited (acts as agent for downline load)
+            ( -- TYPE 5: Cash-In (Downline) (user/agent is debited)
                 SELECT 
-                    a.date_created,
-                    a.amount,
+                    a.date_created, a.amount,
                     5 AS type,
                     CONCAT(
-                        (SELECT 
-                            CASE 
-                                WHEN role = 1 THEN 'Financer Account'
-                                WHEN role = 2 THEN 'Operator'
-                                WHEN role = 3 THEN 'Sub-Operator'
-                                WHEN role = 4 THEN 'Master Agent'
-                                WHEN role = 5 THEN 'Player'
-                                ELSE ''
-                            END
-                        FROM users WHERE id = a.user_id),
+                        (SELECT CASE WHEN role = 1 THEN 'Financer Account' WHEN role = 2 THEN 'Operator' WHEN role = 3 THEN 'Sub-Operator' WHEN role = 4 THEN 'Master Agent' WHEN role = 5 THEN 'Player' ELSE '' END FROM users WHERE id = a.user_id),
                         ' - ', 
                         (SELECT username FROM users WHERE id = a.user_id)
                     ) AS accttyp,
-                    (SELECT username FROM users WHERE id = a.agent_id) AS processby
+                    (SELECT username FROM users WHERE id = a.agent_id) AS processby,
+                    0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, '' AS drawno
                 FROM loading a
                 WHERE a.active = 'N' AND a.agent_id = ? AND a.date_created >= ?
             )
             UNION ALL
-            ( -- Cash-Out (Downline) (type 6) - user is credited (acts as agent for downline withdrawal)
+            ( -- TYPE 6: Cash-Out (Downline) (user/agent is credited)
                 SELECT 
-                    a.date_created,
-                    a.amount,
+                    a.date_created, a.amount,
                     6 AS type,
                     CONCAT(
-                        (SELECT 
-                            CASE 
-                                WHEN role = 1 THEN 'Financer Account'
-                                WHEN role = 2 THEN 'Operator'
-                                WHEN role = 3 THEN 'Sub-Operator'
-                                WHEN role = 4 THEN 'Master Agent'
-                                WHEN role = 5 THEN 'Player'
-                                ELSE ''
-                            END
-                        FROM users WHERE id = a.user_id),
+                        (SELECT CASE WHEN role = 1 THEN 'Financer Account' WHEN role = 2 THEN 'Operator' WHEN role = 3 THEN 'Sub-Operator' WHEN role = 4 THEN 'Master Agent' WHEN role = 5 THEN 'Player' ELSE '' END FROM users WHERE id = a.user_id),
                         ' - ', 
                         (SELECT username FROM users WHERE id = a.user_id)
                     ) AS accttyp,
-                    (SELECT username FROM users WHERE id = a.agent_id) AS processby
+                    (SELECT username FROM users WHERE id = a.agent_id) AS processby,
+                    0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, '' AS drawno
                 FROM withdrawals a
                 WHERE a.active = 'N' AND a.agent_id = ? AND a.date_created >= ?
             )
             UNION ALL
-            ( -- Commission (type 3) - user is being credited
+            ( -- TYPE 3: Commission (user is being credited)
                 SELECT 
-                    a.date_created, 
-                    a.amount_converted AS amount, 
+                    a.date_created, a.amount_converted AS amount, 
                     3 AS type,
                     CONCAT(
-                        (SELECT 
-                            CASE 
-                                WHEN role = 1 THEN 'Financer Account'
-                                WHEN role = 2 THEN 'Operator'
-                                WHEN role = 3 THEN 'Sub-Operator'
-                                WHEN role = 4 THEN 'Master Agent'
-                                WHEN role = 5 THEN 'Player'
-                                ELSE ''
-                            END
-                        FROM users WHERE id = a.agent_id),
+                        (SELECT CASE WHEN role = 1 THEN 'Financer Account' WHEN role = 2 THEN 'Operator' WHEN role = 3 THEN 'Sub-Operator' WHEN role = 4 THEN 'Master Agent' WHEN role = 5 THEN 'Player' ELSE '' END FROM users WHERE id = a.agent_id),
                         ' - ', 
                         (SELECT username FROM users WHERE id = a.agent_id)
                     ) AS accttyp,
-                    (SELECT username FROM users WHERE id = a.agent_id) AS processby 
+                    (SELECT username FROM users WHERE id = a.agent_id) AS processby,
+                    0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, '' AS drawno
                 FROM coms_converted a 
                 WHERE a.user_id = ? AND a.date_created >= ?
             )
             UNION ALL
-            ( -- Winnings/Bets (type 4) - user's net amount from a bet (can be positive for win, negative for loss)
+            ( -- TYPE 4: Winnings/Bets (user's net amount)
                 SELECT 
                     a.date_created, 
                     (a.earnings - a.red_amount - a.blue_amount - a.yellow_amount) AS amount, 
@@ -668,7 +604,10 @@ class BetInfo {
                         '-', 
                         (SELECT name FROM events WHERE id = (SELECT eventid FROM draws WHERE id = a.drawid))
                     ) AS accttyp,
-                    '' AS processby 
+                    '' AS processby,
+                    (SELECT winner FROM draws WHERE id = a.drawid) AS winner,
+                    a.red_amount, a.blue_amount, a.yellow_amount,
+                    (SELECT drawno FROM draws WHERE id = a.drawid) AS drawno
                 FROM bets a 
                 WHERE a.user_id = ? AND a.date_created >= ?
             )
@@ -677,6 +616,7 @@ class BetInfo {
 
         $stmt = $this->conn->prepare($sql);
 
+        // Bind parameters (sds + 6 instances of ss for the user ID and date)
         $stmt->bind_param(
             "sds" . "ss" . "ss" . "ss" . "ss" . "ss" . "ss", 
             $ending_asof, 
@@ -694,46 +634,44 @@ class BetInfo {
         $result = $stmt->get_result();
         $stmt->close();
         
+        // 3. Process results to calculate running balance and finalize columns
         $rows = [];
-        $bal = 0.00;
+        $bal = (float)$ending_amount;
         $i = 1;
 
         while ($row = $result->fetch_assoc()) {
+            $row['amount'] = (float)$row['amount']; // Ensure amount is float for arithmetic
             $row['display_amount'] = $row['amount']; // Initialize display amount
-            $transaction_type_name = 'Winnings/Bets'; // Default name (matches the last 'else')
 
-            switch ($row['type']) {
-                case 0: // Beginning Balance
-                    $bal += $row['amount'];
+            switch ((int)$row['type']) {
+                case 0: // Beginning Balance/Cut-off
+                    // Balance initialized with $ending_amount, no need to add here unless we skip the initialization step.
+                    // To follow the Agent logic:
+                    if ($i === 1) $bal = $row['amount']; // Re-align balance if row 0 exists
                     $transaction_type_name = $type_name;
                     break;
                 case 1: // Cash-In (Credit)
+                case 3: // Commission (Credit)
+                case 6: // Cash-Out (Downline) (Credit to Agent)
                     $bal += $row['amount'];
-                    $transaction_type_name = 'Cash-In';
+                    $transaction_type_name = ['Cash-In', 'Commission', 'Cash-Out (Downline)'][($row['type'] - 1) % 3]; // Simplified naming
                     break;
                 case 2: // Cash-Out (Debit)
+                case 5: // Cash-In (Downline) (Debit from Agent)
                     $bal -= $row['amount'];
-                    $row['display_amount'] = '-' . number_format($row['amount'], 2); // Show as negative
-                    $transaction_type_name = 'Cash-Out';
+                    // The client-side code will handle the display_amount negative sign for these types, 
+                    // but we ensure the balance calculation is correct.
+                    $transaction_type_name = ['Cash-Out', '', 'Cash-In (Downline)'][($row['type'] - 2) % 3]; // Simplified naming
                     break;
-                case 3: // Commission (Credit)
+                case 4: // Winnings/Bets (Credit/Debit)
                     $bal += $row['amount'];
-                    $transaction_type_name = 'Commission';
-                    break;
-                case 4: // Winnings/Bets (Credit/Debit) - Amount is already calculated as net (earnings - bets)
-                    $bal += $row['amount'];
-                    $transaction_type_name = 'Fight #' . $row['accttyp'];
-                    break;
-                case 5: // Cash-In (Downline) (Debit) - Agent is debited
-                    $bal -= $row['amount'];
-                    $row['display_amount'] = '-' . number_format($row['amount'], 2); // Show as negative
-                    $transaction_type_name = 'Cash-In (Downline)';
-                    break;
-                case 6: // Cash-Out (Downline) (Credit) - Agent is credited
-                    $bal += $row['amount'];
-                    $transaction_type_name = 'Cash-Out (Downline)';
+                    // The client-side loop prefixes with 'Fight #', so we only need the accttyp content here.
+                    $transaction_type_name = $row['accttyp'];
                     break;
             }
+            
+            // Format for client-side display
+            $row['display_amount'] = number_format($row['amount'], 2, '.', '');
             
             $row['row_num'] = $i++;
             $row['current_balance'] = $bal;
