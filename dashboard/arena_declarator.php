@@ -950,12 +950,12 @@ function controller_fight_status(){
               					
       setTimeout(function(){
         controller_fight_status();
-      },1500);
+      },1900);
     },
     error: function(result){
       setTimeout(function(){
         controller_fight_status();
-      },1500);
+      },1900);
     }
   });
 }
