@@ -151,7 +151,7 @@
 										else if ($winner === '4') $winnerBadge = '<span class="badge badge-light">Cancelled</span>';
 
 										// Win/Lose status for the Amount column (Column 8)
-										if ($row['bet_status'] !== 'Y') {
+										if (strtolower($row['bet_status']) !== 'y') {
 											if ($amount < 0) {
 												$winnerStatus = ' <span class="badge badge-danger">Lose</span>';
 												$amountDisplay = number_format(abs($amount), 2); // Show loss as positive, then append Lose badge

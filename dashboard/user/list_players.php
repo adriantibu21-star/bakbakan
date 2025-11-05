@@ -869,11 +869,16 @@ function set_bet_history_table(data, userName) {
             else if (winner === '4') winnerBadge = '<span class="badge badge-light">Cancelled</span>';
 
             // Win/Lose status for the Amount column (Column 8)
-            if (amount < 0) {
-                winnerStatus = ' <span class="badge badge-danger">Lose</span>';
-            } else if (amount > 0) {
-                winnerStatus = ' <span class="badge badge-success">Win</span>';
-            }
+			console.log(typeof(row.bet_status));
+			if (row.bet_status.toLowerCase() != 'y') {
+				if (amount < 0) {
+					winnerStatus = ' <span class="badge badge-danger">Lose</span>';
+				} else if (amount > 0) {
+					winnerStatus = ' <span class="badge badge-success">Win</span>';
+				}
+			}else{
+        		winnerStatus = '<span class="badge badge-light">N/A</span>';
+			}
         }
         
         let newRow = '<tr>';

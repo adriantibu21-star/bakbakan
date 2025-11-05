@@ -1210,7 +1210,7 @@ class BetInfo {
             -- TYPE 0: Beginning Balance / Cut-off
             SELECT 0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, 
                    '{$ending_asof}' AS date_created, {$ending_amount} AS amount, 
-                   0 AS type, '{$type_name}' AS type_name, '' AS accttyp, '' AS processby, '' AS drawno, 0 AS sort_col
+                   0 AS type, '{$type_name}' AS type_name, '' AS accttyp, '' AS processby, '' AS drawno, 0 AS sort_col, '' AS bet_status
             
             UNION ALL
             
@@ -1218,7 +1218,7 @@ class BetInfo {
             SELECT 0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, 
                    date_created, amount, 1 AS type, 'Cash-In' AS type_name,
                    (SELECT CONCAT(CASE WHEN role = 1 THEN 'Financer Account' WHEN role = 2 THEN 'Operator' WHEN role = 3 THEN 'Sub-Operator' WHEN role = 4 THEN 'Master Agent' WHEN role = 5 THEN 'Player' ELSE '' END, ' - ', username) FROM users WHERE id = a.agent_id) AS accttyp,
-                   (SELECT username FROM users WHERE id = a.agent_id) AS processby, '' AS drawno, UNIX_TIMESTAMP(date_created) AS sort_col
+                   (SELECT username FROM users WHERE id = a.agent_id) AS processby, '' AS drawno, UNIX_TIMESTAMP(date_created) AS sort_col, '' AS bet_status
             FROM loading a 
             WHERE active = 'N' AND user_id = ? AND date_created >= '{$ending_asof}'
 
@@ -1228,7 +1228,7 @@ class BetInfo {
             SELECT 0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, 
                    date_created, amount, 2 AS type, 'Cash-Out' AS type_name,
                    (SELECT CONCAT(CASE WHEN role = 1 THEN 'Financer Account' WHEN role = 2 THEN 'Operator' WHEN role = 3 THEN 'Sub-Operator' WHEN role = 4 THEN 'Master Agent' WHEN role = 5 THEN 'Player' ELSE '' END, ' - ', username) FROM users WHERE id = a.agent_id) AS accttyp,
-                   (SELECT username FROM users WHERE id = a.agent_id) AS processby, '' AS drawno, UNIX_TIMESTAMP(date_created) AS sort_col
+                   (SELECT username FROM users WHERE id = a.agent_id) AS processby, '' AS drawno, UNIX_TIMESTAMP(date_created) AS sort_col, '' AS bet_status
             FROM withdrawals a 
             WHERE active = 'N' AND user_id = ? AND date_created >= '{$ending_asof}'
 
@@ -1238,7 +1238,7 @@ class BetInfo {
             SELECT 0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, 
                    date_created, amount, 5 AS type, 'Cash-In (Downline)' AS type_name,
                    (SELECT CONCAT(CASE WHEN role = 1 THEN 'Financer Account' WHEN role = 2 THEN 'Operator' WHEN role = 3 THEN 'Sub-Operator' WHEN role = 4 THEN 'Master Agent' WHEN role = 5 THEN 'Player' ELSE '' END, ' - ', username) FROM users WHERE id = a.user_id) AS accttyp,
-                   (SELECT username FROM users WHERE id = a.agent_id) AS processby, '' AS drawno, UNIX_TIMESTAMP(date_created) AS sort_col
+                   (SELECT username FROM users WHERE id = a.agent_id) AS processby, '' AS drawno, UNIX_TIMESTAMP(date_created) AS sort_col, '' AS bet_status
             FROM loading a 
             WHERE active = 'N' AND agent_id = ? AND date_created >= '{$ending_asof}'
 
@@ -1248,7 +1248,7 @@ class BetInfo {
             SELECT 0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, 
                    date_created, amount, 6 AS type, 'Cash-Out (Downline)' AS type_name,
                    (SELECT CONCAT(CASE WHEN role = 1 THEN 'Financer Account' WHEN role = 2 THEN 'Operator' WHEN role = 3 THEN 'Sub-Operator' WHEN role = 4 THEN 'Master Agent' WHEN role = 5 THEN 'Player' ELSE '' END, ' - ', username) FROM users WHERE id = a.user_id) AS accttyp,
-                   (SELECT username FROM users WHERE id = a.agent_id) AS processby, '' AS drawno, UNIX_TIMESTAMP(date_created) AS sort_col
+                   (SELECT username FROM users WHERE id = a.agent_id) AS processby, '' AS drawno, UNIX_TIMESTAMP(date_created) AS sort_col, '' AS bet_status
             FROM withdrawals a 
             WHERE active = 'N' AND agent_id = ? AND date_created >= '{$ending_asof}'
 
@@ -1258,7 +1258,7 @@ class BetInfo {
             SELECT 0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, 
                    date_created, amount, 3 AS type, 'Commission' AS type_name,
                    (SELECT CONCAT(CASE WHEN role = 1 THEN 'Financer Account' WHEN role = 2 THEN 'Operator' WHEN role = 3 THEN 'Sub-Operator' WHEN role = 4 THEN 'Master Agent' WHEN role = 5 THEN 'Player' ELSE '' END, ' - ', username) FROM users WHERE id = a.agent_id) AS accttyp,
-                   (SELECT username FROM users WHERE id = a.agent_id) AS processby, '' AS drawno, UNIX_TIMESTAMP(date_created) AS sort_col
+                   (SELECT username FROM users WHERE id = a.agent_id) AS processby, '' AS drawno, UNIX_TIMESTAMP(date_created) AS sort_col, '' AS bet_status
             FROM coms a 
             WHERE active = 'N' AND user_id = ? AND date_created >= '{$ending_asof}'
 
@@ -1273,7 +1273,7 @@ class BetInfo {
                           (SELECT drawno FROM draws WHERE id = a.drawid),'-', 
                           (SELECT name FROM events WHERE id = (SELECT eventid FROM draws WHERE id = a.drawid))) AS accttyp,
                    '' AS processby, 
-                   (SELECT drawno FROM draws WHERE id = a.drawid) AS drawno, UNIX_TIMESTAMP(date_created) AS sort_col
+                   (SELECT drawno FROM draws WHERE id = a.drawid) AS drawno, UNIX_TIMESTAMP(date_created) AS sort_col, (SELECT active FROM draws WHERE id = a.drawid) AS bet_status
             FROM bets a 
             WHERE user_id = ? AND date_created >= '{$ending_asof}'
             
