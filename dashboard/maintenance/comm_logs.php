@@ -108,7 +108,7 @@
 						<?php
 							foreach($commLogsOfAgent as $row):?>
 								<tr>
-									<td><?php echo $row['DATE_formatted'] ?></td>
+									<td><?php echo $row['DATE'] ?></td>
 									<td><?php echo $row['FIGHT#']?></td>
 									<td><?php echo $row['EVENT']?></td>
 									<td><?php echo $row['USERNAME']?></td>
