@@ -151,12 +151,16 @@
 										else if ($winner === '4') $winnerBadge = '<span class="badge badge-light">Cancelled</span>';
 
 										// Win/Lose status for the Amount column (Column 8)
-										if ($amount < 0) {
-											$winnerStatus = ' <span class="badge badge-danger">Lose</span>';
-											$amountDisplay = number_format(abs($amount), 2); // Show loss as positive, then append Lose badge
-										} else if ($amount > 0) {
-											$winnerStatus = ' <span class="badge badge-success">Win</span>';
-											$amountDisplay = number_format($amount, 2); 
+										if ($row['bet_status'] !== 'Y') {
+											if ($amount < 0) {
+												$winnerStatus = ' <span class="badge badge-danger">Lose</span>';
+												$amountDisplay = number_format(abs($amount), 2); // Show loss as positive, then append Lose badge
+											} else if ($amount > 0) {
+												$winnerStatus = ' <span class="badge badge-success">Win</span>';
+												$amountDisplay = number_format($amount, 2); 
+											}
+										}else{
+											$winnerStatus = '<span class="badge badge-light">N/A</span>';
 										}
 									}
 									
