@@ -353,7 +353,6 @@ class BetInfo {
                         0.00 AS `COMMISSION`,
                         w.amount_converted AS `WITHDRAWAL`, 
                         'Withdrawal' AS `%EARN`
-                    -- 🛑 Assuming 'withdrawals' is the correct table for transactions 
                     --    that debit the commission balance
                     FROM coms_converted w 
                     INNER JOIN users ag ON ag.id = w.user_id
@@ -516,7 +515,12 @@ class BetInfo {
                     0 AS type, 
                     ? AS accttyp, 
                     '' AS processby,
-                    0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, '' AS drawno
+                    0 AS winner, 
+                    0.00 AS red_amount, 
+                    0.00 AS blue_amount, 
+                    0.00 AS yellow_amount, 
+                    '' AS drawno,
+                    '' AS bet_status 
             )
             UNION ALL
             ( -- TYPE 1: Cash-In (user is being credited)
@@ -529,7 +533,12 @@ class BetInfo {
                         (SELECT username FROM users WHERE id = a.agent_id)
                     ) AS accttyp,
                     (SELECT username FROM users WHERE id = a.agent_id) AS processby,
-                    0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, '' AS drawno
+                    0 AS winner, 
+                    0.00 AS red_amount, 
+                    0.00 AS blue_amount, 
+                    0.00 AS yellow_amount, 
+                    '' AS drawno,
+                    '' AS bet_status 
                 FROM loading a
                 WHERE a.active = 'N' AND a.user_id = ? AND a.date_created >= ?
             )
@@ -544,7 +553,12 @@ class BetInfo {
                         (SELECT username FROM users WHERE id = a.agent_id)
                     ) AS accttyp,
                     (SELECT username FROM users WHERE id = a.agent_id) AS processby,
-                    0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, '' AS drawno
+                    0 AS winner, 
+                    0.00 AS red_amount, 
+                    0.00 AS blue_amount, 
+                    0.00 AS yellow_amount, 
+                    '' AS drawno,
+                    '' AS bet_status 
                 FROM withdrawals a
                 WHERE a.active = 'N' AND a.user_id = ? AND a.date_created >= ?
             )
@@ -559,7 +573,12 @@ class BetInfo {
                         (SELECT username FROM users WHERE id = a.user_id)
                     ) AS accttyp,
                     (SELECT username FROM users WHERE id = a.agent_id) AS processby,
-                    0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, '' AS drawno
+                    0 AS winner, 
+                    0.00 AS red_amount, 
+                    0.00 AS blue_amount, 
+                    0.00 AS yellow_amount, 
+                    '' AS drawno,
+                    '' AS bet_status 
                 FROM loading a
                 WHERE a.active = 'N' AND a.agent_id = ? AND a.date_created >= ?
             )
@@ -574,7 +593,12 @@ class BetInfo {
                         (SELECT username FROM users WHERE id = a.user_id)
                     ) AS accttyp,
                     (SELECT username FROM users WHERE id = a.agent_id) AS processby,
-                    0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, '' AS drawno
+                    0 AS winner, 
+                    0.00 AS red_amount, 
+                    0.00 AS blue_amount, 
+                    0.00 AS yellow_amount, 
+                    '' AS drawno,
+                    '' AS bet_status 
                 FROM withdrawals a
                 WHERE a.active = 'N' AND a.agent_id = ? AND a.date_created >= ?
             )
@@ -589,7 +613,12 @@ class BetInfo {
                         (SELECT username FROM users WHERE id = a.agent_id)
                     ) AS accttyp,
                     (SELECT username FROM users WHERE id = a.agent_id) AS processby,
-                    0 AS winner, 0.00 AS red_amount, 0.00 AS blue_amount, 0.00 AS yellow_amount, '' AS drawno
+                    0 AS winner, 
+                    0.00 AS red_amount, 
+                    0.00 AS blue_amount, 
+                    0.00 AS yellow_amount, 
+                    '' AS drawno,
+                    '' AS bet_status 
                 FROM coms_converted a 
                 WHERE a.user_id = ? AND a.date_created >= ?
             )
@@ -607,7 +636,8 @@ class BetInfo {
                     '' AS processby,
                     (SELECT winner FROM draws WHERE id = a.drawid) AS winner,
                     a.red_amount, a.blue_amount, a.yellow_amount,
-                    (SELECT drawno FROM draws WHERE id = a.drawid) AS drawno
+                    (SELECT drawno FROM draws WHERE id = a.drawid) AS drawno,
+                    (SELECT active FROM draws WHERE id = a.drawid) AS bet_status 
                 FROM bets a 
                 WHERE a.user_id = ? AND a.date_created >= ?
             )
