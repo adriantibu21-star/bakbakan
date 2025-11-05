@@ -417,9 +417,9 @@
 									<table class="table table-striped table-head-fixed text-nowrap table-dark" id="user-bet-history">
 										<thead class="text-center">
 											<tr>
-												<th>Username</th>
 												<th>Date</th>
-												<th>Fight #- Event</th>
+												<th>Username</th>
+												<th>Fight # - Event</th>
 												<th>Meron/Pula</th>
 												<th>Wala/Asul</th>
 												<th>Draw</th>
