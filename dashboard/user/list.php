@@ -122,7 +122,7 @@
 											}
 										?>
 									</td>
-									<td><?php echo $player['type'] == 2 ? "Agent" : "Not an Agent"; ?></td>
+									<td><?php echo $player['type'] == 2 ? "Agent" : ($player['type'] == 4 ? "Declarator" : "Not an Agent"); ?></td>
 									<td><?php echo $player['amount']; ?></td>
 									<td><?php echo $player['com_amount_bal']; ?></td>
 									<td><?php echo $player['rate']; ?>%</td>

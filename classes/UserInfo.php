@@ -16,7 +16,7 @@ class UserInfo {
 
     public function getAllAgentsUnderAgent($userId,$type) {
         if ($type == 1){ //use admin priv
-            $qry = $this->conn->query("SELECT * from `users` where type = 2  and active in ('Y','N','F','T')");
+            $qry = $this->conn->query("SELECT * from `users` where type in (2,4)  and active in ('Y','N','F','T')");
         }else{
             $qry = $this->conn->query("SELECT * from `users` where type = 2  and active in ('Y','N','F','T') and parentid = '{$userId}' order by username asc ");
         }
