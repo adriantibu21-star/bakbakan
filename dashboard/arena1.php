@@ -940,7 +940,7 @@
       $.ajax({
         url: _base_url_ + "classes/balance.php",
         success: function(result) {
-          $('#ur_points').html(result);
+          $('#ur_points').html('₱'+result);
         },
         error: function(result) {
           console.log(result);
@@ -1300,7 +1300,7 @@
                 }
 
                 if (result !== balancechecker) {
-                  $('#ur_points').html(result);
+                  $('#ur_points').html('₱'+result);
                 }
                 balancechecker = result;
               },
