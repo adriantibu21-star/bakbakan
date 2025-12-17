@@ -26,9 +26,9 @@ class UserInfo {
 
     public function getAllPlayersUnderAgent($userId,$type) {
         if ($type == 1){ //use admin priv
-            $qry = $this->conn->query("SELECT * from `users` where type = 3  and active in ('Y','N','F','T')");
+            $qry = $this->conn->query("SELECT u.*, agent.username AS agent_username FROM users AS u INNER JOIN users AS agent ON agent.id = u.parentid WHERE u.type = 3 AND u.active IN ('Y','N','F','T');");
         }else{
-            $qry = $this->conn->query("SELECT * from `users` where type = 3  and active in ('Y','N','F','T') and parentid = '{$userId}' order by username asc ");
+            $qry = $this->conn->query("    SELECT u.*,  agent.username AS agent_username FROM users AS u INNER JOIN users AS agent ON agent.id = u.parentid WHERE u.type = 3 AND u.active IN ('Y','N','F','T') AND u.parentid = '{$userId}' ORDER BY u.username ASC");
         }
         
         return $qry->fetch_all(MYSQLI_ASSOC);

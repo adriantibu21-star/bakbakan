@@ -120,7 +120,7 @@
 											}
 										?>
 									</td>
-									<td><?php echo $player['type'] == 2 ? "Agent" : "Player"; ?></td>
+									<td><?php echo $player['agent_username']; ?></td></td>
 									<td><?php echo $player['amount']; ?></td>
 									<td class="text-center">
 										<a class="btn btn-danger btn-xs mb-1 user-load-btn" data-logged-in-user-id="<?php echo $_settings->userdata('id')?>" data-user-id="<?php echo $player['id']?>">Load</a>
