@@ -540,14 +540,9 @@
           </div>
           <div class="row">
             <div class="col-6 py-1 px-0 text-center pt-3 dark-bg">
-
               <div class="col p-0 text-center pt-0 " style="background-color: rgb(33, 33, 33);">
-
-
+                
                 <h3 id="meron_winner_label" class="bg-red_dash">MERON</h3>
-
-
-
                 <h3 id="total_meron_bets" class="meron-bets-v1 mt-4">0.00</h3>
                 <h4 id="payout_meron" class="payout-text-v1 mt-3">
                 </h4>
@@ -566,18 +561,12 @@
                 </div>  
 
               </div>
-
             </div>
-            <div class="col-6 py-1 px-0 text-center pt-3 dark-bg">
 
+            <div class="col-6 py-1 px-0 text-center pt-3 dark-bg">
               <div class="col p-0 text-center pt-0 " style="background-color: rgb(26, 26, 26);">
 
-
-
                 <h3 id="wala_winner_label" class="bg-blue_dash">WALA</h3>
-
-
-
                 <h3 id="total_wala_bets" class="wala-bets-v1 mt-4">0.00</h3>
                 <h4 id="payout_wala" class="payout-text-v1 mt-3">
                 </h4>
@@ -595,8 +584,8 @@
                 </div>
 
               </div>
-
             </div>
+
           </div>
 
           <div class="mt-2" style="background-image: url('<?php echo validate_image('/uploads/boardbg.jpg')?>');">
@@ -760,7 +749,6 @@
           </div>
 
           <div class="container-fluid p-0 fight_trend _mobile" id="" style="position:relative;"></div>
-
 
         </div>
       </div>
