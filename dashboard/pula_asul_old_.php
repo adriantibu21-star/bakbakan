@@ -9,7 +9,7 @@
 
 <?php
 $currentsession = $_settings->userdata('id');
-$currentgame_id = '1';
+$currentgame_id = '2';
 ?>
 
 <?php
@@ -353,8 +353,8 @@ if ($event->num_rows > 0) {
               <table class="table bg-status_dash table-borderless text-center table-striped mb-0">
                 <thead>
                   <tr>
-                    <th class="text-center pt-0 statusLabel" style="width: 50%; color: white;"><h5 id="lbl_game_status"> </h5></th>
-		                <th class="text-center pt-0 statusLabel" style="width: 50%; font-size:15px; color: white;">FIGHT # <strong id="lbl_fight_number" fightNoDisplay" style="color: orange; font-size:25px;"> </strong></th>
+                    <th class="text-center statusLabel" style="width: 50%; color: white;"><h5 id="lbl_game_status"> </h5></th>
+		                <th class="text-center statusLabel" style="width: 50%; font-size:15px; color: white;">FIGHT # <strong id="lbl_fight_number" fightNoDisplay" style="color: orange; font-size:25px;"> </strong></th>
                   </tr>
                 </thead>
               </table>
@@ -371,7 +371,7 @@ if ($event->num_rows > 0) {
               <div class="col p-0 text-center pt-0 bg-dark padding: 15px;" style="border-radius: 10px; border: 1px solid white;">
 
                
-                  <h3 id="meron_winner_label" class="bg-red_dash">MERON</h3>
+                  <h3 id="meron_winner_label" class="bg-red_dash">PULA</h3>
               
 
 
@@ -385,7 +385,7 @@ if ($event->num_rows > 0) {
                     <h4>
 				<div class="row">		
                   <div class="col p-1 text-center pt-0 dark-bg">
-                    <button type="button" id="post-meron" class="btn btn-grad-green btn-success btn-sm btn-block post-bet" href="javascript:void(0)" betid=1><i class="fas fa-plus-circle"></i><strong> BET MERON</strong></button>
+                    <button type="button" id="post-meron" class="btn btn-grad-green btn-success btn-sm btn-block post-bet" href="javascript:void(0)" betid=1><i class="fas fa-plus-circle"></i><strong> BET PULA</strong></button>
                   </div>
 				  </div>
 			
@@ -397,7 +397,7 @@ if ($event->num_rows > 0) {
 
                 <div class="col p-0 text-center pt-0 bg-dark padding: 15px;" style="border-radius: 10px; border: 1px solid white;">
 
-                  <h3 id="wala_winner_label" class="bg-blue_dash">WALA</h3>
+                  <h3 id="wala_winner_label" class="bg-blue_dash">ASUL</h3>
 
                   <h3 id="total_wala_bets" style="color:yellow;">0.00</h3>
                   <h4 id="payout_wala">
@@ -411,7 +411,7 @@ if ($event->num_rows > 0) {
 				  <div class="row">			
 			
                   <div class="col p-1 text-center pt-0 dark-bg">
-                    <button type="button" id="post-wala" class="btn btn-grad-green btn-success btn-sm btn-block post-bet" href="javascript:void(0)" betid=2><i class="fas fa-plus-circle"></i><strong> BET WALA</strong></button>
+                    <button type="button" id="post-wala" class="btn btn-grad-green btn-success btn-sm btn-block post-bet" href="javascript:void(0)" betid=2><i class="fas fa-plus-circle"></i><strong> BET ASUL</strong></button>
                   </div>
 				  
 				  </div>
@@ -480,15 +480,14 @@ if ($event->num_rows > 0) {
 
 <script>
   $(document).ready(function() {
-
     $('.post-bet').click(function() {
       uni_modal("<i class='fa fa-coins'></i> Confirmation", 'transactions/manage_transaction.php?betid=' + $(this).attr('betid') + '&bet=' + $('#bet_amount').val() + '&eventid=<?php echo $eventid ?>')
     })
     $('.finish').click(function() {
-      uni_modal("<i class='fa fa-coins'></i> Select Winner/Cancel Fight", 'transactions/manage_winner.php?game_id=<?php echo $currentgame_id ?>')
+      uni_modal("<i class='fa fa-coins'></i> Select Winner/Cancel Fight", 'transactions/manage_winner_pula_asul.php?game_id=<?php echo $currentgame_id ?>')
     })
     $('.redeclare').click(function() {
-      uni_modal("<i class='fa fa-coins'></i> Redeclare", 'transactions/manage_redeclare.php?eventid=<?php echo $eventid ?>')
+      uni_modal("<i class='fa fa-coins'></i> Redeclare", 'transactions/manage_redeclare_pula_asul.php?eventid=<?php echo $eventid ?>')
     })
     $('.new').click(function() {
       uni_modal("<i class='fa fa-plus'></i> Add New Fight", 'transactions/new_transaction.php?game_id=<?php echo $currentgame_id ?>')
@@ -617,6 +616,7 @@ function formatNumber(number) {
   });
 }
 
+
 controller_fight_status();
 
 var trendchecker=statuschecker=callchecker=balancechecker=numberchecker=winnermeronchecker=winnerwalachecker=myredchecker=mybluechecker=myyellowchecker=bluepayoutchecker=redpayoutchecker=redchecker=bluechecker=myredcheckerfin=mybluecheckerfin=myyellowcheckerfin='';
@@ -650,7 +650,7 @@ function controller_fight_status(){
                 redpayoutchecker = result.red_payout; 
 
     
-                    if (result.blue !== bluechecker){
+                if (result.blue !== bluechecker){
                   // $('#total_wala_bets').html(result.blue);
                   animateValueUpdate('total_wala_bets', result.blue);
                 }
@@ -782,7 +782,7 @@ function controller_fight_status(){
 
         if (result == 3 || result ==1){
             $.ajax({
-                url: _base_url_+"classes/winner_wala.php?eventid=<?php echo $eventid ?>",
+                url: _base_url_+"classes/winner_asul.php?eventid=<?php echo $eventid ?>",
                 success: 
                 function(result){
                     if (result !== winnerwalachecker){
@@ -796,7 +796,7 @@ function controller_fight_status(){
               });
 
             $.ajax({
-                url: _base_url_+"classes/winner_meron.php?eventid=<?php echo $eventid ?>",
+                url: _base_url_+"classes/winner_pula.php?eventid=<?php echo $eventid ?>",
                 success: 
                 function(result){
                     if (result !== winnermeronchecker){
@@ -943,9 +943,7 @@ function controller_fight_status(){
       setTimeout(function(){
         controller_fight_status();
       },5000);
-
     },
-
     error: function(result){
       setTimeout(function(){
         controller_fight_status();
