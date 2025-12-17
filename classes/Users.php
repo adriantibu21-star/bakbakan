@@ -293,8 +293,8 @@ switch ($action) {
 	case 'fsave':
 		echo $users->save_fusers();
 	break;
-	case 'delete':
-		echo $users->delete_users();
+	// case 'delete':
+	// 	echo $users->delete_users();
 	break;	
 	case 'activate':
 			echo $users->activate_users();
@@ -302,8 +302,8 @@ switch ($action) {
 	case 'deactivate':
 		echo $users->deactivate_users();
 	break;
-	case 'fdelete':
-		echo $users->delete_fusers();
+	// case 'fdelete':
+	// 	echo $users->delete_fusers();
 	break;
 	default:
 		// echo $sysset->index();
