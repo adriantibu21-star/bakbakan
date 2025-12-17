@@ -48,4 +48,11 @@ class UserBalance {
         $row = $qry->fetch_assoc();
         return number_format($row['total'], 2);
     }
+
+    public function getUserBalance($userId) {
+        $qry = $this->conn->query("SELECT * from users where id ='{$userId}' ");
+        $row = $qry->fetch_assoc();
+        return $row;
+    }
+
 }

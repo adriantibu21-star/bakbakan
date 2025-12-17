@@ -1,6 +1,24 @@
 <?php
 require_once('../config.php');
 require_once('../libs/phpqrcode/qrlib.php');
+
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_secure', 1); // only if HTTPS
+ini_set('session.cookie_samesite', 'Strict');
+
+if(!isset($_SESSION['userdata']['id'])){
+    echo json_encode(['status'=>'failed','msg'=>'UNAUTHORIZED']); 
+    exit;
+}
+
+function require_role($allowed_roles = []) {
+
+    if (!in_array($_SESSION['userdata']['type'], $allowed_roles)) {
+        echo json_encode(['status' => 'failed', 'msg' => 'FORBIDDEN']);
+        exit;
+    }
+}
+
 Class Master extends DBConnection {
 	private $settings;
 	public function __construct(){
@@ -309,16 +327,32 @@ Class Master extends DBConnection {
 	}
 
 	function save_withdrawals1(){
-		extract($_POST);
-		//$agentid=$_settings->userdata('id');
-		$data = "";
-		foreach($_POST as $k =>$v){
-			if(!in_array($k,array('id'))){
-				$v = addslashes($v);
-				if(!empty($data)) $data .=",";
-				$data .= " `{$k}`='{$v}' ";
+		// extract($_POST);
+		// //$agentid=$_settings->userdata('id');
+		// $data = "";
+		// foreach($_POST as $k =>$v){
+		// 	if(!in_array($k,array('id'))){
+		// 		$v = addslashes($v);
+		// 		if(!empty($data)) $data .=",";
+		// 		$data .= " `{$k}`='{$v}' ";
+		// 	}
+		// }
+
+		$cleaned_post = [];
+		$prefix = "cashout-";
+		$prefix_length = strlen($prefix);
+
+		foreach ($_POST as $key => $value) {
+			if (substr($key, 0, $prefix_length) === $prefix) {
+				$new_key = substr($key, $prefix_length);
+				$cleaned_post[$new_key] = $value;
+			} else {
+				$cleaned_post[$key] = $value;
 			}
 		}
+		$_POST = $cleaned_post; 
+    	extract($_POST);
+
 		//check if userid is empty
 		if(empty($user_id)){
 			$resp['status'] = 'failed';
@@ -808,14 +842,16 @@ Class Master extends DBConnection {
 				}
 			}
 			//para pa lang sa yellow amount ito
-			if ($_POST['betid']=='3'){	
-				if ($row['amount']< $yellow_amount ) {
-					$resp['status'] = 'failed';
-					$resp['msg'] = " INSUFFICIENT BALANCE!";
-					return json_encode($resp);
-					exit;
-				}
-			}
+			// Uncomment if it will cause error in betting
+			// Disabled to disable hacker bet on Draw
+			// if ($_POST['betid']=='3'){	
+			// 	if ($row['amount']< $yellow_amount ) {
+			// 		$resp['status'] = 'failed';
+			// 		$resp['msg'] = " INSUFFICIENT BALANCE!";
+			// 		return json_encode($resp);
+			// 		exit;
+			// 	}
+			// }
 			
 		}else{
 			//walang record sa my_balance table
@@ -1010,6 +1046,7 @@ Class Master extends DBConnection {
 	}
 
 	function finish_transaction(){
+		require_role([1,4]);
 
 
 		//$debugging = $this->conn->query("UPDATE `debugging` set remarks = 'Im here' WHERE id = 32076");
@@ -1198,6 +1235,7 @@ Class Master extends DBConnection {
 	}
 
 	function redeclare_transaction(){
+		require_role([1,4]);
 
 
 		//$debugging = $this->conn->query("UPDATE `debugging` set remarks = 'Im here' WHERE id = 32076");
@@ -1485,6 +1523,7 @@ Class Master extends DBConnection {
 	}
 
 	function new_transaction(){
+		require_role([1,4]);
 		extract($_POST);
 		$check_existing = $this->conn->query("SELECT * FROM `draws` where eventid = '{$_POST['eventid']}' and `active` = 'Y' ")->num_rows;
 		if($check_existing > 0){
@@ -1515,6 +1554,7 @@ Class Master extends DBConnection {
 	}
 	
 	function update_status(){
+		require_role([1,4]);
 		extract($_POST);
 		$check_active = $this->conn->query("SELECT * FROM `draws` where eventid = '{$_POST['eventid']}' and `active` = 'Y' order by id desc limit 1 "); //lagyan ng staus = !open !lastcall
 		if($check_active->num_rows > 0){

@@ -942,12 +942,12 @@ function controller_fight_status(){
               					
       setTimeout(function(){
         controller_fight_status();
-      },4000);
+      },5000);
     },
     error: function(result){
       setTimeout(function(){
         controller_fight_status();
-      },4000);
+      },5000);
     }
   });
 }

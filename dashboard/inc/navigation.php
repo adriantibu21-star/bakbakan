@@ -1,11 +1,38 @@
 </style>
+<style>
+  .nav-item .active{
+    color: #fff !important;
+  }
+  .nav-item, .nav-item a{
+    color: #c2c7d0 !important;
+    font-weight: 500 !important;
+  }
+</style>
 <!-- Main Sidebar Container -->
-      <aside class="main-sidebar sidebar-dark-primary text-white bg-darkgray disabled elevation-4 sidebar-no-expand">
+      <aside class="main-sidebar sidebar-dark-primary text-white bg-darkgray disabled elevation-4 sidebar-no-expand"style="font-family: &quot;Rubik&quot;, sans-serif; background-color: #212529 !important;">
         <!-- Brand Logo -->
-        <a href="<?php echo base_url ?>dashboard" class="brand-link bg-darkgray text-sm">
+        <!-- <a href="<?php echo base_url ?>dashboard" class="brand-link bg-darkgray text-sm">
         <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3" style="opacity: .8;width: 1.7rem;height: 1.7rem;max-height: unset">
         <span class="brand-text font-weight-light"><?php echo $_settings->info('short_name') ?></span>
-        </a>
+        </a> -->
+
+
+        <a href="#" class="brand-link">
+              <img src="<?php echo base_url ?>/uploads/i-system.png" alt="boombap Logo" class="brand-image img-circle elevation-3" style="opacity: .8; height:33px; width:33px">
+              <center> 
+                <span class="brand-text font-weight-bolder text-white" style="font-size: 1.25rem; line-height: 1.5; white-space: nowrap; ">
+                  INCORPORATOR                    
+                </span>
+              </center>
+          </a>
+        <!-- Brand Logo -->
+        <!-- <div class="w-100">
+            <a href="<?php echo base_url ?>dashboard" class="brand-link bg-darkgray d-flex justify-content-center align-items-center w-100" style="flex-direction: column; height: auto;">
+                <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3 d-block" style="opacity: .8; width: 3.7rem; height: 3.7rem; max-height: unset; margin: 0 auto;">
+                <img src="<?php echo base_url ?>uploads/i-system.png" alt="Store Logo" class="brand-image img-circle elevation-3 d-block" style="opacity: .8; width: 3.7rem; height: 3.7rem; max-height: unset; margin: 0 auto;">
+            </a>
+        </div> -->
+
         <!-- Sidebar -->
         <div class="sidebar os-host os-theme-light os-host-overflow os-host-overflow-y os-host-resize-disabled os-host-transition os-host-scrollbar-horizontal-hidden">
           <div class="os-resize-observer-host observed">
@@ -17,241 +44,264 @@
           <div class="os-content-glue" style="margin: 0px -8px; width: 249px; height: 646px;"></div>
           <div class="os-padding">
             <div class="os-viewport os-viewport-native-scrollbars-invisible" style="overflow-y: scroll;">
-              <div class="os-content" style="padding: 0px 8px; height: 100%; width: 100%;">
+              <div class="os-content ml-2" style="padding: 0px 8px; height: 100%; width: 100%;">
                 <!-- Sidebar user panel (optional) -->
                 <div class="clearfix"></div>
                 <!-- Sidebar Menu -->
-                <nav class="mt-4">
-                   <ul class="nav nav-pills nav-sidebar flex-column text-sm nav-compact nav-flat nav-child-indent nav-collapse-hide-child" data-widget="treeview" role="menu" data-accordion="false">
-                   
-                   
-                   <?php if($_settings->userdata('type') == 3 or $_settings->userdata('type') == 1 or $_settings->userdata('type') == 4): ?> 
-                   <li class="nav-item dropdown">
-                      <a href="./" class="nav-link nav-home">
-                        <i class="nav-icon fas fa-play"></i>
-                        <p>
-                          Play
-                        </p>
-                      </a>
-                    </li>
- 
+                <nav class="mt-2">
+                  <ul class="nav nav-pills nav-sidebar flex-column text-sm nav-compact nav-flat nav-child-indent nav-collapse-hide-child" 
+                  style='font-family: "Rubik", sans-serif; font-size:1rem !important; line-height:1.9;'
+                  data-widget="treeview" role="menu" 
+                  data-accordion="false">
+                    <?php if($_settings->userdata('type') == 3 or $_settings->userdata('type') == 1 or $_settings->userdata('type') == 4): ?> 
+                      <li class="nav-item dropdown">
+                        <a href="./" class="nav-link nav-home">
+                          <i class="nav-icon fas fa-play"></i>
+                          <p>
+                            Play
+                          </p>
+                        </a>
+                      </li>
                     <?php endif; ?>
                     <?php if($_settings->userdata('type') == 3): ?> 
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=maintenance/rules" class="nav-link nav-maintenance_rules">
-                        <i class="nav-icon fas fa-book-open"></i>
-                        <p>
-                          Rules
-                        </p>
-                      </a>
-                    </li>
+                      <li class="nav-item dropdown">
+                        <a href="<?php echo base_url ?>dashboard/?page=maintenance/rules" class="nav-link nav-maintenance_rules">
+                          <i class="nav-icon fas fa-book-open"></i>
+                          <p>
+                            Rules
+                          </p>
+                        </a>
+                      </li>
 
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=maintenance/hist_bets" class="nav-link nav-maintenance_hist_bets">
-                        <i class="nav-icon fas fa-book-open"></i>
-                        <p>
-                          Betting History
-                        </p>
-                      </a>
-                    </li>
+                      <li class="nav-item dropdown">
+                        <a href="<?php echo base_url ?>dashboard/?page=maintenance/hist_bets" class="nav-link nav-maintenance_hist_bets">
+                          <i class="nav-icon fas fa-book-open"></i>
+                          <p>
+                            Betting History
+                          </p>
+                        </a>
+                      </li>
                     <?php endif; ?>
                     
 
                     <?php if($_settings->userdata('type') == 1 or $_settings->userdata('type') == 2): ?> 
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=maintenance" class="nav-link nav-maintenance">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                          Dashboard
-                        </p>
-                      </a>
-                    </li>
+                      <li class="nav-item dropdown">
+                        <a href="<?php echo base_url ?>dashboard/?page=maintenance" class="nav-link nav-maintenance">
+                          <i class="nav-icon fas fa-tachometer-alt"></i>
+                          <p>
+                            Dashboard
+                          </p>
+                        </a>
+                      </li>
 
-                     <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=maintenance/hist_cashin" class="nav-link nav-maintenance_hist_bets">
-                        <i class="nav-icon fas fa-book-open"></i>
-                        <p>
-                          Cash-in Logs
-                        </p>
-                      </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=maintenance/hist_cashout" class="nav-link nav-maintenance_hist_bets">
-                        <i class="nav-icon fas fa-book-open"></i>
-                        <p>
-                          Cash-out Logs
-                        </p>
-                      </a>
-                    </li>
+                      <!-- Remove Cash-in & Cash-out -->
+                      <!-- <li class="nav-item dropdown">
+                        <a href="<?php echo base_url ?>dashboard/?page=maintenance/hist_cashin" class="nav-link nav-maintenance_hist_bets">
+                          <i class="nav-icon fas fa-book-open"></i>
+                          <p>
+                            Cash-in Logs
+                          </p>
+                        </a>
+                      </li>
+                      <li class="nav-item dropdown">
+                        <a href="<?php echo base_url ?>dashboard/?page=maintenance/hist_cashout" class="nav-link nav-maintenance_hist_bets">
+                          <i class="nav-icon fas fa-book-open"></i>
+                          <p>
+                            Cash-out Logs
+                          </p>
+                        </a>
+                      </li> -->
                     
-		<?php if($_settings->userdata('type') == 1): ?> 
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=maintenance/admin_hist_bets" class="nav-link nav-maintenance_rules">
-                        <i class="nav-icon fas fa-book-open"></i>
-                        <p>
-                          Fight Logs
-                        </p>
-                      </a>
-                    </li>
-	        <?php endif; ?>
+                      <?php if($_settings->userdata('type') == 1): ?> 
+                        <li class="nav-item dropdown">
+                          <a href="<?php echo base_url ?>dashboard/?page=maintenance/admin_hist_bets" class="nav-link nav-maintenance_rules">
+                            <i class="nav-icon fas fa-book-open"></i>
+                            <p>
+                              Fight Logs
+                            </p>
+                          </a>
+                        </li>
+                      <?php endif; ?>
+
+                      <li class="nav-item dropdown">
+                        <a href="<?php echo base_url ?>dashboard/?page=maintenance/load_logs" class="nav-link nav-maintenance_load_logs">
+                          <i class="nav-icon fas fa-history"></i>
+                          <p>
+                            Load Logs
+                          </p>
+                        </a>
+                      </li>
+
+                      <?php if($_settings->userdata('type') == 1 or $_settings->userdata('type') == 2): ?> 
+
+                        <!-- Remove Cash-in & Cash-out -->
+                        <!-- <li class="nav-item dropdown">
+                          Cash In & Out Process
+                        </li>
+
+                        <li class="nav-item dropdown">
+                          <a href="<?php echo base_url ?>dashboard/?page=maintenance/cashin" class="nav-link nav-maintenance_cashin">
+                            <i class="nav-icon fas fa-history"></i>
+                            <p>
+                              Cash-In
+                            </p>
+                          </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                          <a href="<?php echo base_url ?>dashboard/?page=maintenance/cashout" class="nav-link nav-maintenance_cashout">
+                            <i class="nav-icon fas fa-donate"></i>
+                            <p>
+                              Cash-out
+                            </p>
+                          </a>
+                        </li> -->
+
+                
+
+                        <!-- <li class="nav-item dropdown">
+                          Commissions
+                        </li> -->
+
+                        <!-- <?php if($_settings->userdata('type') == 2): ?> 
+                          <li class="nav-item dropdown">
+                            <a href="<?php echo base_url ?>dashboard/?page=maintenance/comsfight_logs" class="nav-link nav-maintenance_hist_bets">
+                              <i class="nav-icon fas fa-book-open"></i>
+                              <p>
+                                Commission Fight Logs
+                              </p>
+                            </a>
+                          </li>
+		                    <?php endif; ?> -->
+
+                        <?php if($_settings->userdata('type') == 2): ?> 
+                          <li class="nav-item dropdown">
+                            <a href="<?php echo base_url ?>dashboard/?page=maintenance/comm_logs" class="nav-link nav-maintenance_comm_logs">
+                              <i class="nav-icon fas fa-chart-line"></i>
+                              <p>
+                                Comm Logs
+                              </p>
+                            </a>
+                          </li>
+		                    <?php endif; ?>
+
+                        <li class="nav-item dropdown">
+                          <a href="<?php echo base_url ?>dashboard/?page=maintenance/commission" class="nav-link nav-maintenance_commission">
+                            <i class="nav-icon fas fa-coins"></i>
+                            <p>
+                              Comm Earn
+                            </p>
+                          </a>
+                        </li>
+                      <?php endif; ?>
+
+                      <?php if($_settings->userdata('type') == 1 or $_settings->userdata('type') == 2): ?> 
+                        <li class="nav-item dropdown">
+                          <!-- <a href="<?php echo base_url ?>dashboard/?page=maintenance/hist_commission" class="nav-link nav-maintenance_hist_commission"> -->
+                          <a href="<?php echo base_url ?>dashboard/?page=maintenance/comm_withdrawal" class="nav-link nav-maintenance_comm_withdrawal">
+                            <i class="nav-icon fas fa-chart-bar"></i>
+                            <p>
+                              Comm Withdrawal
+                            </p>
+                          </a>
+                        </li>
+                      <?php endif; ?>
+
+
+                    <?php endif; ?>
+
 
                     <?php if($_settings->userdata('type') == 1 or $_settings->userdata('type') == 2): ?> 
+                      <li class="nav-item dropdown">
+                        Sub-Agents/Players
+                      </li> 
 
-                    <li class="nav-item dropdown">
-                    Cash In & Out Process
-                    </li>
-
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=maintenance/cashin" class="nav-link nav-maintenance_cashin">
-                        <i class="nav-icon fas fa-history"></i>
-                        <p>
-                          Cash-In
-                        </p>
-                      </a>
-
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=maintenance/cashout" class="nav-link nav-maintenance_cashout">
-                        <i class="nav-icon fas fa-donate"></i>
-                        <p>
-                          Cash-out
-                        </p>
-                      </a>
-
-                    </li>
-
-                  
-
-                    <li class="nav-item dropdown">
-                    Commissions
-                    </li>
-
-                   <?php if($_settings->userdata('type') == 2): ?> 
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=maintenance/comsfight_logs" class="nav-link nav-maintenance_hist_bets">
-                        <i class="nav-icon fas fa-book-open"></i>
-                        <p>
-                          Commission Fight Logs
-                        </p>
-                      </a>
-                    </li>
-		   <?php endif; ?>
-
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=maintenance/commission" class="nav-link nav-maintenance_commission">
-                        <i class="nav-icon fas fa-coins"></i>
-                        <p>
-                          Commission Earn
-                        </p>
-                      </a>
-                    </li>
+                      <li class="nav-item dropdown">
+                        <a href="<?php echo base_url ?>dashboard/?page=user/list" class="nav-link nav-user_list">
+                          <i class="nav-icon fas fa-users"></i>
+                          <?php if($_settings->userdata('type') == 1): ?> 
+                          <p>
+                            All Agents
+                          </p>
+                          <?php else: ?>
+                          <p>
+                            Agents
+                          </p>
+                          <?php endif; ?>
+                        </a>
+                      </li>
                     <?php endif; ?>
 
                     <?php if($_settings->userdata('type') == 1 or $_settings->userdata('type') == 2): ?> 
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=maintenance/hist_commission" class="nav-link nav-maintenance_hist_commission">
-                        <i class="nav-icon fas fa-history"></i>
-                        <p>
-                          Commission Withdraw
-                        </p>
-                      </a>
-                    </li>
-                    <?php endif; ?>
-
-
-                    <?php endif; ?>
-
-
-                    <?php if($_settings->userdata('type') == 1 or $_settings->userdata('type') == 2): ?> 
-                    <li class="nav-item dropdown">
-                    Sub-Agents/Players
-                    </li> 
-
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=user/list" class="nav-link nav-user_list">
-                        <i class="nav-icon fas fa-users"></i>
-                        <?php if($_settings->userdata('type') == 1): ?> 
-                        <p>
-                          All Agents
-                        </p>
-                        <?php else: ?>
-                        <p>
-                          My Agents
-                        </p>
-                        <?php endif; ?>
-                      </a>
-                    </li>
-                    <?php endif; ?>
-
-                    <?php if($_settings->userdata('type') == 1 or $_settings->userdata('type') == 2): ?> 
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=user/list_players" class="nav-link nav-user_list_players">
-                        <i class="nav-icon fas fa-users"></i>
-                        <?php if($_settings->userdata('type') == 1): ?> 
-                        <p>
-                          All Players
-                        </p>
-                        <?php else: ?>
-                        <p>
-                          My Players
-                        </p>
-                        <?php endif; ?>
-                      </a>
-                    </li>
+                      <li class="nav-item dropdown">
+                        <a href="<?php echo base_url ?>dashboard/?page=user/list_players" class="nav-link nav-user_list_players">
+                          <i class="nav-icon fas fa-users"></i>
+                          <?php if($_settings->userdata('type') == 1): ?> 
+                          <p>
+                            All Players
+                          </p>
+                          <?php else: ?>
+                          <p>
+                            Active Players
+                          </p>
+                          <?php endif; ?>
+                        </a>
+                      </li>
 
                     <?php endif; ?>
 
                     <?php if($_settings->userdata('type') == 2): ?> 
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=user/list_players_approval" class="nav-link nav-user_list_players_approval">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p>
-                          For Approval Players
-                        </p>
-                      </a>
-                    </li>
+                      <li class="nav-item dropdown">
+                        <a href="<?php echo base_url ?>dashboard/?page=user/approval_players" class="nav-link nav-user_approval_players">
+                          <i class="nav-icon fas fa-users"></i>
+                          <p>
+                            Approval Players
+                          </p>
+                        </a>
+                      </li>
 
                     <?php endif; ?>
 
 
                     <?php if($_settings->userdata('type') == 1 or $_settings->userdata('type') == 4): ?> 
-                    <li class="nav-item dropdown">
-                    Systems Settings
-                    </li>
+                      <li class="nav-item dropdown">
+                        Systems Settings
+                      </li>
 
-		   <?php if($_settings->userdata('type') == 1 or $_settings->userdata('type') == 4): ?> 
+		                  <?php if($_settings->userdata('type') == 1 or $_settings->userdata('type') == 4): ?> 
 
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=maintenance/events" class="nav-link nav-maintenance_events">
-                        <i class="nav-icon fas fa-calendar"></i>
-                        <p>
-                          Arena
-                        </p>
-                      </a>
-                    </li>
+                        <li class="nav-item dropdown">
+                          <a href="<?php echo base_url ?>dashboard/?page=maintenance/events" class="nav-link nav-maintenance_events">
+                            <i class="nav-icon fas fa-calendar"></i>
+                            <p>
+                              Arena
+                            </p>
+                          </a>
+                        </li>
 
-		    <?php endif; ?>
+		                  <?php endif; ?>
 
 
-		   <?php if($_settings->userdata('type') == 1 or $_settings->userdata('type') == 4): ?>
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=maintenance/template" class="nav-link nav-maintenance_template">
-                        <i class="nav-icon fas fa-video"></i>
-                        <p>
-                          Game Settings
-                        </p>
-                      </a>
-                    </li>
+		                  <?php if($_settings->userdata('type') == 1 or $_settings->userdata('type') == 4): ?>
+                        <li class="nav-item dropdown">
+                          <a href="<?php echo base_url ?>dashboard/?page=maintenance/template" class="nav-link nav-maintenance_template">
+                            <i class="nav-icon fas fa-video"></i>
+                            <p>
+                              Game Settings
+                            </p>
+                          </a>
+                        </li>
             
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>dashboard/?page=system_info" class="nav-link nav-system_info">
-                        <i class="nav-icon fas fa-cogs"></i>
-                        <p>
-                          Profile
-                        </p>
-                      </a>
-                    </li>
+                        <li class="nav-item dropdown">
+                          <a href="<?php echo base_url ?>dashboard/?page=system_info" class="nav-link nav-system_info">
+                            <i class="nav-icon fas fa-cogs"></i>
+                            <p>
+                              Profile
+                            </p>
+                          </a>
+                        </li>
 
-		    <?php endif; ?>
+		                  <?php endif; ?>
                     <?php endif; ?>
 
 
