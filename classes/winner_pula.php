@@ -7,16 +7,16 @@ $eventid = $_GET['eventid'];
 		if ($winner->num_rows >0){
       	$rows = $winner->fetch_assoc();
       			if($rows['winner'] ==1){
-					echo   'PULA <small class="blinking" >WINNER</small>';
+					echo   'MERON <small class="blinking" ></br>WINNER</small>';
                 }elseif($rows['winner'] ==3){
-                    echo   'PULA <small class="blinking">DRAW</small>';
+                    echo   'MERON <small class="blinking"></br>DRAW</small>';
                 }elseif($rows['winner'] ==4){
-                    echo   'PULA <small class="blinking">CANCELLED</small>';
+                    echo   'MERON <small class="blinking"></br>CANCELLED</small>';
 				}else{
-                    echo   'PULA';
+                    echo   'MERON';
                 }
 		}else{
-            echo   'PULA';
+            echo   'MERON';
         }
 ?>
 <style>
