@@ -63,7 +63,7 @@ $page = isset($_GET['p']) ? $_GET['p'] : 'home';
                 <button type="submit" class="btn btn-primary btn-lg btn-block btn-dark">Sign in to your account</button>
               </div>
             <div class="form-group form-group--password-forgot mb-0">
-              <span class="password-reminder"><a href="/register.php" >Register an account</a></span>
+              <!-- <span class="password-reminder"><a href="/register.php" >Register an account</a></span> -->
             </div>
             </form>
           </div>
