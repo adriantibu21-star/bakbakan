@@ -488,11 +488,13 @@
 
         <div class="col-sm-7">
           <div class="card mb-3">
-            <div class="card-header bg-arena_dash bg-success">
-              <center>
-                <h5 class="text-white"><?php echo $arena ?></h6>
-                  <h6 class="text-white" style="display:block;"><?php echo $_settings->userdata('username'); ?></b></h7>
-              </center>
+            <div class="card-header bg-arena_dash bg-success py-1" style="background:rgb(33,33,33) !important">
+              <div class="row justify-content-between align-items-center">
+                <h5 class="text-white mb-0" style="color: #ff0 !important; font-size: 1rem !important; font-weight: 700; line-height: 1.75; letter-spacing: .009375em !important; font-family: Doppio One, sans-serif !important;text-transform: none !important;">
+                  <?php echo $arena ?></h6>
+                <h5 class="text-white mb-0" style="font-size: .875rem !important; font-weight: 500; line-height: 1.6; letter-spacing: .0071428571em !important; font-family: Be Vietnam Pro, sans-serif !important;text-transform: none !important;">
+                  <?php echo $_settings->userdata('username'); ?></b></h7>
+              </div>
             </div>
             <div class="card-body p-0 w-100" style="width: 100%">
               <div style="width: 100%" class="w-100">
