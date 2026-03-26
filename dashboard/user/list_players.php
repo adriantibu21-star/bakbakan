@@ -52,7 +52,23 @@
 		padding: 0.75rem !important;
 	}
 
-	
+	/* Mobile-specific adjustments */
+	@media (max-width: 768px) {
+		#user-bet-history {
+			font-size: 0.72rem !important; /* Makes text smaller but readable */
+		}
+
+		#user-bet-history th, 
+		#user-bet-history td {
+			padding: 4px 2px !important; /* Reduces vertical and horizontal gaps */
+			vertical-align: middle;
+		}
+
+		/* Remove horizontal scroll by letting long text wrap */
+		#user-bet-history td {
+			white-space: normal !important;
+		}
+	}
 
 </style>
 
@@ -414,14 +430,14 @@
 							<div class="card-body table-responsive p-0">
 								<div class="card-body">
 
-									<table class="table table-striped table-head-fixed text-nowrap table-dark" id="user-bet-history">
+									<table class="table table-striped table-head-fixed table-dark text-center" id="user-bet-history">
 										<thead class="text-center">
 											<tr>
 												<th>Date</th>
 												<th>Username</th>
-												<th>Fight # - Event</th>
-												<th>Meron/Pula</th>
-												<th>Wala/Asul</th>
+												<th>Fight # </br>- Event</th>
+												<th>Meron</br>/Pula</th>
+												<th>Wala</br>/Asul</th>
 												<th>Draw</th>
 												<th>Result</th>
 												<th>Earned</th>
@@ -881,32 +897,41 @@ function set_bet_history_table(data, userName) {
 			}
         }
         
-        let newRow = '<tr>';
-        
-        // Column 1: Date
-        newRow += '<td><span>' + row.date_created + '</span></td>'; 
-        // Column 2: User Name (Display 'START' for type 0)
-        newRow += '<td class="">' + userName + '</td>'; 
-        // Column 3: Type / Drawno
-        newRow += '<td>' + typeColumnContent + '</td>'; 
-        
-        // Columns 4, 5, 6: Red, Blue, Yellow Amounts
-        newRow += '<td>' + parseFloat(row.red_amount || 0).toFixed(2) + '</td>';
-        newRow += '<td>' + parseFloat(row.blue_amount || 0).toFixed(2) + '</td>';
-        newRow += '<td>' + parseFloat(row.yellow_amount || 0).toFixed(2) + '</td>';
+		let newRow = '<tr>';
 
-        // Column 7: Winner Badge
-        newRow += '<td>' + winnerBadge + '</td>'; 
-        // Column 8: Amount + Win/Lose Badge
-        newRow += '<td>' + amountDisplay + winnerStatus + '</td>'; 
-        // Column 9: Running Balance
-        newRow += '<td>' + bal.toFixed(2) + '</td>'; 
-        
-        // Column 10: Account Type/Fight OR Process By (Combined)
-        const accountProcessContent = (row.accttyp && row.accttyp !== 'N/A') ? row.accttyp : (row.processby || 'N/A');
-        newRow += '<td>' + accountProcessContent + '</td>'; 
+		// Column 1: Date (Splitting Date and Time for mobile stacking)
+		// We split the string by the space to get [YYYY-MM-DD, HH:MM:SS]
+		let dateParts = row.date_created.split(' ');
+		newRow += '<td>' + 
+					'<span>' + dateParts[0] + '</span>' + 
+					'<span class="d-block d-md-inline ">' + (dateParts[1] || '') + '</span>' + 
+				'</td>';
 
-        newRow += '</tr>';
+		// Column 2: User Name
+		newRow += '<td class="">' + userName + '</td>'; 
+
+		// Column 3: Type / Drawno (Allowing text to wrap)
+		newRow += '<td style="white-space: normal; min-width: 100px;">' + typeColumnContent + '</td>'; 
+
+		// Columns 4, 5, 6: Red, Blue, Yellow (Numeric values stay small)
+		newRow += '<td>' + parseFloat(row.red_amount || 0).toFixed(2) + '</td>';
+		newRow += '<td>' + parseFloat(row.blue_amount || 0).toFixed(2) + '</td>';
+		newRow += '<td>' + parseFloat(row.yellow_amount || 0).toFixed(2) + '</td>';
+
+		// Column 7: Winner Badge
+		newRow += '<td>' + winnerBadge + '</td>'; 
+
+		// Column 8: Amount + Win/Lose Badge
+		newRow += '<td>' + amountDisplay + winnerStatus + '</td>'; 
+
+		// Column 9: Running Balance
+		newRow += '<td>' + bal.toFixed(2) + '</td>'; 
+
+		// Column 10: Account Type (Hiding on extra small screens to save space)
+		const accountProcessContent = (row.accttyp && row.accttyp !== 'N/A') ? row.accttyp : (row.processby || 'N/A');
+		newRow += '<td class="d-sm-table-cell">' + accountProcessContent + '</td>'; 
+
+		newRow += '</tr>';
 
         processedRows.push({ html: newRow, type: type });
     }
