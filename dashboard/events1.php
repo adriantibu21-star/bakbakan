@@ -138,8 +138,8 @@
 
        .arena-card {
            position: relative;
-           width: 100%;
-           height: 280px;
+           width: 90%;
+           height: 250px;
            border-radius: 12px;
            overflow: hidden;
            font-family: 'Orbitron', sans-serif;
@@ -228,9 +228,9 @@
 
        <div class="row justify-content-center">
 
-           <div class="col-md-4 mb-3 mx-2">
+           <div class="col-md-4 mb-3 d-flex justify-content-center">
                <div class="arena-card">
-                   <a href="<?php echo $page; ?>">
+                   <a href="<?php echo $page; ?>" class="h-100 w-100 d-block">
                        <div class="arena-content" id="event_img" style="background: url('<?php echo validate_image('uploads/event-img/wcg.jpg') ?>') no-repeat center center;">
                            <div class="arena-overlay">
                                <h3 class="arena-title text-center" id="event_name"></h3>
@@ -243,9 +243,9 @@
                </div>
            </div>
 
-           <div class="col-md-4 mb-3 mx-2">
+           <div class="col-md-4 mb-3 d-flex justify-content-center">
                <div class="arena-card">
-                   <a href="<?php echo $page; ?>">
+                   <a href="<?php echo $page; ?>" class="h-100 w-100 d-block">
                        <div class="arena-content" id="event_img2" style="background: url('<?php echo validate_image('uploads/event-img/lucky.jpg') ?>') no-repeat center center;">
                            <div class="arena-overlay">
                                <h3 class="arena-title text-center" id="event_name2"></h3>
@@ -258,9 +258,9 @@
                </div>
            </div>
 
-           <div class="col-md-4 mb-3 mx-2">
+           <div class="col-md-4 mb-3 d-flex justify-content-center">
                <div class="arena-card">
-                   <a href="<?php echo $page; ?>">
+                   <a href="<?php echo $page; ?>" class="h-100 w-100 d-block">
                        <div class="arena-content" id="event_img3" style="background: url('') no-repeat center center;">
                            <div class="arena-overlay">
                                <h3 class="arena-title text-center" id="event_name3"></h3>
