@@ -245,7 +245,7 @@
 
            <div class="col-md-4 mb-3 d-flex justify-content-center">
                <div class="arena-card">
-                   <a href="<?php echo $page; ?>" class="h-100 w-100 d-block">
+                   <a href="<?php echo $page2; ?>" class="h-100 w-100 d-block">
                        <div class="arena-content" id="event_img2">
                            <div class="arena-overlay">
                                <h3 class="arena-title text-center" id="event_name2"></h3>
@@ -260,7 +260,7 @@
 
            <div class="col-md-4 mb-3 d-flex justify-content-center">
                <div class="arena-card">
-                   <a href="<?php echo $page; ?>" class="h-100 w-100 d-block">
+                   <a href="<?php echo $page3; ?>" class="h-100 w-100 d-block">
                        <div class="arena-content" id="event_img3" style="background: url('') no-repeat center center;">
                            <div class="arena-overlay">
                                <h3 class="arena-title text-center" id="event_name3"></h3>
