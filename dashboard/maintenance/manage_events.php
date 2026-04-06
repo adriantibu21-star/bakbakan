@@ -1,6 +1,6 @@
 <?php
+require_once('../../config.php');
 if (isset($_GET['id']) && $_GET['id'] > 0) {
-	require_once('../../config.php');
 	$qry = $conn->query("SELECT * from `events` where id = '{$_GET['id']}' ");
 	if ($qry->num_rows > 0) {
 		foreach ($qry->fetch_assoc() as $k => $v) {
@@ -49,7 +49,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 		</div>
 
 		<div class="form-group d-flex justify-content-center">
-			<img src="<?php echo validate_image($event_img) ?>" alt="" id="display_event_img" class="img-fluid img-thumbnail" style="width:85%">
+			<img src="<?php echo validate_image(isset($event_img) ? $event_img : '') ?>" alt="" id="display_event_img" class="img-fluid img-thumbnail" style="width:85%">
 		</div>
 
 		<!-- Handle submit button function and uploading of file -->
