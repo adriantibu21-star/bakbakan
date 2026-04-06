@@ -353,7 +353,6 @@
                    $('#event_description2').html(result.description);
 
                    // Set the Background Image
-                   console.log(result);
                    if (result.event_img) {
                        var imgPath = _base_url_ + result.event_img;
                        $('#event_img2').css('background-image', 'url("' + imgPath + '")');
