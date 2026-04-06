@@ -299,7 +299,6 @@
                    setTimeout(function() {}, 2000);
                },
                error: function(result) {
-                   console.log(result);
                    setTimeout(function() {
                        balance();
                    }, 2000);
@@ -322,7 +321,6 @@
                    $('#event_description').html(result.description);
 
                    // Set the Background Image
-                   console.log(result);
                    if (result.event_img) {
                        var imgPath = _base_url_ + result.event_img;
                        $('#event_img').css('background-image', 'url("' + imgPath + '")');
@@ -384,7 +382,6 @@
                    $('#event_description3').html(result.description);
 
                    // Set the Background Image
-                   console.log(result);
                    if (result.event_img) {
                        var imgPath = _base_url_ + result.event_img;
                        $('#event_img3').css('background-image', 'url("' + imgPath + '")');
