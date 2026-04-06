@@ -127,6 +127,27 @@ Class Master extends DBConnection {
 				$data .= " `{$k}`='{$v}' ";
 			}
 		}
+		
+		// --- START IMAGE HANDLING ---
+		if(isset($_FILES['event_img']) && $_FILES['event_img']['tmp_name'] != ''){
+			// Create a unique filename to avoid overwriting existing files
+			$fname = 'uploads/event-img/'.strtotime(date('y-m-d H:i')).'_'.$_FILES['event_img']['name'];
+			$move = move_uploaded_file($_FILES['event_img']['tmp_name'], '../'.$fname);
+			
+			if($move){
+				if(!empty($data)) $data .=",";
+				$data .= " `event_img` = '{$fname}' ";
+
+            // Delete old image if updating
+            if(!empty($id)){
+                $old_img = $this->conn->query("SELECT event_img FROM `events` where id = '{$id}'")->fetch_array()[0];
+                if(is_file('../'.$old_img)) unlink('../'.$old_img);
+            }
+
+			}
+		}
+		// --- END IMAGE HANDLING ---
+
 		$check = $this->conn->query("SELECT * FROM `events` where `game_id` = '{$game_id}' and `name` = '{$name}' ".(!empty($id) ? " and id != {$id} " : "")." ")->num_rows;
 		if($this->capture_err())
 			return $this->capture_err();
@@ -155,6 +176,7 @@ Class Master extends DBConnection {
 		}
 		return json_encode($resp);
 	}
+	
 	function save_commission(){
 		extract($_POST);
 		$data = "";

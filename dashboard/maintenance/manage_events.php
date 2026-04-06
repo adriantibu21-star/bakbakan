@@ -10,7 +10,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 }
 ?>
 <div class="container-fluid">
-	<form action="" id="event-form">
+	<form action="" id="event-form" enctype="multipart/form-data">
 		<input type="hidden" name="id" value="<?php echo isset($id) ? $id : '' ?>">
 
 
@@ -49,7 +49,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 		</div>
 
 		<div class="form-group d-flex justify-content-center">
-			<img src="<?php echo validate_image($_settings->info('logo')) ?>" alt="" id="display_event_img" class="img-fluid img-thumbnail" style="width:85%">
+			<img src="<?php echo validate_image($event_img) ?>" alt="" id="display_event_img" class="img-fluid img-thumbnail" style="width:85%">
 		</div>
 
 		<!-- Handle submit button function and uploading of file -->
