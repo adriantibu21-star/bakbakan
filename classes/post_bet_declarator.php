@@ -165,7 +165,14 @@ $yellow_amount = '0.00';
 
 
 			//wag na baguhin wlang userinput
-			$sql5 = "UPDATE draws set red_payout = COALESCE(((red+blue) * '{$odds}')/NULLIF(red, 0), 0.00), blue_payout = COALESCE(((red+blue) * '{$odds}')/NULLIF(blue, 0), 0.00) where id='{$drawid}' ";		
+			// $sql5 = "UPDATE draws set red_payout = COALESCE(((red+blue) * '{$odds}')/NULLIF(red, 0), 0.00), blue_payout = COALESCE(((red+blue) * '{$odds}')/NULLIF(blue, 0), 0.00) where id='{$drawid}' ";		
+			
+			// (Meron + Wala Payout) / 2 = Selected Odds
+			
+			$sql5 = "UPDATE draws SET 
+				red_payout = COALESCE(( ('{$odds}' * 2) / (1 + (red / NULLIF(blue, 0))) ) + '{$odds}', '{$odds}' * 2),
+				blue_payout = COALESCE(( ('{$odds}' * 2) / (1 + (blue / NULLIF(red, 0))) ) + '{$odds}', '{$odds}' * 2)
+				WHERE id='{$drawid}'";
 			$save5 = $conn->query($sql5);
 
 			//sql bind parameters
@@ -224,7 +231,14 @@ $yellow_amount = '0.00';
 			$sql1->bind_param("ddd",$red_amount,$blue_amount,$yellow_amount);
 			$sql1->execute();
 
-			$sql5 = "UPDATE draws set red_payout = COALESCE(((red+blue) * '{$odds}')/NULLIF(red, 0), 0.00), blue_payout = COALESCE(((red+blue) * '{$odds}')/NULLIF(blue, 0), 0.00) where id='{$drawid}' ";		
+			// $sql5 = "UPDATE draws set red_payout = COALESCE(((red+blue) * '{$odds}')/NULLIF(red, 0), 0.00), blue_payout = COALESCE(((red+blue) * '{$odds}')/NULLIF(blue, 0), 0.00) where id='{$drawid}' ";		
+			
+			// (Meron + Wala Payout) / 2 = Selected Odds
+			
+			$sql5 = "UPDATE draws SET 
+				red_payout = COALESCE(( ('{$odds}' * 2) / (1 + (red / NULLIF(blue, 0))) ) + '{$odds}', '{$odds}' * 2),
+				blue_payout = COALESCE(( ('{$odds}' * 2) / (1 + (blue / NULLIF(red, 0))) ) + '{$odds}', '{$odds}' * 2)
+				WHERE id='{$drawid}'";
 			$save5 = $conn->query($sql5);
 
 

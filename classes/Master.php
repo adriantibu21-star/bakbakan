@@ -965,7 +965,14 @@ Class Master extends DBConnection {
 			//$save1 = $this->conn->query($sql1);
 
 			//wag na baguhin wlang userinput
-			$sql5 = "UPDATE draws set red_payout = COALESCE(((red+blue) * '{$odds}' )/NULLIF(red, 0), 0.00), blue_payout = COALESCE(((red+blue) * '{$odds}')/NULLIF(blue, 0), 0.00) where id='{$drawid}' ";		
+			// $sql5 = "UPDATE draws set red_payout = COALESCE(((red+blue) * '{$odds}')/NULLIF(red, 0), 0.00), blue_payout = COALESCE(((red+blue) * '{$odds}')/NULLIF(blue, 0), 0.00) where id='{$drawid}' ";		
+			
+			// (Meron + Wala Payout) / 2 = Selected Odds
+			
+			$sql5 = "UPDATE draws SET 
+				red_payout = COALESCE(( ('{$odds}' * 2) / (1 + (red / NULLIF(blue, 0))) ) + '{$odds}', '{$odds}' * 2),
+				blue_payout = COALESCE(( ('{$odds}' * 2) / (1 + (blue / NULLIF(red, 0))) ) + '{$odds}', '{$odds}' * 2)
+				WHERE id='{$drawid}'";
 			$save5 = $this->conn->query($sql5);
 
 			//sql bind parameters
@@ -1029,7 +1036,14 @@ Class Master extends DBConnection {
 			//$sql1 = "UPDATE draws set red = (red + '{$red_amount}'),blue = (blue + '{$blue_amount}'),yellow = (yellow + '{$yellow_amount}') where id='{$drawid}' ";
 			//$save1 = $this->conn->query($sql1);
 
-			$sql5 = "UPDATE draws set red_payout = COALESCE(((red+blue) * '{$odds}')/NULLIF(red, 0), 0.00), blue_payout = COALESCE(((red+blue) * '{$odds}')/NULLIF(blue, 0), 0.00) where id='{$drawid}' ";		
+			// $sql5 = "UPDATE draws set red_payout = COALESCE(((red+blue) * '{$odds}')/NULLIF(red, 0), 0.00), blue_payout = COALESCE(((red+blue) * '{$odds}')/NULLIF(blue, 0), 0.00) where id='{$drawid}' ";		
+			
+			// (Meron + Wala Payout) / 2 = Selected Odds
+			
+			$sql5 = "UPDATE draws SET 
+				red_payout = COALESCE(( ('{$odds}' * 2) / (1 + (red / NULLIF(blue, 0))) ) + '{$odds}', '{$odds}' * 2),
+				blue_payout = COALESCE(( ('{$odds}' * 2) / (1 + (blue / NULLIF(red, 0))) ) + '{$odds}', '{$odds}' * 2)
+				WHERE id='{$drawid}'";
 			$save5 = $this->conn->query($sql5);
 
 
