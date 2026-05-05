@@ -1,4 +1,4 @@
-<?php if($_settings->userdata('type') == 1): ?> 
+<?php if($_settings->userdata('type') == 1 or $_settings->userdata('type') == 4): ?> 
 
 <?php
 $DateSearch = isset($_GET['DateSearch']) ? $_GET['DateSearch'] : '*';
