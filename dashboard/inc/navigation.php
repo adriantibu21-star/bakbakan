@@ -210,6 +210,17 @@
 
                     <?php endif; ?>
 
+                    <?php if($_settings->userdata('type') == 4): ?> 
+                      <li class="nav-item dropdown">
+                        <a href="<?php echo base_url ?>dashboard/?page=maintenance/admin_hist_bets" class="nav-link nav-maintenance_rules">
+                          <i class="nav-icon fas fa-book-open"></i>
+                          <p>
+                            Fight Logs
+                          </p>
+                        </a>
+                      </li>
+                    <?php endif; ?>
+
 
                     <?php if($_settings->userdata('type') == 1 or $_settings->userdata('type') == 2): ?> 
                       <li class="nav-item dropdown">
