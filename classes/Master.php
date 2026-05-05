@@ -866,14 +866,14 @@ Class Master extends DBConnection {
 			//para pa lang sa yellow amount ito
 			// Uncomment if it will cause error in betting
 			// Disabled to disable hacker bet on Draw
-			// if ($_POST['betid']=='3'){	
-			// 	if ($row['amount']< $yellow_amount ) {
-			// 		$resp['status'] = 'failed';
-			// 		$resp['msg'] = " INSUFFICIENT BALANCE!";
-			// 		return json_encode($resp);
-			// 		exit;
-			// 	}
-			// }
+			if ($_POST['betid']=='3'){	
+				if ($row['amount']< $yellow_amount ) {
+					$resp['status'] = 'failed';
+					$resp['msg'] = " INSUFFICIENT BALANCE!";
+					return json_encode($resp);
+					exit;
+				}
+			}
 			
 		}else{
 			//walang record sa my_balance table
@@ -1206,6 +1206,61 @@ Class Master extends DBConnection {
 											}//end while
 										}
 									}
+
+									// Only trigger this specific block if the winner is DRAW (3)
+									if ($_POST['winner'] == '3') {
+
+										// IMPORTANT: Check if the player actually has a bet on the Draw (Yellow)
+										// If they only bet on Red/Blue and a Draw happened, no commission is generated.
+										if ($row1['yellow_amount'] > 0) {
+
+											// query to find the agent hierarchy
+											$coms = $this->conn->query("SELECT X,T2.id,T2.rate,T2.active
+																		FROM (
+																		SELECT @x := @x+ 1 as X,
+																		@r AS _id,
+																		(SELECT @r := parentid FROM users WHERE id = _id) AS parentid
+																		FROM
+																		(SELECT @r := '{$row1['user_id']}') vars,
+																		users h,(select @x := -1) i
+																		WHERE @r <> 0) T1
+																		JOIN users T2
+																		ON T1._id = T2.id
+																		where T2.rate > 0 and T2.active = 'Y' and T2.id != '{$row1['user_id']}'
+																		group by T2.id,T2.rate,T2.active order by X asc");
+
+											$oldrate = 0;
+											$newrate = 0;
+											$com_amount = 0;
+
+											if ($coms->num_rows > 0) {
+												while ($row2 = $coms->fetch_assoc()) {
+
+													
+													if (($row2['rate'] - $oldrate) > 0) {
+
+														$newrate = $row2['rate'] - $oldrate;
+														/** * THE KEY FIX: 
+														 * Instead of (red + blue + yellow), we use ONLY yellow_amount.
+														 * This ensures commission is only earned on the winning side.
+														 **/
+														$com_amount = ($newrate / 100) * $row1['yellow_amount'];
+
+														// Update agent's accumulated and balance amount
+														$sql2 = "UPDATE `users` set com_amount_accu = com_amount_accu + '{$com_amount}', com_amount_bal = com_amount_bal + '{$com_amount}' where `id` = '{$row2['id']}' ";
+														$this->conn->query($sql2);
+
+														// Record  transaction in coms table
+														$sql3 = "INSERT INTO `coms` set user_id = '{$row2['id']}', player_id = '{$row1['user_id']}', com_rate = '{$newrate}', amount = '{$com_amount}', date_created= now(), drawid = '{$row['id']}', eventid = '{$event}' ";
+														$this->conn->query($sql3);
+
+														$oldrate = $row2['rate'];
+													}
+												}
+											}
+										}
+									}
+
 
 								//end coms
 

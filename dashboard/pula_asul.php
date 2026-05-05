@@ -600,6 +600,26 @@
 
           </div>
 
+          <div class="row mt-1">
+            <div class="col-12 px-0">
+              <div class="p-2 text-center" style="background-color: #1b5e20; border-top: 1px solid #2e7d32;">
+                <div class="d-flex justify-content-between align-items-center px-3">
+                  <h5 class="mb-0 text-white">DRAW <small style="font-size: 0.6em; color: #a5d6a7;">(8X PAYOUT)</small></h5>
+
+                  <div id="draw_bet_div">
+                    <span class="badge rounded-pill bg-dark bet-pill" style="border: 1px solid #4caf50;">
+                      <span>BET: ₱</span> <span id="ur_draw_bets">0.00</span>
+                    </span>
+                  </div>
+
+                  <button type="button" id="post-draw" class="btn btn-success btn-sm post-bet px-4" style="background-color: #4caf50; font-weight: bold;" betid="3">
+                    <i class="fas fa-plus-circle"></i> BET DRAW
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="mt-2" style="background-image: url('<?php echo validate_image('/uploads/boardbg.jpg')?>');">
 
               <!-- Betting Chips and Amount -->

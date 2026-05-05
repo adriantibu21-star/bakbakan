@@ -590,6 +590,26 @@
 
           </div>
 
+          <div class="row mt-1">
+            <div class="col-12 px-0">
+              <div class="p-2 text-center" style="background-color: #1b5e20; border-top: 1px solid #2e7d32;">
+                <div class="d-flex justify-content-between align-items-center px-3">
+                  <h5 class="mb-0 text-white">DRAW <small style="font-size: 0.6em; color: #a5d6a7;">(8X PAYOUT)</small></h5>
+
+                  <div id="draw_bet_div">
+                    <span class="badge rounded-pill bg-dark bet-pill" style="border: 1px solid #4caf50;">
+                      <span>BET: ₱</span> <span id="ur_draw_bets">0.00</span>
+                    </span>
+                  </div>
+
+                  <button type="button" id="post-draw" class="btn btn-success btn-sm post-bet px-4" style="background-color: #4caf50; font-weight: bold; color: white;" href="javascript:void(0)" betid="3">
+                    <i class="fas fa-plus-circle"></i> BET DRAW
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="mt-2" style="background-image: url('<?php echo validate_image('/uploads/boardbg.jpg')?>');">
 
               <!-- Betting Chips and Amount -->
@@ -971,31 +991,30 @@
 
     function animateValueUpdate(elementId, newValue) {
       const $element = $(`#${elementId}`);
-      const currentValue = parseFloat($element.html().replace(/[,₱]/g, ''));
-      const targetValue = parseFloat(newValue.replace(/,/g, ''));
+      
+      // Clean the input: remove currency symbols and commas
+      const cleanNewValue = newValue.toString().replace(/[,₱]/g, '');
+      const targetValue = parseFloat(cleanNewValue);
+      
+      // Get current value from HTML, or default to 0 if empty
+      const currentHtml = $element.html().replace(/[,₱]/g, '') || "0";
+      const currentValue = parseFloat(currentHtml);
 
-      if (currentValue === targetValue) {
-        return;
-      }
+      if (currentValue === targetValue) return;
 
-      if (targetValue > currentValue) {
-        $({
-          num: currentValue
-        }).animate({
-          num: targetValue
-        }, {
-          duration: 3000,
-          easing: 'swing',
-          step: function(now) {
-            $element.html('₱' + formatNumber(now));
-          },
-          complete: function() {
-            $element.html('₱' + formatNumber(targetValue));
-          }
-        });
-      } else {
-        $element.html(targetValue)
-      }
+      // .stop(true, false) clears the animation queue and stops the current one
+      $({ num: currentValue }).stop(true, false).animate({
+        num: targetValue
+      }, {
+        duration: 10000, // Slightly faster to avoid lagging behind data refreshes
+        easing: 'swing',
+        step: function(now) {
+          $element.html('₱' + formatNumber(Math.floor(now)));
+        },
+        complete: function() {
+          $element.html('₱' + formatNumber(targetValue));
+        }
+      });
     }
 
     function formatNumber(number) {

@@ -57,10 +57,10 @@ if(isset($_GET['betid']) && $_GET['betid'] > 0){
             <input type="hidden" name ="yellow_amount" id="yellow_amount" value="0">
 
         <?php else: ?>
-            <!-- <label for="yellow_amount" class="control-label"style="color:black">ARE YOU SURE?</label>   		    
+            <label for="yellow_amount" class="control-label"style="color:black">ARE YOU SURE?</label>   		    
 		    <input name="yellow_amount" id="yellow_amount" type="number" inputmode="numeric" pattern="[0-9]*" min="10" max="20000"step="1" class="form-control form  rounded-0" value=<?php echo $_GET['bet']?> readonly >
             <input type="hidden" name ="red_amount" id="red_amount"value="0">
-            <input type="hidden" name ="blue_amount" id="blue_amount" value="0"> -->
+            <input type="hidden" name ="blue_amount" id="blue_amount" value="0">
         <?php endif; ?> 
         </div>
 
