@@ -80,10 +80,57 @@ Class Users extends DBConnection {
 
 			$qrypassupdate = $this->conn->query("UPDATE users set password = case when '{$_POST['password']}' <> '' then md5('{$_POST['password']}') else password end where id = {$id}");
 
-			$qry = $this->conn->prepare("UPDATE users set parentid = ?, firstname = ?, lastname = ?, middlename = ?, rate = ?, type = ?, role = ?, active = ? where id = {$id}");
-			$qry->bind_param("iissdsss", $_POST['parentid'], $_POST['firstname'], $_POST['lastname'], $_POST['middlename'], $_POST['rate'], $_POST['type'], $_POST['role'], $_POST['active']);
-			$qry->execute();
+			// $qry = $this->conn->prepare("UPDATE users set parentid = ?, firstname = ?, lastname = ?, middlename = ?, rate = ?, type = ?, role = ?, active = ? where id = {$id}");
+			// $qry->bind_param("iissdsss", $_POST['parentid'], $_POST['firstname'], $_POST['lastname'], $_POST['middlename'], $_POST['rate'], $_POST['type'], $_POST['role'], $_POST['active']);
+			// $qry->execute();
 
+			$updates = [];
+			$types = "";
+			$params = [];
+
+			if (isset($_POST['parentid'])){ 
+				$updates[] = "parentid = ?"; 
+			 	$types .= "s"; $params[] = $_POST['parentid']; 
+			}
+			if (isset($_POST['firstname'])){
+				 $updates[] = "firstname = ?"; 
+				 $types .= "s"; $params[] = $_POST['firstname']; 
+			}
+			if (isset($_POST['lastname'])){
+				 $updates[] = "lastname = ?";  
+				 $types .= "s"; $params[] = $_POST['lastname']; 
+			}
+			if (isset($_POST['middlename'])){
+				 $updates[] = "middlename = ?";
+				 $types .= "s"; $params[] = $_POST['middlename']; 
+			}
+			if (isset($_POST['rate'])){
+				 $updates[] = "rate = ?";      
+				 $types .= "d"; $params[] = $_POST['rate']; 
+			}
+			if (isset($_POST['type'])){
+				 $updates[] = "type = ?";      
+				 $types .= "s"; $params[] = $_POST['type']; 
+			}
+			if (isset($_POST['role'])){
+				 $updates[] = "role = ?";      
+				 $types .= "s"; $params[] = $_POST['role']; 
+			}
+			if (isset($_POST['active'])){
+				 $updates[] = "active = ?";    
+				 $types .= "s"; $params[] = $_POST['active']; 
+			}
+
+			if (count($updates) > 0) {
+				$sql = "UPDATE users SET " . implode(', ', $updates) . " WHERE id = ?";
+				
+				$types .= "i";
+				$params[] = $id;
+
+				$qry = $this->conn->prepare($sql);
+				$qry->bind_param($types, ...$params); // The ... (splat) spreads the array into the function
+				$qry->execute();
+			}
 
 
 			if($qry){

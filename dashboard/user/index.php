@@ -3,6 +3,7 @@ $user = $conn->query("SELECT * FROM users where id ='".$_settings->userdata('id'
 foreach($user->fetch_array() as $k =>$v){
 	$meta[$k] = $v;
 }
+$isAdmin = $_settings->userdata('type') == '1' ? true : false;
 ?>
 <?php if($_settings->chk_flashdata('success')): ?>
 <script>
@@ -16,16 +17,22 @@ foreach($user->fetch_array() as $k =>$v){
 			<form action="" id="manage-user">	
 				<input type="hidden" name="id" value="<?php echo $_settings->userdata('id') ?>">
 				<div class="form-group">
-					<label for="name">FirstName</label>
-					<input type="text" name="firstname" id="firstname" class="form-control" value="<?php echo isset($meta['firstname']) ? $meta['firstname']: '' ?>" required>
+					<?php if ($isAdmin): ?>
+						<label for="name">FirstName</label>
+					<?php endif; ?>	
+					<input type="<?php echo $isAdmin ? 'text' : 'hidden' ?>" name="firstname" id="firstname" class="form-control" value="<?php echo isset($meta['firstname']) ? $meta['firstname']: '' ?>" required>
 				</div>
 				<div class="form-group">
-					<label for="name">LastName</label>
-					<input type="text" name="lastname" id="lastname" class="form-control" value="<?php echo isset($meta['lastname']) ? $meta['lastname']: '' ?>" required>
+					<?php if ($isAdmin): ?>
+						<label for="name">LastName</label>
+					<?php endif; ?>
+					<input type="<?php echo $isAdmin ? 'text' : 'hidden' ?>" name="lastname" id="lastname" class="form-control" value="<?php echo isset($meta['lastname']) ? $meta['lastname']: '' ?>" required>
 				</div>
 				<div class="form-group">
-					<label for="username">Username</label>
-					<input type="text" name="username" id="username" class="form-control" value="<?php echo isset($meta['username']) ? $meta['username']: '' ?>" required  autocomplete="off">
+					<?php if ($isAdmin): ?>
+						<label for="username">Username</label>
+					<?php endif; ?>
+					<input type="<?php echo $isAdmin ? 'text' : 'hidden' ?>" name="username" id="username" class="form-control" value="<?php echo isset($meta['username']) ? $meta['username']: '' ?>" required  autocomplete="off">
 				</div>
 				<div class="form-group">
 					<label for="password">Password</label>
