@@ -1,0 +1,153 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Stream Player</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ovenplayer@latest/dist/ovenplayer.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            font-family: sans-serif;
+            overflow: hidden;
+        }
+        #player {
+            width: 100%;
+            height: 100%;
+        }
+        /* Custom message for unauthorized access */
+        #unauthorized {
+            display: none;
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="player"></div>
+    <div id="unauthorized"><h1>Redirecting to secure source...</h1></div>
+
+    <script>
+        /**
+         * 1. DOMAIN SECURITY LOGIC
+         */
+        (function checkAccess() {
+            var referrer = document.referrer;
+            var currentDomain = window.location.hostname;
+            var allowedDomains = [
+                'localhost',
+                '127.0.0.1',
+                '128.199.103.91',
+                'www.luckyslasher2025.live',
+                'www.slashernew888.live',
+                'www.sabongslasher2026.live',
+                'www.internationalslasher.live',
+                'worldcockfightingarena.live',
+                'sabongslasher2026.live',
+                'swc4site.live',
+                'wpc183.live',
+                'xxxb777.live'
+            ];
+
+            var targetDomain = "";
+            if (referrer) {
+                try {
+                    targetDomain = new URL(referrer).hostname;
+                } catch(e) {
+                    targetDomain = "";
+                }
+            } else {
+                targetDomain = currentDomain;
+            }
+
+            // If not in allowed list, redirect immediately
+            if (!allowedDomains.includes(targetDomain)) {
+                document.getElementById('player').style.display = 'none';
+                document.getElementById('unauthorized').style.display = 'block';
+                window.location.replace("https://www.youtube.com/embed/BjUn6pu74wc?autoplay=1");
+            }
+        })();
+
+        /**
+         * 2. OVENPLAYER INITIALIZATION (WebRTC + LLHLS)
+         */
+        const player = OvenPlayer.create('player', {
+            autoStart: true,
+            autoFallback: true,
+            mute: true, // Required for browsers to allow autoplay
+            loadPlaylist: false,
+            showBigPlayButton: true,
+            lowLatencyDisplay: false,
+            sources: [
+                {
+                    label: 'Secondary',
+                    type: 'llhls',
+                    file: 'https://adislasherstr2026.live:3334/app/stream/llhls.m3u8'
+                },
+                {
+                    label: 'Primary',
+                    type: 'webrtc',
+                    file: 'wss://adislasherstr2026.live:3334/app/stream'
+                }
+            ]
+        });
+
+        /**
+         * 3. RECONNECTION & ERROR LOGIC
+         */
+        player.on('error', function(error) {
+            console.error('Player Error:', error);
+            // If the stream isn't found or connection drops, retry after 5 seconds
+            setTimeout(function() {
+                console.log('Attempting to reconnect...');
+                player.load();
+            }, 5000);
+        });
+
+        // Listen for the stream being "ready" to ensure smooth playback
+        player.on('ready', function() {
+            console.log('Player is ready with OME source.');
+            player.play();
+        });
+
+        // Optional: Handle state where stream might be idle
+        player.on('stateChanged', function(event) {
+            if (event.newstate === 'error' || event.newstate === 'idle') {
+                // You can trigger custom UI or auto-reloads here
+            }
+        });
+
+        
+
+    /**
+     * 3. ANTI-DEBUGGER PROTECTION
+     */
+    (function() {
+        (function a() {
+            try {
+                (function b(i) {
+                    if (('' + (i / i)).length !== 1 || i % 20 === 0) {
+                        (function() { }).constructor('debugger')();
+                    } else {
+                        debugger;
+                    }
+                    b(++i);
+                })(0);
+            } catch (e) {
+                setTimeout(a, 100);
+            }
+        })();
+    })();
+    </script>
+</body>
+</html>
