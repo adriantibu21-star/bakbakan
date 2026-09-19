@@ -1,5 +1,5 @@
 <?php
-if(!defined('base_url')) define('base_url','https://www.internationalslasher.live/');
+if(!defined('base_url')) define('base_url','https://sabongslasher2026.live/');
 if(!defined('base_app')) define('base_app', str_replace('\\','/',__DIR__).'/' );
 if(!defined('DB_SERVER')) define('DB_SERVER',"localhost");
 if(!defined('DB_USERNAME')) define('DB_USERNAME',"wduser01");

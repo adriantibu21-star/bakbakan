@@ -1,0 +1,12 @@
+# Security - DO NOT UPLOAD
+.htpasswd
+.htaccess_old
+server.key
+server.csr
+config.php
+*db_backup*
+*.sql
+
+# Logs and temp files
+ssl-manager/logs/
+*.log

@@ -3,17 +3,17 @@ require_once('../config.php');
 
 $eventid = $_GET['eventid'];
 
-	  $winner = $conn->query("SELECT winner, drawno FROM `draws` where eventid = '{$eventid}' order by id desc limit 1 "); //pinaka last na draw
+	  $winner = $conn->query("SELECT d.winner, d.drawno, e.meron_text FROM `draws` d INNER JOIN events e on e.id = d.eventid where d.eventid = '{$eventid}' order by d.id desc limit 1 "); //pinaka last na draw
 		if ($winner->num_rows >0){
       	$rows = $winner->fetch_assoc();
       			if($rows['winner'] ==1){
-					echo   'MERON <small class="blinking" ></br>WINNER</small>';
+					echo   $rows['meron_text'] . ' <small class="blinking" ></br>WINNER</small>';
                 }elseif($rows['winner'] ==3){
-                    echo   'MERON <small class="blinking"></br>DRAW</small>';
+                    echo   $rows['meron_text'] . ' <small class="blinking"></br>DRAW</small>';
                 }elseif($rows['winner'] ==4){
-                    echo   'MERON <small class="blinking"></br>CANCELLED</small>';
+                    echo   $rows['meron_text'] . ' <small class="blinking"></br>CANCELLED</small>';
 				}else{
-                    echo   'MERON';
+                    echo   $rows['meron_text'];
                 }
 		}else{
             echo   'MERON';

@@ -41,6 +41,16 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 		<?php endif; ?>
 
 		<div class="form-group">
+			<label for="meron_text" class="control-label text-body">Meron Text</label>
+			<input name="meron_text" id="meron_text" type="text" class="form-control form  rounded-0" value="<?php echo isset($meron_text) ? $meron_text : 'MERON'; ?>" required />
+		</div>
+
+		<div class="form-group">
+			<label for="wala_text" class="control-label text-body">Wala Text</label>
+			<input name="wala_text" id="wala_text" type="text" class="form-control form  rounded-0" value="<?php echo isset($wala_text) ? $wala_text : 'WALA'; ?>" required />
+		</div>
+
+		<div class="form-group">
 			<label class="control-label" style="color: black;">Event Image</label>
 			<div class="custom-file">
 				<input type="file" class="custom-file-input rounded-circle" id="event_img" name="event_img" onchange="displayImg(this,$(this))">
